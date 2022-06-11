@@ -9,13 +9,13 @@ const Store = mongoose.model('stores')
 router.get('/api', (req, res) => {
     Product.find()
         .then(products => res.json({products}))
-        .catch(err => res.send('error' + err))
+        .catch(err => res.json('Erro ao buscar produtos.'))
 })
 
-router.get('/api/:name', (req, res) => {
-    const product_name = req.params.name
+router.get('/api/:id', (req, res) => {
+    const product_id = req.params.id
 
-    Product.findOne({name: product_name})
+    Product.findOne({_id: product_id})
         .then(products => {
             if(!products) {
                 return res.json('Produto não encontrado.')
@@ -35,13 +35,12 @@ router.post('/api', (req, res) => {
         photo: req.body.photo,
         unity: req.body.unity,
         id_store: req.body.id_store
-
     })
     
     product.save()
         .then(() => {
             // res.json('Produto cadastrado com sucesso!')
-            Store.findOne({id: req.body.id_store})
+            Store.findOne({_id: req.body.id_store})
                 .then(store => {
                     store.products.push(product)
                     store.save()
@@ -50,15 +49,15 @@ router.post('/api', (req, res) => {
                 })
                 .catch(err => res.json('Erro ao cadastrar produto.'))
         })
-        .catch((err) => res.json('Erro ao cadastrar produto.'))
+        .catch(err => res.json('Erro ao cadastrar produto.'))
 
     
 })
 
-router.put('/api/:name', (req, res) => {
-    const product_name = req.params.name
+router.put('/api/:id', (req, res) => {
+    const product_id = req.params.id
 
-    Product.findOne({name: product_name})
+    Product.findOne({_id: product_id})
         .then(product => {
             if(!product) {
                 return res.json('Produto não encontrada.')
@@ -78,23 +77,38 @@ router.put('/api/:name', (req, res) => {
         .catch(err => res.json('Erro ao editar produto.'))
 })
 
-router.delete('/api/:name', (req, res) => {
-    const product_name = req.params.name
+router.delete('/api/:id', (req, res) => {
+    const product_id = req.params.id
 
-    Product.findOne({name: product_name})
+    Product.findOne({_id: product_id})
         .then(product => {
             if(!product) {
                 return res.json('Produto inexistente.')
             } else {
-                Product.deleteOne({name: product_name})
-                    .then(() => {
-                        res.json('Produto deletado com sucesso!')
+                Store.findOne({_id: product.id_store})
+                    .then(store => {
+                        const index = store.products.indexOf(product_id)
+
+                        if(index > -1) {
+                            store.products.splice(index, 1) // Deletando produto da lista de produtos da loja.
+                        }
+                        
+                        store.save()
+                            .then(() => {
+                                Product.deleteOne({_id: product_id})
+                                    .then(() => {
+                                        res.json('Produto deletado com sucesso!')
+                                    })
+                                    .catch(err => res.json('Erro ao deletar produto.'))
+                            })
+                            .catch(err => res.json('Erro ao deletar produto.'))
+
                     })
-                    .catch(err => res.json('Erro ao deletar produto.'))
+                    .catch(err => res.json('Erro ao deletar produto.'))     
             }
         })
         .catch(err => {
-            return res.json('Erro ao deletar produto.')
+            return res.json('Erro ao deletar produto.'+err)
         })
 })
 

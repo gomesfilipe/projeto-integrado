@@ -26,20 +26,13 @@ const Store = new Schema({
     products: [{
         type: Schema.Types.ObjectId,
         ref: 'products'
+    }],
+
+    sales: [{
+        type: Schema.Types.ObjectId,
+        ref: 'sales'
     }]
 })
 
 mongoose.model('stores', Store)
-
-// const Loja = mongoose.model('stores')
-
-// new Loja({
-//     name: 'loja',
-//     username: 'teste',
-//     password: '123',
-//     admin_password: '123',
-// }).save()
-//     .then(() => console.log('cadastrado com sucesso'))
-//     .catch((err) => console.log('erro ao cadastrar ' + err))
-
 module.exports = Store
