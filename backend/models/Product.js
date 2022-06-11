@@ -30,6 +30,11 @@ const Product = new Schema({
     unity: {
         type: String,
         required: true
+    },
+
+    id_store: {
+        type: String,
+        required: true
     }
 })
 

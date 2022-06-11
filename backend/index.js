@@ -27,7 +27,11 @@ app.use('/product', product) // /store é o prefixo para acessar as rotas desse 
 // const Store = require('./models/Store')
 
 // TODO
-// Ajeitar chaves de busca para produtos e lojas.
+// Ajeitar chaves de busca para produtos e lojas. (De preferência IDs)
 // Fazer validação dos dados.
 // Verificar se já existe produto ou loja com mesmo nome no CRUD.
-// Ver como inserir produtos na lista de produtos de uma loja específica.
+// Ver como inserir produtos na lista de produtos de uma loja específica. //!OK
+// Ajeitar model de produtos (todo produto pertence a uma loja). //! OK
+// Fazer model e CRUD de vendas.
+// Ver como fazer busca no banco de dados num intervalo entre duas datas para os dashboards.
+// Fazer interface da API.
