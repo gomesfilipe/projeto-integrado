@@ -8,11 +8,20 @@
 
 // console.log(vetor)
 
-var date = new Date()
+// var date = new Date()
 
-console.log(date)
-console.log(date.toISOString())
-var date2 = new Date('2021-01-01')
-console.log(date2.toISOString())
+// console.log(date)
+// console.log(date.toISOString())
+// var date2 = new Date('2021-01-01')
+// console.log(date2.toISOString())
 
-console.log(date2)
+// console.log(date2)
+
+// var vetor = [{nome: 'teste'},{nome: 'testando'}]
+// console.log(typeof(vetor))
+
+if(null) {
+    console.log('entrou')
+} else {
+    console.log('nao entrou')
+}
