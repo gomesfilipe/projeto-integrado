@@ -30,7 +30,8 @@ router.get('/api/name/:name', (req, res) => {
     const product_name = req.params.name
 
     Product.find({name: {
-        "$regex": `^(${product_name})`
+        "$regex": `^(${product_name})`,
+        "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
     }})
         .then(products => {
             if(!products) {
@@ -43,31 +44,38 @@ router.get('/api/name/:name', (req, res) => {
 })
 
 router.post('/api', (req, res) => {
-    const product = new Product({
-        name: req.body.name,
-        cost: Number(req.body.cost),
-        sale: Number(req.body.sale),
-        quantity: Number(req.body.quantity),
-        photo: req.body.photo,
-        unity: req.body.unity,
-        id_store: req.body.id_store
-    })
-    
-    product.save()
-        .then(() => {
-            // res.json('Produto cadastrado com sucesso!')
-            Store.findOne({_id: req.body.id_store})
-                .then(store => {
-                    store.products.push(product)
-                    store.save()
-                        .then(() => res.json('Produto cadastrado e inserido na loja com sucesso!'))
-                        .catch(err => res.json('Erro ao cadastrar e inserir produto na loja.'))
-                })
-                .catch(err => res.json('Erro ao cadastrar produto.'))
-        })
-        .catch(err => res.json('Erro ao cadastrar produto.'))
+    const name1 = req.body.name
+    const id_store1 = req.body.id_store
 
-    
+    Product.findOne({name: name1, id_store: id_store1})
+        .then(product => {
+            if(product) {
+                return res.json('Produto já existente.')
+            }
+
+            const new_product = new Product({
+                name: req.body.name,
+                cost: Number(req.body.cost),
+                sale: Number(req.body.sale),
+                quantity: Number(req.body.quantity),
+                photo: req.body.photo,
+                unity: req.body.unity,
+                id_store: req.body.id_store
+            })
+
+            new_product.save()
+                .then(() => {
+                    Store.findOne({_id: req.body.id_store})
+                        .then(store => {
+                            store.products.push(new_product)
+                            store.save()
+                                .then(() => res.json('Produto cadastrado e inserido na loja com sucesso!'))
+                                .catch(err => res.json('Erro ao cadastrar e inserir produto na loja.'+err))
+                        })
+                        .catch(err => res.json('Erro ao cadastrar produto2.'))
+                })
+                .catch(err => res.json('Erro ao cadastrar produto1.'))  
+        })
 })
 
 router.put('/api/:id', (req, res) => {
