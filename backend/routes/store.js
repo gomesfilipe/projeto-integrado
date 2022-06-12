@@ -27,14 +27,24 @@ router.get('/api/:id', (req, res) => {
 })
 
 router.post('/api', (req, res) => {
-    new Store({
-        name: req.body.name,
-        username: req.body.username,
-        password: req.body.password,
-        admin_password: req.body.admin_password
-    }).save()
-        .then(() => res.json('Loja cadastrada com sucesso!'))
-        .catch((err) => res.json('Erro ao cadastrar loja.'))
+    const username = req.body.username
+    
+    Store.findOne({username: username})
+        .then(store => {
+            if(store) {
+                return res.json('Usuário já existente.')
+            }
+
+            new Store({
+                name: req.body.name,
+                username: req.body.username,
+                password: req.body.password,
+                admin_password: req.body.admin_password
+            }).save()
+                .then(() => res.json('Loja cadastrada com sucesso!'))
+                .catch(err => res.json('Erro ao cadastrar loja.'))
+        })
+        .catch(err => res.json('Erro ao cadastrar loja.'))
 })
 
 router.put('/api/:id', (req, res) => {
