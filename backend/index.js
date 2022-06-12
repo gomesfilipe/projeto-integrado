@@ -29,16 +29,16 @@ app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
 
 // TODO
 // Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK (TROCADO PRA ID)
-// Fazer validação dos dados.
-// Verificar se já existe produto ou loja com mesmo nome no CRUD.
+// Verificar se já existe produto ou loja com mesmo nome no CRUD. //!OK
 // Ver como inserir produtos na lista de produtos de uma loja específica. //!OK
 // Ajeitar model de produtos (todo produto pertence a uma loja). //! OK
 // Fazer model e CRUD de vendas. //! OK
-// Ver como fazer busca no banco de dados num intervalo entre duas datas para os dashboards.
-// Fazer interface da API.
-// Fazer hash para as senhas.
-// Fazer mais tipos de buscas para produtos (mais chaves de buscas além das IDs).
+// Ver como fazer busca no banco de dados num intervalo entre duas datas para os dashboards. //!OK
+// Fazer hash para as senhas. //!OK
+// Fazer mais tipos de buscas para produtos (mais chaves de buscas além das IDs). //!OK
 // Ver como fazer sessão de login.
+// Fazer validação dos dados.
+// Fazer interface da API.
 
 // TODO TESTES
 // Testes CRUD Stores //!OK
