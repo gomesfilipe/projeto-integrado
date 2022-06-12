@@ -10,6 +10,10 @@ const Product = mongoose.model('products')
 const Sale = mongoose.model('sales')
 const Item = mongoose.model('items')
 
+const auth_middleware = require('../middlewares/auth')
+
+router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
+
 router.get('/api/all', (req, res) => {
     Sale.find()
         .then(sales => res.json({sales}))
