@@ -36,7 +36,7 @@ app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
 // Ver como fazer busca no banco de dados num intervalo entre duas datas para os dashboards. //!OK
 // Fazer hash para as senhas. //!OK
 // Fazer mais tipos de buscas para produtos (mais chaves de buscas além das IDs). //!OK
-// Ver como fazer sessão de login.
+// Ver como fazer sessão de login. //!OK
 // Fazer validação dos dados.
 // Fazer interface da API.
 
