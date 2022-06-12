@@ -10,8 +10,17 @@ const Product = mongoose.model('products')
 const Sale = mongoose.model('sales')
 const Item = mongoose.model('items')
 
-router.get('/api', (req, res) => {
+router.get('/api/all', (req, res) => {
     Sale.find()
+        .then(sales => res.json({sales}))
+        .catch(err => res.json('Erro ao buscar vendas.'))
+})
+
+router.get('/api/dates', (req, res) => {
+    Sale.find({"date": {
+        "$gte": req.body.from_date, // Início do período. Obs: devem estar no formato ISO.
+        "$lt": req.body.to_date // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
+    }})
         .then(sales => res.json({sales}))
         .catch(err => res.json('Erro ao buscar vendas.'))
 })
