@@ -6,13 +6,13 @@ require('../models/Store')
 const Product = mongoose.model('products')
 const Store = mongoose.model('stores')
 
-router.get('/api', (req, res) => {
+router.get('/api/all', (req, res) => {
     Product.find()
         .then(products => res.json({products}))
         .catch(err => res.json('Erro ao buscar produtos.'))
 })
 
-router.get('/api/:id', (req, res) => {
+router.get('/api/id/:id', (req, res) => {
     const product_id = req.params.id
 
     Product.findOne({_id: product_id})
@@ -20,7 +20,23 @@ router.get('/api/:id', (req, res) => {
             if(!products) {
                 return res.json('Produto não encontrado.')
             } else {
-                res.json(products)
+                res.json({products})
+            }
+        })
+        .catch(() => {return res.json('Produto não encontrado.')})
+})
+
+router.get('/api/name/:name', (req, res) => {
+    const product_name = req.params.name
+
+    Product.find({name: {
+        "$regex": `^(${product_name})`
+    }})
+        .then(products => {
+            if(!products) {
+                return res.json('Produto não encontrado.')
+            } else {
+                res.json({products})
             }
         })
         .catch(() => {return res.json('Produto não encontrado.')})
