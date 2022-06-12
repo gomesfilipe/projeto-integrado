@@ -3,7 +3,7 @@ const app = express()
 const store = require('./routes/store')
 const product = require('./routes/product')
 const sale = require('./routes/sale')
-const item_sale = require('./routes/item')
+const item = require('./routes/item')
 const mongoose = require('mongoose')
 
 // Configuração mongoose.
@@ -25,11 +25,7 @@ app.use(express.json())
 app.use('/store', store) // /store é o prefixo para acessar as rotas desse grupo.
 app.use('/product', product) // /product é o prefixo para acessar as rotas desse grupo.
 app.use('/sale', sale) // /sale é o prefixo para acessar as rotas desse grupo.
-
-// app.use('/item', item_sale) // /item é o prefixo para acessar as rotas desse grupo.
-// app.use('/item', item_sale)
-// const Product = require('./models/Product')
-// const Store = require('./models/Store')
+app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
 
 // TODO
 // Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK (TROCADO PRA ID)
@@ -37,14 +33,15 @@ app.use('/sale', sale) // /sale é o prefixo para acessar as rotas desse grupo.
 // Verificar se já existe produto ou loja com mesmo nome no CRUD.
 // Ver como inserir produtos na lista de produtos de uma loja específica. //!OK
 // Ajeitar model de produtos (todo produto pertence a uma loja). //! OK
-// Fazer model e CRUD de vendas. //! OK (TESTAR E FAZER AJUSTES NECESSÁRIOS)
+// Fazer model e CRUD de vendas. //! OK
 // Ver como fazer busca no banco de dados num intervalo entre duas datas para os dashboards.
 // Fazer interface da API.
 // Fazer hash para as senhas.
 // Fazer mais tipos de buscas para produtos (mais chaves de buscas além das IDs).
+// Ver como fazer sessão de login.
 
 // TODO TESTES
-// Testes CRUD Stores //! OK
+// Testes CRUD Stores //!OK
 // Testes CRUD Product //!OK
-// Testes CRUD Sale
-// Testes CRUD Item
+// Testes CRUD Sale //!OK
+// Testes CRUD Item //!OK

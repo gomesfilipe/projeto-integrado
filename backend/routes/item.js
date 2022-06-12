@@ -40,3 +40,5 @@ router.delete('/api/:id', (req, res) => {
         })
         .catch(err => res.json('Erro ao deletar item.'))
 })
+
+module.exports = router

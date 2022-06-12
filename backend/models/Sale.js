@@ -14,7 +14,6 @@ const Sale = new Schema({
 
     value: {
         type: Number,
-        default: 0,
         required: true
     },
 

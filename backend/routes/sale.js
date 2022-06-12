@@ -34,7 +34,7 @@ router.post('/api', (req, res) => {
                 })
                 .catch(err => res.json('Erro ao concluir venda.'))
         })
-        .catch(err => res.json('Erro ao concluir venda. ' + err))
+        .catch(err => res.json('Erro ao concluir venda.'))
 })
 
 router.delete('/api/:id', (req, res) => {
@@ -42,7 +42,6 @@ router.delete('/api/:id', (req, res) => {
     // console.log('sale_id: ' + sale_id)
     Sale.findOne({_id: sale_id})
         .then(sale => {
-            console.log(sale)
             if(!sale) {
                 return res.json('Venda inexistente.')
             } else {
