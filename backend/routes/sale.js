@@ -17,7 +17,7 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 router.get('/api/all', (req, res) => {
     Sale.find()
         .then(sales => res.json({sales}))
-        .catch(err => res.json('Erro ao buscar vendas.'))
+        .catch(err => res.json({message: 'Erro ao buscar vendas.'}))
 })
 
 router.get('/api/dates', (req, res) => {
@@ -26,7 +26,7 @@ router.get('/api/dates', (req, res) => {
         "$lt": req.body.to_date // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
     }})
         .then(sales => res.json({sales}))
-        .catch(err => res.json('Erro ao buscar vendas.'))
+        .catch(err => res.json({message: 'Erro ao buscar vendas.'}))
 })
 
 router.post('/api', (req, res) => {
@@ -42,12 +42,12 @@ router.post('/api', (req, res) => {
                 .then(store => {
                     store.sales.push(sale)
                     store.save()
-                        .then(() => res.json('Venda concluída com sucesso!'))
-                        .catch(err => res.json('Erro ao concluir venda.'))
+                        .then(() => res.json({message: 'Venda concluída com sucesso!'}))
+                        .catch(err => res.json({message: 'Erro ao concluir venda.'}))
                 })
-                .catch(err => res.json('Erro ao concluir venda.'))
+                .catch(err => res.json({message: 'Erro ao concluir venda.'}))
         })
-        .catch(err => res.json('Erro ao concluir venda.'))
+        .catch(err => res.json({message: 'Erro ao concluir venda.'}))
 })
 
 router.delete('/api/:id', (req, res) => {
@@ -56,14 +56,14 @@ router.delete('/api/:id', (req, res) => {
     Sale.findOne({_id: sale_id})
         .then(sale => {
             if(!sale) {
-                return res.json('Venda inexistente.')
+                return res.json({message: 'Venda inexistente.'})
             } else {
                 Sale.deleteOne({_id: sale_id})
-                    .then(() => res.json('Venda deletada com sucesso!'))
-                    .catch(err => res.json('Erro ao deletar venda.'))
+                    .then(() => res.json({message: 'Venda deletada com sucesso!'}))
+                    .catch(err => res.json({message: 'Erro ao deletar venda.'}))
             }
         })
-        .catch(err => res.json('Erro ao deletar venda.'))
+        .catch(err => res.json({message: 'Erro ao deletar venda.'}))
 })
 
 module.exports = router

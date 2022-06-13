@@ -58,12 +58,12 @@ router.get('/api/:id', (req, res) => {
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json('Loja não encontrada.')
+                return res.json({message: 'Loja não encontrada.'})
             } else {
                 res.json({store})
             }
         })
-        .catch(() => {return res.json('Loja não encontrada.')})
+        .catch(() => {return res.json({message: 'Loja não encontrada.'})})
 })
 
 // router.post('/api', (req, res) => {
@@ -122,7 +122,7 @@ router.put('/api/:id', (req, res) => {
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json('Loja não encontrada.')
+                return res.json({message: 'Loja não encontrada.'})
             } else {
                 store.name = req.body.name,
                 store.username = req.body.username,
@@ -130,11 +130,11 @@ router.put('/api/:id', (req, res) => {
                 store.admin_password = req.body.admin_password
 
                 store.save()
-                    .then(() => res.json('Loja editada com sucesso!'))
-                    .catch(err => res.json('Erro ao editar loja.'))
+                    .then(() => res.json({message: 'Loja editada com sucesso!'}))
+                    .catch(err => res.json({message: 'Erro ao editar loja.'}))
             }
         })
-        .catch(err => res.json('Erro ao editar loja.'))
+        .catch(err => res.json({message: 'Erro ao editar loja.'}))
 })
 
 router.delete('/api/:id', (req, res) => {
@@ -143,17 +143,17 @@ router.delete('/api/:id', (req, res) => {
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json('Loja inexistente.')
+                return res.json({message: 'Loja inexistente.'})
             } else {
                 Store.deleteOne({_id: store_id})
                     .then(() => {
-                        res.json('Loja deletada com sucesso!')
+                        res.json({message: 'Loja deletada com sucesso!'})
                     })
-                    .catch(err => res.json('Erro ao deletar loja.'))
+                    .catch(err => res.json({message: 'Erro ao deletar loja.'}))
             }
         })
         .catch(err => {
-            return res.json('Erro ao deletar loja.'+err)
+            return res.json({message: 'Erro ao deletar loja.'})
         })
 })
 

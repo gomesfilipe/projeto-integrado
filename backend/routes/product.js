@@ -13,7 +13,7 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 router.get('/api/all', (req, res) => {
     Product.find()
         .then(products => res.json({products}))
-        .catch(err => res.json('Erro ao buscar produtos.'))
+        .catch(err => res.json({message: 'Erro ao buscar produtos.'}))
 })
 
 router.get('/api/id/:id', (req, res) => {
@@ -22,29 +22,33 @@ router.get('/api/id/:id', (req, res) => {
     Product.findOne({_id: product_id})
         .then(products => {
             if(!products) {
-                return res.json('Produto não encontrado.')
+                return res.json({message: 'Produto não encontrado.'})
             } else {
                 res.json({products})
             }
         })
-        .catch(() => {return res.json('Produto não encontrado.')})
+        .catch(() => {return res.json({message: 'Produto não encontrado.'})})
 })
 
-router.get('/api/name/:name', (req, res) => {
+router.get('/api/name/:name/:page', (req, res) => {
     const product_name = req.params.name
+    const page = req.params.page
+    const size_page = 10
 
     Product.find({name: {
         "$regex": `^(${product_name})`,
         "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
     }})
+        .skip(page > 0 ? ((page - 1) * size_page) : 0)
+        .limit(size_page)
         .then(products => {
             if(!products) {
-                return res.json('Produto não encontrado.')
+                return res.json({message: 'Produto não encontrado.'})
             } else {
                 res.json({products})
             }
         })
-        .catch(() => {return res.json('Produto não encontrado.')})
+        .catch(() => {return res.json({message: 'Produto não encontrado.'})})
 })
 
 router.post('/api', (req, res) => {
@@ -54,7 +58,7 @@ router.post('/api', (req, res) => {
     Product.findOne({name: name1, id_store: id_store1})
         .then(product => {
             if(product) {
-                return res.json('Produto já existente.')
+                return res.json({message: 'Produto já existente.'})
             }
 
             const new_product = new Product({
@@ -73,12 +77,12 @@ router.post('/api', (req, res) => {
                         .then(store => {
                             store.products.push(new_product)
                             store.save()
-                                .then(() => res.json('Produto cadastrado e inserido na loja com sucesso!'))
-                                .catch(err => res.json('Erro ao cadastrar e inserir produto na loja.'+err))
+                                .then(() => res.json({message: 'Produto cadastrado e inserido na loja com sucesso!'}))
+                                .catch(err => res.json({message: 'Erro ao cadastrar e inserir produto na loja.'}))
                         })
-                        .catch(err => res.json('Erro ao cadastrar produto2.'))
+                        .catch(err => res.json({message: 'Erro ao cadastrar produto.'}))
                 })
-                .catch(err => res.json('Erro ao cadastrar produto1.'))  
+                .catch(err => res.json({message: 'Erro ao cadastrar produto.'}))  
         })
 })
 
@@ -88,7 +92,7 @@ router.put('/api/:id', (req, res) => {
     Product.findOne({_id: product_id})
         .then(product => {
             if(!product) {
-                return res.json('Produto não encontrada.')
+                return res.json({message: 'Produto não encontrado.'})
             } else {
                 product.name = req.body.name,
                 product.cost = Number(req.body.cost),
@@ -98,11 +102,11 @@ router.put('/api/:id', (req, res) => {
                 product.unity = req.body.unity
 
                 product.save()
-                    .then(() => res.json('Produto editado com sucesso!'))
-                    .catch(err => res.json('Erro ao editar produto.'))
+                    .then(() => res.json({message: 'Produto editado com sucesso!'}))
+                    .catch(err => res.json({message: 'Erro ao editar produto.'}))
             }
         })
-        .catch(err => res.json('Erro ao editar produto.'))
+        .catch(err => res.json({message: 'Erro ao editar produto.'}))
 })
 
 router.delete('/api/:id', (req, res) => {
@@ -111,7 +115,7 @@ router.delete('/api/:id', (req, res) => {
     Product.findOne({_id: product_id})
         .then(product => {
             if(!product) {
-                return res.json('Produto inexistente.')
+                return res.json({message: 'Produto inexistente.'})
             } else {
                 Store.findOne({_id: product.id_store})
                     .then(store => {
@@ -125,18 +129,18 @@ router.delete('/api/:id', (req, res) => {
                             .then(() => {
                                 Product.deleteOne({_id: product_id})
                                     .then(() => {
-                                        res.json('Produto deletado com sucesso!')
+                                        res.json({message: 'Produto deletado com sucesso!'})
                                     })
-                                    .catch(err => res.json('Erro ao deletar produto.'))
+                                    .catch(err => res.json({message: 'Erro ao deletar produto.'}))
                             })
-                            .catch(err => res.json('Erro ao deletar produto.'))
+                            .catch(err => res.json({message: 'Erro ao deletar produto.'}))
 
                     })
-                    .catch(err => res.json('Erro ao deletar produto.'))     
+                    .catch(err => res.json({message: 'Erro ao deletar produto.'}))     
             }
         })
         .catch(err => {
-            return res.json('Erro ao deletar produto.'+err)
+            return res.json({message: 'Erro ao deletar produto.'})
         })
 })
 
