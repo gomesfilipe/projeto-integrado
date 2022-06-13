@@ -30,10 +30,10 @@ router.get('/api/id/:id', (req, res) => {
         .catch(() => {return res.json({message: 'Produto não encontrado.'})})
 })
 
-router.get('/api/name/:name/:page', (req, res) => {
+router.get('/api/name/:name', (req, res) => {
     const product_name = req.params.name
-    const page = req.params.page
-    const size_page = 10
+    const page = req.body.page
+    const size_page = req.body.size_page
 
     Product.find({name: {
         "$regex": `^(${product_name})`,
