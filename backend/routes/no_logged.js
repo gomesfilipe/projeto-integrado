@@ -1,5 +1,13 @@
 const express = require('express')
 const router = express.Router()
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const auth_config = require('../config/auth')
+// require('../models/Product')
+require('../models/Store')
+// const Product = mongoose.model('products')
+const Store = mongoose.model('stores')
 
 function generate_token(params = {}) {
     const token = jwt.sign(params, auth_config.secret, {
@@ -15,11 +23,11 @@ router.post('/authenticate', async (req, res) => {
     const store = await Store.findOne({username}).select('+password')
 
     if(!store) {
-        return res.json('Usuário não existente.')
+        return res.json({message: 'Usuário não existente.'})
     }
 
     if(!await bcrypt.compare(password, store.password)) {
-        return res.json('Senha incorreta.')
+        return res.json({message: 'Senha incorreta.'})
     }
 
     store.password = undefined // Para não mostrar no json. Não muda no banco de dados pois não deu .save(). 
@@ -41,7 +49,7 @@ router.post('/api', (req, res) => {
     Store.findOne({username: username})
         .then(store => {
             if(store) {
-                return res.json('Usuário já existente.')
+                return res.json({message: 'Usuário já existente.'})
             }
 
             const new_store = new Store({
@@ -59,7 +67,9 @@ router.post('/api', (req, res) => {
                         message: "Loja cadastrada com sucesso!"
                     })
                 })
-                .catch(err => res.json('Erro ao cadastrar loja.'))
+                .catch(err => res.json({message: 'Erro ao cadastrar loja.'}))
         })
-        .catch(err => res.json('Erro ao cadastrar loja.'))
+        .catch(err => res.json({message: 'Erro ao cadastrar loja.'}))
 })
+
+module.exports = router
