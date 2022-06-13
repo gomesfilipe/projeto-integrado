@@ -4,6 +4,7 @@ const store = require('./routes/store')
 const product = require('./routes/product')
 const sale = require('./routes/sale')
 const item = require('./routes/item')
+const nologged = require('./routes/no_logged')
 const mongoose = require('mongoose')
 
 // Configuração mongoose.
@@ -26,6 +27,7 @@ app.use('/store', store) // /store é o prefixo para acessar as rotas desse grup
 app.use('/product', product) // /product é o prefixo para acessar as rotas desse grupo.
 app.use('/sale', sale) // /sale é o prefixo para acessar as rotas desse grupo.
 app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
+app.use('/nologged', nologged)
 
 // TODO
 // Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK (TROCADO PRA ID)
@@ -37,6 +39,8 @@ app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
 // Fazer hash para as senhas. //!OK
 // Fazer mais tipos de buscas para produtos (mais chaves de buscas além das IDs). //!OK
 // Ver como fazer sessão de login. //!OK
+// Passar todas as mensagens de erro para json. //!OK
+// Fazer paginação nas rotas de consulta. //!OK
 // Fazer validação dos dados.
 // Fazer interface da API.
 
