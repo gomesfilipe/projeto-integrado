@@ -42,7 +42,8 @@ app.use('/nologged', nologged)
 // Passar todas as mensagens de erro para json. //!OK
 // Fazer paginação nas rotas de consulta. //!OK
 // Fazer validação dos dados.
-// Fazer interface da API.
+// Documentar para facilitar o desenvolvimento do front-end. (Swagger)
+// Fazer validação de parâmetros nas rotas.
 
 // TODO TESTES
 // Testes CRUD Stores //!OK
