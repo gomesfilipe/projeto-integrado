@@ -48,8 +48,7 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 router.get('/api', (req, res) => {
     Store.find()
         .then(stores => res.json({stores}))
-        .catch(err => res.json({message: 'Erro ao buscas lojas.'}))
-        // .catch(err => res.json('Erro ao buscar lojas.'))
+        .catch(err => res.json({ message: 'Erro ao buscas lojas.' }))
 })
 
 router.get('/api/:id', (req, res) => {
@@ -58,12 +57,12 @@ router.get('/api/:id', (req, res) => {
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json({message: 'Loja não encontrada.'})
+                return res.json({ message: 'Loja não encontrada.' })
             } else {
                 res.json({store})
             }
         })
-        .catch(() => {return res.json({message: 'Loja não encontrada.'})})
+        .catch(() => {return res.json({ message: 'Loja não encontrada.' })})
 })
 
 // router.post('/api', (req, res) => {
@@ -119,10 +118,15 @@ router.get('/api/:id', (req, res) => {
 router.put('/api/:id', (req, res) => {
     const store_id = req.params.id
 
+    if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
+        return res.json({ message: 'Faltam dados.' })
+
+    //! Validar username, password e admin_password (definir critérios).
+
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json({message: 'Loja não encontrada.'})
+                return res.json({ message: 'Loja não encontrada.' })
             } else {
                 store.name = req.body.name,
                 store.username = req.body.username,
@@ -130,11 +134,11 @@ router.put('/api/:id', (req, res) => {
                 store.admin_password = req.body.admin_password
 
                 store.save()
-                    .then(() => res.json({message: 'Loja editada com sucesso!'}))
-                    .catch(err => res.json({message: 'Erro ao editar loja.'}))
+                    .then(() => res.json({ message: 'Loja editada com sucesso!' }))
+                    .catch(err => res.json({ message: 'Erro ao editar loja.' }))
             }
         })
-        .catch(err => res.json({message: 'Erro ao editar loja.'}))
+        .catch(err => res.json({ message: 'Erro ao editar loja.' }))
 })
 
 router.delete('/api/:id', (req, res) => {
@@ -143,17 +147,17 @@ router.delete('/api/:id', (req, res) => {
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json({message: 'Loja inexistente.'})
+                return res.json({ message: 'Loja inexistente.' })
             } else {
                 Store.deleteOne({_id: store_id})
                     .then(() => {
-                        res.json({message: 'Loja deletada com sucesso!'})
+                        res.json({ message: 'Loja deletada com sucesso!' })
                     })
-                    .catch(err => res.json({message: 'Erro ao deletar loja.'}))
+                    .catch(err => res.json({ message: 'Erro ao deletar loja.' }))
             }
         })
         .catch(err => {
-            return res.json({message: 'Erro ao deletar loja.'})
+            return res.json({ message: 'Erro ao deletar loja.' })
         })
 })
 

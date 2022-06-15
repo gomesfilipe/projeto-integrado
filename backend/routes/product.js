@@ -13,7 +13,7 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 router.get('/api/all', (req, res) => {
     Product.find()
         .then(products => res.json({products}))
-        .catch(err => res.json({message: 'Erro ao buscar produtos.'}))
+        .catch(err => res.json({ message: 'Erro ao buscar produtos.' }))
 })
 
 router.get('/api/id/:id', (req, res) => {
@@ -22,18 +22,24 @@ router.get('/api/id/:id', (req, res) => {
     Product.findOne({_id: product_id})
         .then(products => {
             if(!products) {
-                return res.json({message: 'Produto não encontrado.'})
+                return res.json({ message: 'Produto não encontrado.' })
             } else {
                 res.json({products})
             }
         })
-        .catch(() => {return res.json({message: 'Produto não encontrado.'})})
+        .catch(() => {return res.json({ message: 'Produto não encontrado.' })})
 })
 
 router.get('/api/name/:name', (req, res) => {
     const product_name = req.params.name
     const page = req.body.page
     const size_page = req.body.size_page
+
+    if(!product_name || !page || !size_page)
+        return res.json({ message: 'Faltam dados.' })
+
+    if(isNaN(page) || isNaN(size_page))
+        return res.json({ message: 'Há dados inválidos.'})
 
     Product.find({name: {
         "$regex": `^(${product_name})`,
@@ -43,22 +49,28 @@ router.get('/api/name/:name', (req, res) => {
         .limit(size_page)
         .then(products => {
             if(!products) {
-                return res.json({message: 'Produto não encontrado.'})
+                return res.json({ message: 'Produto não encontrado.' })
             } else {
                 res.json({products})
             }
         })
-        .catch(() => {return res.json({message: 'Produto não encontrado.'})})
+        .catch(() => {return res.json({ message: 'Produto não encontrado.' })})
 })
 
 router.post('/api', (req, res) => {
     const name1 = req.body.name
     const id_store1 = req.body.id_store
 
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.unity || !req.body.id_store)
+        return res.json({ message: 'Faltam dados.' })
+
+    if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
+        return res.json({ message: 'Há dados inválidos.'})
+
     Product.findOne({name: name1, id_store: id_store1})
         .then(product => {
             if(product) {
-                return res.json({message: 'Produto já existente.'})
+                return res.json({ message: 'Produto já existente.' })
             }
 
             const new_product = new Product({
@@ -77,22 +89,29 @@ router.post('/api', (req, res) => {
                         .then(store => {
                             store.products.push(new_product)
                             store.save()
-                                .then(() => res.json({message: 'Produto cadastrado e inserido na loja com sucesso!'}))
-                                .catch(err => res.json({message: 'Erro ao cadastrar e inserir produto na loja.'}))
+                                .then(() => res.json({ message: 'Produto cadastrado e inserido na loja com sucesso!' }))
+                                .catch(err => res.json({ message: 'Erro ao cadastrar e inserir produto na loja.' }))
                         })
-                        .catch(err => res.json({message: 'Erro ao cadastrar produto.'}))
+                        .catch(err => res.json({ message: 'Erro ao cadastrar produto.' }))
                 })
-                .catch(err => res.json({message: 'Erro ao cadastrar produto.'}))  
+                .catch(err => res.json({ message: 'Erro ao cadastrar produto.' }))  
         })
 })
 
 router.put('/api/:id', (req, res) => {
     const product_id = req.params.id
 
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.quantity)
+        return res.json({ message: 'Faltam dados.' })
+
+    if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
+        return res.json({ message: 'Há dados inválidos.'})
+
+
     Product.findOne({_id: product_id})
         .then(product => {
             if(!product) {
-                return res.json({message: 'Produto não encontrado.'})
+                return res.json({ message: 'Produto não encontrado.' })
             } else {
                 product.name = req.body.name,
                 product.cost = Number(req.body.cost),
@@ -102,11 +121,11 @@ router.put('/api/:id', (req, res) => {
                 product.unity = req.body.unity
 
                 product.save()
-                    .then(() => res.json({message: 'Produto editado com sucesso!'}))
-                    .catch(err => res.json({message: 'Erro ao editar produto.'}))
+                    .then(() => res.json({ message: 'Produto editado com sucesso!' }))
+                    .catch(err => res.json({ message: 'Erro ao editar produto.' }))
             }
         })
-        .catch(err => res.json({message: 'Erro ao editar produto.'}))
+        .catch(err => res.json({ message: 'Erro ao editar produto.' }))
 })
 
 router.delete('/api/:id', (req, res) => {
@@ -115,7 +134,7 @@ router.delete('/api/:id', (req, res) => {
     Product.findOne({_id: product_id})
         .then(product => {
             if(!product) {
-                return res.json({message: 'Produto inexistente.'})
+                return res.json({ message: 'Produto inexistente.' })
             } else {
                 Store.findOne({_id: product.id_store})
                     .then(store => {
@@ -129,18 +148,18 @@ router.delete('/api/:id', (req, res) => {
                             .then(() => {
                                 Product.deleteOne({_id: product_id})
                                     .then(() => {
-                                        res.json({message: 'Produto deletado com sucesso!'})
+                                        res.json({ message: 'Produto deletado com sucesso!' })
                                     })
-                                    .catch(err => res.json({message: 'Erro ao deletar produto.'}))
+                                    .catch(err => res.json({ message: 'Erro ao deletar produto.' }))
                             })
-                            .catch(err => res.json({message: 'Erro ao deletar produto.'}))
+                            .catch(err => res.json({ message: 'Erro ao deletar produto.' }))
 
                     })
-                    .catch(err => res.json({message: 'Erro ao deletar produto.'}))     
+                    .catch(err => res.json({ message: 'Erro ao deletar produto.' }))     
             }
         })
         .catch(err => {
-            return res.json({message: 'Erro ao deletar produto.'})
+            return res.json({ message: 'Erro ao deletar produto.' })
         })
 })
 

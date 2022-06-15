@@ -20,14 +20,17 @@ function generate_token(params = {}) {
 router.post('/authenticate', async (req, res) => {
     const {username, password} = req.body
 
+    if(!username || !password)
+        return res.json({ message: 'Faltam dados.' })
+
     const store = await Store.findOne({username}).select('+password')
 
     if(!store) {
-        return res.json({message: 'Usuário não existente.'})
+        return res.json({ message: 'Usuário não existente.' })
     }
 
     if(!await bcrypt.compare(password, store.password)) {
-        return res.json({message: 'Senha incorreta.'})
+        return res.json({ message: 'Senha incorreta.' })
     }
 
     store.password = undefined // Para não mostrar no json. Não muda no banco de dados pois não deu .save(). 
@@ -45,11 +48,16 @@ router.post('/authenticate', async (req, res) => {
 // Rota para efetuar cadastro.
 router.post('/api', (req, res) => {
     const username = req.body.username
+     
+    if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
+        return res.json({ message: 'Faltam dados.' })
     
+    //! Validar username, password e admin_password (definir critérios).
+
     Store.findOne({username: username})
         .then(store => {
             if(store) {
-                return res.json({message: 'Usuário já existente.'})
+                return res.json({ message: 'Usuário já existente.' })
             }
 
             const new_store = new Store({
@@ -67,9 +75,9 @@ router.post('/api', (req, res) => {
                         message: "Loja cadastrada com sucesso!"
                     })
                 })
-                .catch(err => res.json({message: 'Erro ao cadastrar loja.'}))
+                .catch(err => res.json({ message: 'Erro ao cadastrar loja.' }))
         })
-        .catch(err => res.json({message: 'Erro ao cadastrar loja.'}))
+        .catch(err => res.json({ message: 'Erro ao cadastrar loja.' }))
 })
 
 module.exports = router
