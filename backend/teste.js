@@ -20,8 +20,14 @@
 // var vetor = [{nome: 'teste'},{nome: 'testando'}]
 // console.log(typeof(vetor))
 
-if(null) {
-    console.log('entrou')
-} else {
-    console.log('nao entrou')
-}
+// if(null) {
+//     console.log('entrou')
+// } else {
+//     console.log('nao entrou')
+// }
+
+console.log(isNaN('1'))
+console.log(isNaN('-1'))
+console.log(isNaN('-1.3'))
+console.log(isNaN('1.5'))
+console.log(isNaN('a'))
