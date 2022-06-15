@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost/sisve')
     .then(() => console.log('Connected database!'))
     .catch(() => console.log('Error to connect database.'))
 
-// Rodando servidor
+// Rodando servidor.
 const port = 8081
 app.listen(port, () => {
     console.log(`The server is running in http://localhost:${port}`)
@@ -22,15 +22,15 @@ app.listen(port, () => {
 // Middleware.
 app.use(express.json())
 
-// Usando rotas user
+// Usando rotas user.
 app.use('/store', store) // /store é o prefixo para acessar as rotas desse grupo.
 app.use('/product', product) // /product é o prefixo para acessar as rotas desse grupo.
 app.use('/sale', sale) // /sale é o prefixo para acessar as rotas desse grupo.
 app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
-app.use('/nologged', nologged)
+app.use('/nologged', nologged) // /nologged é o prefixo para acessar as rotas desse grupo.
 
 // TODO
-// Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK (TROCADO PRA ID)
+// Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK
 // Verificar se já existe produto ou loja com mesmo nome no CRUD. //!OK
 // Ver como inserir produtos na lista de produtos de uma loja específica. //!OK
 // Ajeitar model de produtos (todo produto pertence a uma loja). //! OK
@@ -41,9 +41,12 @@ app.use('/nologged', nologged)
 // Ver como fazer sessão de login. //!OK
 // Passar todas as mensagens de erro para json. //!OK
 // Fazer paginação nas rotas de consulta. //!OK
-// Fazer validação dos dados.
-// Documentar para facilitar o desenvolvimento do front-end. (Swagger)
-// Fazer validação de parâmetros nas rotas.
+// Fazer validação de parâmetros nas rotas. //!OK
+// Fazer validação de dados numéricos //!OK
+// Ver como validar datas no formato ISO.
+// Definir critérios de validação de username, password e admin_password.
+// Documentar para facilitar o desenvolvimento do front-end. (Swagger).
+// Fazer testes das validações já feitas (de parâmetros vindos do req.body e dos parâmetros numéricos).
 
 // TODO TESTES
 // Testes CRUD Stores //!OK
