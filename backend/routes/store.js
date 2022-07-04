@@ -5,128 +5,139 @@ require('../models/Store')
 require('../models/Product')
 const Store = mongoose.model('stores')
 const Product = mongoose.model('products')
-// const bcrypt = require('bcryptjs')
-// const jwt = require('jsonwebtoken')
-// const auth_config = require('../config/auth')
 const auth_middleware = require('../middlewares/auth')
 
 router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
-// function generate_token(params = {}) {
-//     const token = jwt.sign(params, auth_config.secret, {
-//         expiresIn: 86400 // 1 dia.
-//     })
-//     return token
-// }
+/**
+ * @swagger
+ * securityDefinitions:
+ *     Bearer:
+ *       description: Efetue login para obter o token de autenticação.
+ *       type: apiKey
+ *       name: Authorization
+ *       in: header
+ */
 
-// // Autenticação após efetuar login.
-// router.post('/authenticate', async (req, res) => {
-//     const {username, password} = req.body
-
-//     const store = await Store.findOne({username}).select('+password')
-
-//     if(!store) {
-//         return res.json('Usuário não existente.')
-//     }
-
-//     if(!await bcrypt.compare(password, store.password)) {
-//         return res.json('Senha incorreta.')
-//     }
-
-//     store.password = undefined // Para não mostrar no json. Não muda no banco de dados pois não deu .save(). 
-
-//     // const token = jwt.sign({id: store._id}, auth_config.secret, {
-//     //     expiresIn: 86400
-//     // })
-
-//     res.json({
-//         store, 
-//         token: generate_token({id: store._id})
-//     })
-// })
-
+/**
+ * @swagger
+ * /store/api:
+ *      get:
+ *          summary: Busca de todas as lojas.
+ *          description: Rota para consultar todas as lojas cadastradas.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Lojas consultadas com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar lojas no banco de dados.
+ *              '401':
+ *                  description: Token inválido.
+ */
 router.get('/api', (req, res) => {
     Store.find()
-        .then(stores => res.json({stores}))
-        .catch(err => res.json({ message: 'Erro ao buscas lojas.' }))
+        .then(stores => res.status(200).json({stores}))
+        .catch(err => res.status(400).json({ message: 'Erro ao buscar lojas.' }))
 })
 
+/**
+ * @swagger
+ * /store/api/{id}:
+ *      get:
+ *          summary: Busca de loja por id.
+ *          description: Rota para consultar uma loja específica por id.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: id
+ *            type: string
+ *            required: true
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Loja consultada com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar loja no banco de dados ou loja não encontrada.
+ *              '401':
+ *                  description: Token inválido.
+ */
 router.get('/api/:id', (req, res) => {
     const store_id = req.params.id
 
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json({ message: 'Loja não encontrada.' })
+                return res.status(400).json({ message: 'Loja não encontrada.' })
             } else {
-                res.json({store})
+                res.status(200).json({store})
             }
         })
-        .catch(() => {return res.json({ message: 'Loja não encontrada.' })})
+        .catch(() => {return res.status(400).json({ message: 'Loja não encontrada.' })})
 })
 
-// router.post('/api', (req, res) => {
-//     const username = req.body.username
-    
-//     Store.findOne({username: username})
-//         .then(store => {
-//             if(store) {
-//                 return res.json('Usuário já existente.')
-//             }
-
-//             const new_store = new Store({
-//                 name: req.body.name,
-//                 username: req.body.username,
-//                 password: req.body.password,
-//                 admin_password: req.body.admin_password
-//             })
-            
-//             new_store.save()
-//                 .then(() => {
-//                     res.json({
-//                         new_store,
-//                         token: generate_token({id: new_store._id}), // Enviando token para já entrar na conta após cadastrar.
-//                         message: "Loja cadastrada com sucesso!"
-//                     })
-//                 })
-//                 .catch(err => res.json('Erro ao cadastrar loja.'))
-//         })
-//         .catch(err => res.json('Erro ao cadastrar loja.'))
-// })
-
-// router.post('/api', (req, res) => {
-//     const username = req.body.username
-    
-//     Store.findOne({username: username})
-//         .then(store => {
-//             if(store) {
-//                 return res.json('Usuário já existente.')
-//             }
-
-//             new Store({
-//                 name: req.body.name,
-//                 username: req.body.username,
-//                 password: req.body.password,
-//                 admin_password: req.body.admin_password
-//             }).save()
-//                 .then(() => res.json('Loja cadastrada com sucesso!'))
-//                 .catch(err => res.json('Erro ao cadastrar loja.'))
-//         })
-//         .catch(err => res.json('Erro ao cadastrar loja.'))
-// })
-
+/**
+ * @swagger
+ * /store/api/{id}:
+ *      put:
+ *          summary: Edição de loja por id.
+ *          description: Rota para editar informações de uma loja específica por id.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: id
+ *            type: string
+ *            required: true
+ *          
+ *          - in: body
+ *            name: store
+ *            schema:
+ *              type: object
+ *              properties:
+ *                name:
+ *                  type: string
+ *                  example: Loja
+ *                username:
+ *                  type: string
+ *                  example: loja123
+ *                password:
+ *                  type: string
+ *                  example: 123456
+ *                admin_password:
+ *                  type: string
+ *                  example: 123456admin
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Loja editada com sucesso!
+ *              '400':
+ *                  description: Erro ao editar loja no banco de dados ou loja não encontrada.
+ *              '401':
+ *                  description: Token inválido.
+ */
 router.put('/api/:id', (req, res) => {
     const store_id = req.params.id
 
     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
-        return res.json({ message: 'Faltam dados.' })
+        return res.status(400).json({ message: 'Faltam dados.' })
 
     //! Validar username, password e admin_password (definir critérios).
 
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json({ message: 'Loja não encontrada.' })
+                return res.status(400).json({ message: 'Loja não encontrada.' })
             } else {
                 store.name = req.body.name,
                 store.username = req.body.username,
@@ -135,29 +146,54 @@ router.put('/api/:id', (req, res) => {
 
                 store.save()
                     .then(() => res.json({ message: 'Loja editada com sucesso!' }))
-                    .catch(err => res.json({ message: 'Erro ao editar loja.' }))
+                    .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
             }
         })
-        .catch(err => res.json({ message: 'Erro ao editar loja.' }))
+        .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
 })
 
+/**
+ * @swagger
+ * /store/api/{id}:
+ *      delete:
+ *          summary: Remoção de loja por id.
+ *          description: Rota para excluir uma loja específica por id.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: id
+ *            type: string
+ *            required: true
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Loja deletada com sucesso!
+ *              '400':
+ *                  description: Erro ao deletar loja no banco de dados ou loja não encontrada.
+ *              '401':
+ *                  description: Token inválido.
+ */
 router.delete('/api/:id', (req, res) => {
     const store_id = req.params.id
 
     Store.findOne({_id: store_id})
         .then(store => {
             if(!store) {
-                return res.json({ message: 'Loja inexistente.' })
+                return res.status(400).json({ message: 'Loja inexistente.' })
             } else {
                 Store.deleteOne({_id: store_id})
                     .then(() => {
-                        res.json({ message: 'Loja deletada com sucesso!' })
+                        res.status(200).json({ message: 'Loja deletada com sucesso!' })
                     })
-                    .catch(err => res.json({ message: 'Erro ao deletar loja.' }))
+                    .catch(err => res.status(400).json({ message: 'Erro ao deletar loja.' }))
             }
         })
         .catch(err => {
-            return res.json({ message: 'Erro ao deletar loja.' })
+            return res.status(400).json({ message: 'Erro ao deletar loja.' })
         })
 })
 
