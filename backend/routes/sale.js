@@ -87,9 +87,6 @@ router.get('/api/dates', (req, res) => {
  *                value:
  *                  type: string
  *                  example: 120.00
- *                id_store:
- *                  type: string
- *                  example: 62c2440e7e340b831c3ab807
  * 
  *          responses: 
  *              '200': 
@@ -100,7 +97,7 @@ router.get('/api/dates', (req, res) => {
  *                  description: Token inválido.
  */
 router.post('/api', (req, res) => {
-    if(!req.body.items || !req.body.value || !req.body.id_store)
+    if(!req.body.items || !req.body.value /*|| !req.body.id_store*/)
         return res.status(400).json({ message: 'Faltam dados.' })
     
     if(isNaN(req.body.value))
@@ -110,15 +107,15 @@ router.post('/api', (req, res) => {
     const sale = new Sale({
         items: req.body.items,
         value: req.body.value,
-        id_store: req.body.id_store
+        id_store: req.store_id
+        // id_store: req.body.id_store
     })
 
     sale.save()
         .then(() => {
-            Store.findOne({_id: req.body.id_store})
+            Store.findOne({_id: req.store_id/*req.body.id_store*/})
                 .then(store => {
                     store.sales.push(sale)
-                    console.log('chegou aqui')
                     store.save()
                         .then(() => res.status(200).json({ message: 'Venda concluída com sucesso!' }))
                         .catch(err => res.status(400).json({ message: 'Erro ao concluir venda.' }))

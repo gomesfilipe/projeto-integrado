@@ -69,9 +69,6 @@ router.get('/api', (req, res) => {
  *                quantity:
  *                  type: string
  *                  example: 3
- *                id_store:
- *                  type: string
- *                  example: 62c2440e7e340b831c3ab807
  * 
  *          responses: 
  *              '200': 
@@ -84,7 +81,7 @@ router.get('/api', (req, res) => {
  *                  description: Token inválido.
  */
 router.post('/api', (req, res) => {
-    if(!req.body.id_product || !req.body.id_store || !req.body.quantity)
+    if(!req.body.id_product || /*!req.body.id_store ||*/ !req.body.quantity)
         return res.status(400).json({ message: 'Faltam dados.' })
     
     if(isNaN(req.body.quantity))
@@ -92,7 +89,8 @@ router.post('/api', (req, res) => {
         
     const item = new Item({
         id_product: req.body.id_product,
-        id_store: req.body.id_store,
+        id_store: req.store_id, // Campo store_id da requisição vem do middleware de autenticação.
+        // id_store: req.body.id_store,
         quantity: Number(req.body.quantity)
     })
 

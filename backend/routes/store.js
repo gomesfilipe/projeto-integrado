@@ -39,6 +39,7 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
  *                  description: Token inválido.
  */
 router.get('/api', (req, res) => {
+    console.log(req.store_id)
     Store.find()
         .then(stores => res.status(200).json({stores}))
         .catch(err => res.status(400).json({ message: 'Erro ao buscar lojas.' }))
@@ -85,21 +86,15 @@ router.get('/api/:id', (req, res) => {
 
 /**
  * @swagger
- * /store/api/{id}:
+ * /store/api:
  *      put:
- *          summary: Edição de loja por id.
- *          description: Rota para editar informações de uma loja específica por id.
- *                       É necessário estar logado para acessá-la.
+ *          summary: Edição de loja.
+ *          description: Rota para editar informações da loja que estiver logada.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
  *          
  *          parameters:
- *          - in: path
- *            name: id
- *            type: string
- *            required: true
- *          
  *          - in: body
  *            name: store
  *            schema:
@@ -126,8 +121,9 @@ router.get('/api/:id', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.put('/api/:id', (req, res) => {
-    const store_id = req.params.id
+router.put('/api', (req, res) => { // Tirei o parâmetro id do path.
+    const store_id = req.store_id
+    // const store_id = req.params.id
 
     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
         return res.status(400).json({ message: 'Faltam dados.' })
@@ -154,20 +150,13 @@ router.put('/api/:id', (req, res) => {
 
 /**
  * @swagger
- * /store/api/{id}:
+ * /store/api:
  *      delete:
- *          summary: Remoção de loja por id.
- *          description: Rota para excluir uma loja específica por id.
- *                       É necessário estar logado para acessá-la.
+ *          summary: Remoção de loja.
+ *          description: Rota para excluir a loja que estiver logada.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
- *          
- *          parameters:
- *          - in: path
- *            name: id
- *            type: string
- *            required: true
  * 
  *          responses: 
  *              '200': 
@@ -177,8 +166,9 @@ router.put('/api/:id', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.delete('/api/:id', (req, res) => {
-    const store_id = req.params.id
+router.delete('/api', (req, res) => { // Tirei o parâmetro id do path.
+    const store_id = req.store_id
+    // const store_id = req.params.id
 
     Store.findOne({_id: store_id})
         .then(store => {

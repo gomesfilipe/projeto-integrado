@@ -184,9 +184,6 @@ router.get('/api/name/:name/:page/:size_page', (req, res) => {
  *                unity:
  *                  type: string
  *                  example: Unidade
- *                id_store:
- *                  type: string
- *                  example: 62c09d7840704893c5334865
  * 
  *          responses: 
  *              '200': 
@@ -200,9 +197,10 @@ router.get('/api/name/:name/:page/:size_page', (req, res) => {
  */
 router.post('/api', (req, res) => {
     const name1 = req.body.name
-    const id_store1 = req.body.id_store
+    const id_store1 = req.store_id // Este campo da requisição vem do middleware de autenticação.
+    // const id_store1 = req.body.id_store
 
-    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.unity || !req.body.id_store)
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.unity /*|| !req.body.id_store*/)
         return res.status(400).json({ message: 'Faltam dados.' })
 
     if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
@@ -221,12 +219,13 @@ router.post('/api', (req, res) => {
                 quantity: Number(req.body.quantity),
                 photo: req.body.photo,
                 unity: req.body.unity,
-                id_store: req.body.id_store
+                id_store: req.store_id
+                // id_store: req.body.id_store
             })
 
             new_product.save()
                 .then(() => {
-                    Store.findOne({_id: req.body.id_store})
+                    Store.findOne({_id: req.store_id}/*req.body.id_store}*/)
                         .then(store => {
                             store.products.push(new_product)
                             store.save()
