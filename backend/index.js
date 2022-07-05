@@ -81,8 +81,20 @@ app.listen(port, () => {
 // Ver como fazer upload de imagens (ou remover este campo).
 // No cadastro de produto deve verificar se o id da loja existe.
 // No cadastro de item deve verificar se o id da loja e produto existem.
-// Colocar middleware para verificar se o usuário logado está fazendo ações na própria loja.
+// Colocar middleware para verificar se o usuário logado está fazendo ações na própria loja. (usar campo req.id_store)
+// Usar req.id_store nas rotas que usam id_store, para o usuário não ter a responsabilidade de saber o id da loja.
 // Mudar implementação da rota de consultar venda entre datas. Parâmetros devem ser dia, mês e ano no path.
+// Fazer rota de logout (cancelar token).
+// Fazer tratamento de paginação na rota busca de produtos por nome (se passar número de página muito grande).
+// Colocar id da venda nos itens após fechar uma venda.
+// Fazer verificação se a quantidade de itens é menor ou igual ao estoque 
+// Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não).
+// Além da mensagem de sucesso, enviar os dados do produto / venda / loja / item cadastrados pelo cliente. (decidir).
+// Passar cadastro de loja para o grupo de rotas store.
+// Desfazer grupo de rotas nologged e criar um novo grupo para login/logout.
+// Ver como fazer o middleware atuar numa rota específica e não no arquivo inteiro de rota (para fazer o resquisito acima).
+// Edição de username de loja, nome de produto não pode deixar ocorrer repetição.
+// Cancelar token ao deletar loja.
 
 // TODO TESTES
 // Testes CRUD Stores //!OK
