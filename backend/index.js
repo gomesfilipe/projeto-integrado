@@ -75,13 +75,14 @@ app.listen(port, () => {
 // Fazer testes das validações já feitas (de parâmetros vindos do req.body e dos parâmetros numéricos).
 // Fazer scripts de testes.
 // Ver documentação do describe.
-// Mudar implementação da rota de deletar loja (deve excluir os produtos e vendas associadas a ela).
+// Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela).
 // Fazer verificação se loja existe no cadastro de produtos.
 // Remover campo admin_password da model Store.
 // Ver como fazer upload de imagens (ou remover este campo).
 // No cadastro de produto deve verificar se o id da loja existe.
 // No cadastro de item deve verificar se o id da loja e produto existem.
 // Colocar middleware para verificar se o usuário logado está fazendo ações na própria loja.
+// Mudar implementação da rota de consultar venda entre datas. Parâmetros devem ser dia, mês e ano no path.
 
 // TODO TESTES
 // Testes CRUD Stores //!OK
