@@ -303,16 +303,32 @@ router.put('/api/:id', (req, res) => {
             if(!product) {
                 return res.status(400).json({ message: 'Produto não encontrado.' })
             } else {
-                product.name = req.body.name,
+                // product.name = req.body.name,
                 product.cost = Number(req.body.cost),
                 product.sale = Number(req.body.sale),
                 product.quantity = Number(req.body.quantity),
                 product.photo = req.body.photo,
                 product.unity = req.body.unity
 
-                product.save()
-                    .then(() => res.status(200).json({ message: 'Produto editado com sucesso!' }))
-                    .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
+                if(product.name != req.body.name) { // Mudança de nome do produto, verificar se já existe ou não.
+                    Product.findOne({name: req.body.name, id_store: req.store_id})
+                        .then(product2 => {
+                            if(product2) { // Tem produto com o mesmo nome.
+                                return res.status(400).json({ message: 'Nome do produto já está em uso.'})
+                            } else {
+                                product.name = req.body.name
+                                product.save()
+                                    .then(() => res.status(200).json({ message: 'Produto editado com sucesso!' }))
+                                    .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
+                            }
+                        })
+                        .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
+                } else {
+                    product.save()
+                        .then(() => res.status(200).json({ message: 'Produto editado com sucesso!' }))
+                        .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
+                }
+
             }
         })
         .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
