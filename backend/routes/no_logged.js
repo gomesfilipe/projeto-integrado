@@ -115,7 +115,7 @@ router.post('/api', (req, res) => {
     //! Validar username, password e admin_password (definir critérios).
 
     Store.findOne({username: username})
-        .then(store => {
+        .then(async store => {
             if(store) {
                 return res.status(400).json({ message: 'Usuário já existente.' })
             }
@@ -123,9 +123,16 @@ router.post('/api', (req, res) => {
             const new_store = new Store({
                 name: req.body.name,
                 username: req.body.username,
-                password: req.body.password,
-                admin_password: req.body.admin_password
+                password: await bcrypt.hash(req.body.password, 10),
+                admin_password: await bcrypt.hash(req.body.admin_password, 10)
             })
+
+            // const new_store = new Store({
+            //     name: req.body.name,
+            //     username: req.body.username,
+            //     password: req.body.password,
+            //     admin_password: req.body.admin_password
+            // })
             
             new_store.save()
                 .then(() => {
