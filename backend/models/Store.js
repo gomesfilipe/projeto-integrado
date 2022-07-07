@@ -37,19 +37,19 @@ const Store = new Schema({
     }]
 })
 
-Store.pre('save', async function(next) {
-    // Verificação para garantir que as senhas só são encriptadas no cadastro, 
-    // e não no cadastro de produtos.
-    if(this.password != undefined && this.admin_password != undefined) {
-        const hash_password = await bcrypt.hash(this.password, 10)
-        this.password = hash_password
+// Store.pre('save', async function(next) {
+//     // Verificação para garantir que as senhas só são encriptadas no cadastro, 
+//     // e não no cadastro de produtos.
+//     if(this.password != undefined && this.admin_password != undefined) {
+//         const hash_password = await bcrypt.hash(this.password, 10)
+//         this.password = hash_password
 
-        const hash_admin_password = await bcrypt.hash(this.password, 10)
-        this.admin_password = hash_admin_password
-    }
+//         const hash_admin_password = await bcrypt.hash(this.admin_password, 10)
+//         this.admin_password = hash_admin_password
+//     }
 
-    next()
-})
+//     next()
+// })
 
 mongoose.model('stores', Store)
 module.exports = Store
