@@ -130,16 +130,17 @@ router.get('/api/name/:name/:page/:size_page', (req, res) => {
     if(!product_name || !page || !size_page)
         return res.status(400).json({ message: 'Faltam dados.' })
 
-    if(isNaN(page) || isNaN(size_page))
+    if(isNaN(page) || isNaN(size_page) || size_page <= 0)
         return res.status(400).json({ message: 'Há dados inválidos.'})
 
     Product.find({name: {
         "$regex": `^(${product_name})`,
         "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
-    }})
+    }, id_store: req.store_id})
         .skip(page > 0 ? ((page - 1) * size_page) : 0)
         .limit(size_page)
         .then(products => {
+            console.log(products)
             if(!products) {
                 return res.status(400).json({ message: 'Produto não encontrado.' })
             } else {
