@@ -79,6 +79,14 @@ app.listen(port, () => {
 // Edição de username de loja, nome de produto não pode deixar ocorrer repetição. //!OK
 // Fazer tratamento de paginação na rota busca de produtos por nome (se passar número de página muito grande). //!OK
 // Mudar implementação da rota de consultar vendas entre datas. Parâmetros devem ser dia, mês e ano no path. //!OK
+// Ver como fazer o middleware atuar numa rota específica e não no arquivo inteiro de rota (para fazer o resquisito acima). //!OK
+// Mudar get de loja por id pra get na própria loja. //!OK
+// Tirar middleware da rota get all lojas. //!OK
+// Tirar middleware da rota get all products. //!OK
+// Tirar middleware da rota get all sales. //!OK
+// Mudar get de produto por id pra get de produtos da propria loja (fazer paginação???) //!OK
+// Fazer rota get para pegar todas as vendas da loja. //!OK
+// Adaptar rotas para fazer as ações da loja que está logada. //!OK
 
 //? BAIXA PRIORIDADE
 // Definir critérios de validação de username, password e admin_password.
@@ -86,28 +94,20 @@ app.listen(port, () => {
 // Fazer verificação se a quantidade de itens é menor ou igual ao estoque.
 // Além da mensagem de sucesso, enviar os dados do produto / venda / loja / item cadastrados pelo cliente. (decidir).
 // Passar cadastro de loja para o grupo de rotas store.
-// Desfazer grupo de rotas nologged e criar um novo grupo para login/logout.
 // Fazer rota de logout (cancelar token).
 // Cancelar token ao deletar loja.
 
 //? ALTA PRIORIDADE
-// Adaptar rotas para fazer as ações da loja que está logada.
-    // Mudar get de loja por id pra get na própria loja.
-    // Tirar middleware da rota get all lojas.
-    // Tirar middleware da rota get all products.
-    // Mudar get de produto por id pra get de produtos da propria loja (fazer paginação???)
-    // Tirar middleware da rota get all sales.
-    // Descontar estoque no cadastro de vendas e retornar estoque na exclusão de vendas.
-    // Fazer rota get para pegar todas as vendas da loja.
-
 // Adaptar o crud de vendas, remover crud de itens.
+// Descontar estoque no cadastro de vendas e retornar estoque na exclusão de vendas.
 
 // Não deixar acessar rota de login quando estiver logado.
 
-// Ver como fazer o middleware atuar numa rota específica e não no arquivo inteiro de rota (para fazer o resquisito acima).
+// Desfazer grupo de rotas nologged e criar um novo grupo para login/logout.
 // No cadastro de item deve verificar se o id da loja e produto existem.
 // Colocar id da venda nos itens após fechar uma venda.
 // Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela). 
 // Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo). //? BAIXA PRIORIDADE
 // Fazer scripts de testes.
 // Ver documentação do describe.
+// Conferir documentação e melhorá-la com mais detalhes.
