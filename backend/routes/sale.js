@@ -12,7 +12,7 @@ const Item = mongoose.model('items')
 
 const auth_middleware = require('../middlewares/auth')
 
-router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
+// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
 /**
  * @swagger
@@ -32,8 +32,6 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
  *          description: Rota para consultar todas as vendas efetuadas.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Sale]
- *          security:
- *            - Bearer: []
  * 
  *          responses: 
  *              '200': 
@@ -45,6 +43,31 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
  */
 router.get('/api/all', (req, res) => {
     Sale.find()
+        .then(sales => res.status(200).json({sales}))
+        .catch(err => res.status(400).json({ message: 'Erro ao buscar vendas.' }))
+})
+
+/**
+ * @swagger
+ * /sale/api:
+ *      get:
+ *          summary: Busca de todas as vendas da loja que está logada.
+ *          description: Rota para consultar todas as vendas efetuadas pela loja logada.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Sale]
+ *          security:
+ *            - Bearer: []
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Produtos consultados com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar produtos no banco de dados.
+ *              '401':
+ *                  description: Token inválido.
+ */
+router.get('/api', auth_middleware, (req, res) => {
+    Sale.find({id_store: req.store_id})
         .then(sales => res.status(200).json({sales}))
         .catch(err => res.status(400).json({ message: 'Erro ao buscar vendas.' }))
 })
@@ -79,7 +102,7 @@ router.get('/api/all', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.get('/api/dates/:from_date/:to_date', (req, res) => {
+router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
     if(!req.params.from_date || !req.params.to_date)
         return res.json({ message: 'Faltam dados.' })
 
@@ -136,7 +159,7 @@ router.get('/api/dates/:from_date/:to_date', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.post('/api', (req, res) => {
+router.post('/api', auth_middleware, (req, res) => {
     if(!req.body.items || !req.body.value /*|| !req.body.id_store*/)
         return res.status(400).json({ message: 'Faltam dados.' })
     
@@ -190,7 +213,7 @@ router.post('/api', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.delete('/api/:id', (req, res) => {
+router.delete('/api/:id', auth_middleware, (req, res) => {
     const sale_id = req.params.id
 
     Sale.findOne({_id: sale_id})

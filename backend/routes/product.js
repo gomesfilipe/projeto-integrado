@@ -8,7 +8,7 @@ const Store = mongoose.model('stores')
 
 const auth_middleware = require('../middlewares/auth')
 
-router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
+// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
 /**
  * @swagger
@@ -28,8 +28,6 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
  *          description: Rota para consultar todos os produtos cadastrados.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Product]
- *          security:
- *            - Bearer: []
  * 
  *          responses: 
  *              '200': 
@@ -47,20 +45,14 @@ router.get('/api/all', (req, res) => {
 
 /**
  * @swagger
- * /product/api/id/{id}:
+ * /product/api:
  *      get:
- *          summary: Busca de produto por id.
+ *          summary: Busca de todos os produtos da loja que está logada.
  *          description: Rota para consultar um produto específico por id.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
- *          
- *          parameters:
- *          - in: path
- *            name: id
- *            type: string
- *            required: true
  * 
  *          responses: 
  *              '200': 
@@ -70,10 +62,61 @@ router.get('/api/all', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.get('/api/id/:id', (req, res) => {
-    const product_id = req.params.id
+router.get('/api', auth_middleware, (req, res) => {
+    Product.find({id_store: req.store_id})
+        .then(products => {
+            if(!products) {
+                return res.status(400).json({ message: 'Produto não encontrado.' })
+            } else {
+                res.status(200).json({products})
+            }
+        })
+        .catch(() => {return res.status(400).json({ message: 'Produto não encontrado.' })})
+})
 
-    Product.findOne({_id: product_id})
+/**
+ * @swagger
+ * /product/api/{page}/{size_page}:
+ *      get:
+ *          summary: Busca de todos produtos da loja que está logada com paginação.
+ *          description: Rota para consultar produtos em geral da loja que está logada.
+ *                       Deve-se passar no path da requisição o número e tamanho da página de produtos.
+ *                       É necessário estar logado para acessar esta rota.
+ *          tags: [Product]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: page
+ *            type: string
+ *            required: true
+ *          - in: path
+ *            name: size_page
+ *            type: string
+ *            required: true
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Produtos consultados com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar produto no banco de dados ou produto não encontrado ou faltam dados no corpo da requisição.
+ *              '401':
+ *                  description: Token inválido.
+ */
+router.get('/api/:page/:size_page', auth_middleware, (req, res) => {
+    const page = req.params.page
+    const size_page = req.params.size_page
+
+    if(!page || !size_page)
+        return res.status(400).json({ message: 'Faltam dados.' })
+
+    if(isNaN(page) || isNaN(size_page) || size_page <= 0)
+        return res.status(400).json({ message: 'Há dados inválidos.'})
+
+    Product.find({id_store: req.store_id})
+        .skip(page > 0 ? ((page - 1) * size_page) : 0)
+        .limit(size_page)
         .then(products => {
             if(!products) {
                 return res.status(400).json({ message: 'Produto não encontrado.' })
@@ -88,9 +131,9 @@ router.get('/api/id/:id', (req, res) => {
  * @swagger
  * /product/api/name/{name}/{page}/{size_page}:
  *      get:
- *          summary: Busca de produtos por nome.
+ *          summary: Busca de produtos da loja que está logada por nome com paginação.
  *          description: Rota para consultar produtos que contenham seu nome iniciado pelo parâmetro passado.
- *                       Deve-se passar no corpo da requisição o número e tamanho da página de produtos.
+ *                       Deve-se passar no path da requisição o número e tamanho da página de produtos.
  *                       É necessário estar logado para acessar esta rota.
  *          tags: [Product]
  *          security:
@@ -118,7 +161,7 @@ router.get('/api/id/:id', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.get('/api/name/:name/:page/:size_page', (req, res) => {
+router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
     const product_name = req.params.name
     const page = req.params.page
     const size_page = req.params.size_page
@@ -141,6 +184,55 @@ router.get('/api/name/:name/:page/:size_page', (req, res) => {
         .limit(size_page)
         .then(products => {
             console.log(products)
+            if(!products) {
+                return res.status(400).json({ message: 'Produto não encontrado.' })
+            } else {
+                res.status(200).json({products})
+            }
+        })
+        .catch(() => {return res.status(400).json({ message: 'Produto não encontrado.' })})
+})
+
+/**
+ * @swagger
+ * /product/api/{name}:
+ *      get:
+ *          summary: Busca de produtos da loja que está logada por nome sem paginação.
+ *          description: Rota para consultar produtos por nome sem paginação.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Product]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: name
+ *            type: string
+ *            required: true
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Produto consultado com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar produto no banco de dados ou produto não encontrada.
+ *              '401':
+ *                  description: Token inválido.
+ */
+router.get('/api/:name', auth_middleware, (req, res) => {
+    const product_name = req.params.name
+
+    // Coloquei page e size_page no path pois requisições get não podem ter body.
+    // const page = req.body.page
+    // const size_page = req.body.size_page
+
+    if(!product_name)
+        return res.status(400).json({ message: 'Faltam dados.' })
+
+    Product.find({name: {
+        "$regex": `^(${product_name})`,
+        "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
+    }, id_store: req.store_id})
+        .then(products => {
             if(!products) {
                 return res.status(400).json({ message: 'Produto não encontrado.' })
             } else {
@@ -196,7 +288,7 @@ router.get('/api/name/:name/:page/:size_page', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.post('/api', (req, res) => {
+router.post('/api', auth_middleware, (req, res) => {
     const name1 = req.body.name
     const id_store1 = req.store_id // Este campo da requisição vem do middleware de autenticação.
     // const id_store1 = req.body.id_store
@@ -289,7 +381,7 @@ router.post('/api', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.put('/api/:id', (req, res) => {
+router.put('/api/:id', auth_middleware, (req, res) => {
     const product_id = req.params.id
 
     if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.quantity)
@@ -360,7 +452,7 @@ router.put('/api/:id', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.delete('/api/:id', (req, res) => {
+router.delete('/api/:id', auth_middleware, (req, res) => {
     const product_id = req.params.id
 
     Product.findOne({_id: product_id})

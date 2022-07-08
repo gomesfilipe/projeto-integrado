@@ -12,7 +12,7 @@ const Item = mongoose.model('items')
 const Sale = mongoose.model('sales')
 const auth_middleware = require('../middlewares/auth')
 
-router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
+// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
 /**
  * @swagger
@@ -26,14 +26,11 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
 /**
  * @swagger
- * /store/api:
+ * /store/api/all:
  *      get:
  *          summary: Busca de todas as lojas.
  *          description: Rota para consultar todas as lojas cadastradas.
- *                       É necessário estar logado para acessá-la.
  *          tags: [Store]
- *          security:
- *            - Bearer: []
  * 
  *          responses: 
  *              '200': 
@@ -43,7 +40,7 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
  *              '401':
  *                  description: Token inválido.
  */
-router.get('/api', (req, res) => {
+router.get('/api/all', (req, res) => {
     Store.find()
         .then(stores => res.status(200).json({stores}))
         .catch(err => res.status(400).json({ message: 'Erro ao buscar lojas.' }))
@@ -51,20 +48,14 @@ router.get('/api', (req, res) => {
 
 /**
  * @swagger
- * /store/api/{id}:
+ * /store/api:
  *      get:
- *          summary: Busca de loja por id.
+ *          summary: Busca da loja que está logada.
  *          description: Rota para consultar uma loja específica por id.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
- *          
- *          parameters:
- *          - in: path
- *            name: id
- *            type: string
- *            required: true
  * 
  *          responses: 
  *              '200': 
@@ -74,8 +65,9 @@ router.get('/api', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.get('/api/:id', (req, res) => {
-    const store_id = req.params.id
+router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
+    const store_id = req.store_id
+    // const store_id = req.params.id
 
     Store.findOne({_id: store_id})
         .then(store => {
@@ -125,7 +117,7 @@ router.get('/api/:id', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.put('/api', (req, res) => { // Tirei o parâmetro id do path.
+router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
     const store_id = req.store_id
     // const store_id = req.params.id
 
@@ -198,7 +190,7 @@ router.put('/api', (req, res) => { // Tirei o parâmetro id do path.
  *              '401':
  *                  description: Token inválido.
  */
-router.delete('/api', async (req, res) => { // Tirei o parâmetro id do path.
+router.delete('/api', auth_middleware, async (req, res) => { // Tirei o parâmetro id do path.
     const store_id = req.store_id
     const admin_password = req.body.admin_password
     // const store_id = req.params.id
