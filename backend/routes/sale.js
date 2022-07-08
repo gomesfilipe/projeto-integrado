@@ -49,16 +49,56 @@ router.get('/api/all', (req, res) => {
         .catch(err => res.status(400).json({ message: 'Erro ao buscar vendas.' }))
 })
 
-router.get('/api/dates', (req, res) => {
-    if(!req.body.from_date || !req.body.to_date)
+/**
+ * @swagger
+ * /sale/api/dates/{from_date}/{to_date}:
+ *      get:
+ *          summary: Busca de vendas por data.
+ *          description: Rota para consultar as vendas por período. As datas devem estar no formato YYYY-MM-DD.
+ *                       É necessário estar logado para acessá-la.
+ *          tags: [Sale]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: from_date
+ *            type: string
+ *            required: true     
+ * 
+ *          - in: path
+ *            name: to_date
+ *            type: string
+ *            required: true     
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Produtos consultados com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar produtos no banco de dados.
+ *              '401':
+ *                  description: Token inválido.
+ */
+router.get('/api/dates/:from_date/:to_date', (req, res) => {
+    if(!req.params.from_date || !req.params.to_date)
         return res.json({ message: 'Faltam dados.' })
-    
-    //! Ver como validar se as datas estão no formato ISO.
+
+    // Formato YYYY-MM-DD HH:mm:ss
+    const from_date = new Date(`${req.params.from_date} 00:00:00`)
+    const to_date = new Date(`${req.params.to_date} 00:00:00`)
+
+    if(from_date == 'Invalid Date') {
+        return res.json({ message: 'Data inicial inválida.' })
+    }
+
+    if(to_date == 'Invalid Date') {
+        return res.json({ message: 'Data final inválida.' })
+    }
 
     Sale.find({"date": {
-        "$gte": req.body.from_date, // Início do período. Obs: devem estar no formato ISO.
-        "$lt": req.body.to_date // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
-    }})
+        "$gte": from_date.toISOString(), // Início do período. Obs: devem estar no formato ISO.
+        "$lt": to_date.toISOString() // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
+    }, id_store: req.store_id})
         .then(sales => res.status(200).json({sales}))
         .catch(err => res.status(400).json({ message: 'Erro ao buscar vendas.' }))
 })
