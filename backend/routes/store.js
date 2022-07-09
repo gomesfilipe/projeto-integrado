@@ -85,7 +85,8 @@ router.post('/authenticate', async (req, res) => {
 
     res.status(200).json({
         store, 
-        token: generate_token({id: store._id})
+        token: generate_token({id: store._id}),
+        message: 'Login efetuado com sucesso!'
     })
 })
 
@@ -294,7 +295,10 @@ router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
                         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
                 } else {
                     store.save()
-                        .then(() => res.json({ message: 'Loja editada com sucesso!' }))
+                        .then((edited_store) => res.json({ 
+                            edited_store,
+                            message: 'Loja editada com sucesso!' 
+                        }))
                         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
                 }
                 

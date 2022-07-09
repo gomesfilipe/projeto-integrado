@@ -314,12 +314,15 @@ router.post('/api', auth_middleware, (req, res) => {
             })
 
             new_product.save()
-                .then(() => {
+                .then((product) => {
                     Store.findOne({_id: req.store_id}/*req.body.id_store}*/)
                         .then(store => {
                             store.products.push(new_product)
                             store.save()
-                                .then(() => res.status(200).json({ message: 'Produto cadastrado e inserido na loja com sucesso!' }))
+                                .then(() => res.status(200).json({ 
+                                    product,
+                                    message: 'Produto cadastrado e inserido na loja com sucesso!' 
+                                }))
                                 .catch(err => res.status(400).json({ message: 'Erro ao cadastrar e inserir produto na loja.' }))
                         })
                         .catch(err => res.status(400).json({ message: 'Erro ao cadastrar produto.' }))
@@ -405,14 +408,20 @@ router.put('/api/:id', auth_middleware, (req, res) => {
                             } else {
                                 product.name = req.body.name
                                 product.save()
-                                    .then(() => res.status(200).json({ message: 'Produto editado com sucesso!' }))
+                                    .then((edited_product) => res.status(200).json({ 
+                                        edited_product,
+                                        message: 'Produto editado com sucesso!'
+                                    }))
                                     .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
                             }
                         })
                         .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
                 } else {
                     product.save()
-                        .then(() => res.status(200).json({ message: 'Produto editado com sucesso!' }))
+                        .then((edited_product) => res.status(200).json({
+                            edited_product, 
+                            message: 'Produto editado com sucesso!' 
+                        }))
                         .catch(err => res.status(400).json({ message: 'Erro ao editar produto.' }))
                 }
 

@@ -212,12 +212,15 @@ router.post('/api', auth_middleware, async (req, res) => {
     })
 
     sale.save()
-        .then(() => {
+        .then((new_sale) => {
             Store.findOne({_id: req.store_id/*req.body.id_store*/})
                 .then(store => {
                     store.sales.push(sale)
                     store.save()
-                        .then(() => res.status(200).json({ message: 'Venda concluída com sucesso!' }))
+                        .then(() => res.status(200).json({ 
+                            new_sale,
+                            message: 'Venda concluída com sucesso!' 
+                        }))
                         .catch(err => res.status(400).json({ message: 'Erro ao concluir venda.' }))
                 })
                 .catch(err => res.status(400).json({ message: 'Erro ao concluir venda.' }))
