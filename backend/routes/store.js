@@ -25,6 +25,102 @@ const no_auth_middleware = require('../middlewares/no_auth')
  *       type: apiKey
  *       name: Authorization
  *       in: header
+ * 
+ * definitions:
+ *   Store:
+ *     type: object
+ *     properties:
+ *       name:
+ *         type: string
+ *         example: Loja
+ *       username:
+ *         type: string
+ *         example: loja123
+ *       password:
+ *         type: string
+ *         example: 123456
+ *       admin_password:
+ *         type: string
+ *         example: 123456admin
+ *   
+ *   NewStore:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          example: Loja
+ *        username:
+ *          type: string
+ *          example: loja123
+ *        products:
+ *          type: array
+ *          items:
+ *            type: string
+ *            example:
+ * 
+ *   CompleteStore:
+ *      type: object
+ *      properties:
+ *        _id: 
+ *          type: string
+ *          example: 62c9dfeab664c24450071b1a
+ *        name:
+ *          type: string
+ *          example: Loja
+ *        username:
+ *          type: string
+ *          example: loja123
+ *        products:
+ *          type: array
+ *          items:
+ *            type: string
+ *            example: 62c9dfeab664c24450071b1a
+ *        sales:
+ *          type: array
+ *          items:
+ *            type: string
+ *            example: 62c9dfeab664c24450071b1a
+ *        __v:
+ *          type: integer
+ *          example: 0
+ * 
+ *   Error:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: error message
+ *   
+ *   Success:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: success message
+ * 
+ *   Login:
+ *     type: object
+ *     properties:
+ *       username:
+ *         type: string
+ *         example: loja123
+ *       password:
+ *         type: string
+ *         example: 123456
+ * 
+ *   ErrorToken:
+ *     type: object
+ *     properties:
+ *       err:
+ *         type: string
+ *         example: error token message
+ * 
+ *   AdminPassword:
+ *     type: object
+ *     properties:
+ *       admin_password:
+ *         type: string
+ *         example: 123456admin
  */
 
  function generate_token(params = {}) {
@@ -38,9 +134,10 @@ const no_auth_middleware = require('../middlewares/no_auth')
  * @swagger
  * /store/authenticate:
  *      post:
- *          summary: Login do usuário.
- *          description: Rota para efetuar login do usuário, devendo ser informados
- *                       username e senha no corpo da requisição.
+ *          summary: Login de loja.
+ *          description: Rota para efetuar login de loja, devendo ser informados
+ *                       username e senha no corpo da requisição. Só pode ser acessada
+ *                       caso o usuário não esteja logado.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
@@ -49,21 +146,24 @@ const no_auth_middleware = require('../middlewares/no_auth')
  *          - in: body
  *            name: store
  *            schema:
- *              type: object
- *              properties:
- *                username:
- *                  type: string
- *                  example: loja123
- *                password:
- *                  type: string
- *                  example: 123456
+ *              $ref: '#/definitions/Login'
  * 
  *          responses: 
  *              '200': 
  *                  description: Login efetuado com sucesso!
+ *                  schema:
+ *                    $ref: '#/definitions/Store'
+ *                      
  *              '400':
  *                  description: Erro ao efetuar login. (Faltaram dados no corpo da requisição,
- *                               ou o usuário não existe ou senha está incorreta)
+ *                               ou o usuário não existe ou senha está incorreta)  
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ * 
+ *              '401':
+ *                  description: É probido acessar esta rota logado.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.post('/authenticate', no_auth_middleware, async (req, res) => {
     const {username, password} = req.body
@@ -83,10 +183,6 @@ router.post('/authenticate', no_auth_middleware, async (req, res) => {
 
     store.password = undefined // Para não mostrar no json. Não muda no banco de dados pois não deu .save(). 
 
-    // const token = jwt.sign({id: store._id}, auth_config.secret, {
-    //     expiresIn: 86400
-    // })
-
     res.status(200).json({
         store, 
         token: generate_token({id: store._id}),
@@ -101,6 +197,7 @@ router.post('/authenticate', no_auth_middleware, async (req, res) => {
  *          summary: Cadastro de loja.
  *          description: Rota para efetuar cadastro de loja, devendo ser informados
  *                       nome, username, senha e senha de administrador no corpo da requisição.
+ *                       Só pode ser acessada caso o usuário não esteja logado.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
@@ -109,27 +206,33 @@ router.post('/authenticate', no_auth_middleware, async (req, res) => {
  *          - in: body
  *            name: store
  *            schema:
- *              type: object
- *              properties:
- *                name:
- *                  type: string
- *                  example: Loja
- *                username:
- *                  type: string
- *                  example: loja123
- *                password:
- *                  type: string
- *                  example: 123456
- *                admin_password:
- *                  type: string
- *                  example: 123456admin
+ *              $ref: '#/definitions/Store'
  * 
  *          responses: 
  *              '200': 
  *                  description: Loja cadastrada com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      new_store:
+ *                        $ref: '#/definitions/NewStore'
+ *                      token:
+ *                        type: string
+ *                        example: token here
+ *                      message:  
+ *                        type: string
+ *                        example: success message
+ *                    
  *              '400':
  *                  description: Erro ao cadastrar loja. (Faltaram dados no corpo da requisição,
- *                               ou o usuário já existe ou ocorreu falha ao salvar no banco de dados.)
+ *                               ou os dados não passaram pelo critérios de validação ou o
+ *                               usuário já existe ou ocorreu falha ao salvar no banco de dados.)
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ *              '401':
+ *                  description: É probido acessar esta rota logado.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.post('/api', no_auth_middleware, (req, res) => {
     console.log('rota: [' + req.headers.authorization + ']')
@@ -185,20 +288,33 @@ router.post('/api', no_auth_middleware, (req, res) => {
 })
 
 /**
+ * 
  * @swagger
  * /store/api/all:
  *      get:
  *          summary: Busca de todas as lojas.
- *          description: Rota para consultar todas as lojas cadastradas.
+ *          description: Rota para consultar dados de todas as lojas cadastradas.
+ *                       Não é necessário autenticação para acessá-la.
  *          tags: [Store]
  * 
  *          responses: 
  *              '200': 
  *                  description: Lojas consultadas com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      stores:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteStore'
  *              '400':
  *                  description: Erro ao consultar lojas no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/all', (req, res) => {
     Store.find()
@@ -211,7 +327,7 @@ router.get('/api/all', (req, res) => {
  * /store/api:
  *      get:
  *          summary: Busca da loja que está logada.
- *          description: Rota para consultar uma loja específica por id.
+ *          description: Rota para consultar dados da loja que está logada.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Store]
  *          security:
@@ -220,10 +336,19 @@ router.get('/api/all', (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Loja consultada com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      store:
+ *                        $ref: '#/definitions/CompleteStore'
  *              '400':
  *                  description: Erro ao consultar loja no banco de dados ou loja não encontrada.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
     const store_id = req.store_id
@@ -237,15 +362,16 @@ router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
                 res.status(200).json({store})
             }
         })
-        .catch(() => {return res.status(400).json({ message: 'Loja não encontrada.' })})
+        .catch(() => {return res.status(400).json({ message: 'Erro ao buscar loja.' })})
 })
 
 /**
  * @swagger
  * /store/api:
  *      put:
- *          summary: Edição de loja.
+ *          summary: Edição da loja que está logada.
  *          description: Rota para editar informações da loja que estiver logada.
+ *                       É necessário estar logado para acessá-la.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
@@ -254,28 +380,27 @@ router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
  *          - in: body
  *            name: store
  *            schema:
- *              type: object
- *              properties:
- *                name:
- *                  type: string
- *                  example: Loja
- *                username:
- *                  type: string
- *                  example: loja123
- *                password:
- *                  type: string
- *                  example: 123456
- *                admin_password:
- *                  type: string
- *                  example: 123456admin
+ *              $ref: '#/definitions/Store'
  * 
  *          responses: 
  *              '200': 
  *                  description: Loja editada com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      edited_store:
+ *                        $ref: '#/definitions/CompleteStore'
+ *                      message:  
+ *                        type: string
+ *                        example: success message
  *              '400':
- *                  description: Erro ao editar loja no banco de dados ou loja não encontrada.
+ *                  description: Erro ao editar loja no banco de dados ou loja não encontrada ou algum parâmetro enviado inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
     const store_id = req.store_id
@@ -327,7 +452,7 @@ router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
  * @swagger
  * /store/api:
  *      delete:
- *          summary: Remoção de loja.
+ *          summary: Remoção da loja que está logada.
  *          description: Rota para excluir a loja que estiver logada. É necessário
  *                       passar a senha de administrador no corpo da requisição para permitir
  *                       a exclusão da loja, juntamente com todas as suas vendas e produtos.
@@ -339,19 +464,21 @@ router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
  *          - in: body
  *            name: store
  *            schema:
- *              type: object
- *              properties:
- *                admin_password:
- *                  type: string
- *                  example: 123456admin
+ *              $ref: '#/definitions/AdminPassword' 
  * 
  *          responses: 
  *              '200': 
  *                  description: Loja deletada com sucesso!
+ *                  schema:
+ *                    $ref: '#/definitions/Success'
  *              '400':
- *                  description: Erro ao deletar loja no banco de dados ou loja não encontrada.
+ *                  description: Erro ao deletar loja no banco de dados ou loja não encontrada ou senha de administrador incorreta.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.delete('/api', auth_middleware, async (req, res) => { // Tirei o parâmetro id do path.
     const store_id = req.store_id
@@ -379,28 +506,6 @@ router.delete('/api', auth_middleware, async (req, res) => { // Tirei o parâmet
     } catch(err) {
         return res.status(400).json({ message: 'Erro ao deletar loja.' })
     }
-    
-    
-    // Store.findOne({_id: store_id})
-    //     .then(async store => {
-    //         if(!store) {
-    //             return res.status(400).json({ message: 'Loja inexistente.' })
-    //         } else {
-    //             if(!await bcrypt.compare(admin_password, store.admin_password)) { // Comparando senha de admin.
-    //                 return res.status(400).json({ message: 'Senha de administrador incorreta.' })
-
-    //             } else {
-    //                 Store.deleteOne({_id: store_id})
-    //                     .then(() => {
-    //                         res.status(200).json({ message: 'Loja deletada com sucesso!' })
-    //                     })
-    //                     .catch(err => res.status(400).json({ message: 'Erro ao deletar loja1.' }))
-    //             }
-    //         }
-    //     })
-    //     .catch(async err => {
-    //         return res.status(400).json({ message: 'Erro ao deletar loja2.' })
-    //     })
 })
 
 module.exports = router
