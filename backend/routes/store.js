@@ -130,7 +130,15 @@ router.post('/api', (req, res) => {
     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
         return res.status(400).json({ message: 'Faltam dados.' })
     
-    //! Validar username, password e admin_password (definir critérios).
+    // Validação dos campos.
+    if(req.body.username.length < 4)
+        return res.status(400).json({ message: 'Tamanho do username deve ter no mínimo 4 caracteres.' })
+
+    if(req.body.password.length < 4)
+        return res.status(400).json({ message: 'Tamanho da senha deve ter no mínimo 4 caracteres.' })
+
+    if(req.body.admin_password.length < 4)
+        return res.status(400).json({ message: 'Tamanho da senha de administrador deve ter no mínimo 4 caracteres.' })
 
     Store.findOne({username: username})
         .then(async store => {
