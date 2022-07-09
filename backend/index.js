@@ -97,7 +97,7 @@ app.listen(port, () => {
 
 // TODO
 // Conferir documentação e melhorá-la com mais detalhes.
-// Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo). //? BAIXA PRIORIDADE
-
+// Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo).
 // Fazer scripts de testes, ver documentação do describe.
 // Diminuir tempo do token de validação.
+
