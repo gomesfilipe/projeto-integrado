@@ -9,7 +9,7 @@ const Item = mongoose.model('items')
 
 const auth_middleware = require('../middlewares/auth')
 
-router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
+// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
 /**
  * @swagger
@@ -23,9 +23,31 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
 /**
  * @swagger
- * /item/api:
+ * /item/api/all:
  *      get:
  *          summary: Busca de todos os itens de todas as lojas cadastradas.
+ *          description: Rota para consultar todos os itens cadastrados.
+ *          tags: [Item]
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Itens consultados com sucesso!
+ *              '400':
+ *                  description: Erro ao consultar itens no banco de dados.
+ *              '401':
+ *                  description: Token inválido.
+ */
+router.get('/api/all', (req, res) => {
+    Item.find()
+        .then(items => res.status(200).json({ items }))
+        .catch(err => res.status(400).json({ message: 'Erro ao buscar itens.' }))
+})
+
+/**
+ * @swagger
+ * /item/api:
+ *      get:
+ *          summary: Busca de todos os itens da loja que está logada.
  *          description: Rota para consultar todos os itens cadastrados.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Item]
@@ -40,14 +62,14 @@ router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
  *              '401':
  *                  description: Token inválido.
  */
-router.get('/api', (req, res) => {
-    Item.find()
+router.get('/api', auth_middleware, (req, res) => {
+    Item.find({id_store: req.store_id})
         .then(items => res.status(200).json({ items }))
         .catch(err => res.status(400).json({ message: 'Erro ao buscar itens.' }))
 })
 
 /**
- * @swagger
+ * swagger
  * /item/api:
  *      post:
  *          summary: Cadastro de item.
@@ -80,27 +102,27 @@ router.get('/api', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.post('/api', (req, res) => {
-    if(!req.body.id_product || /*!req.body.id_store ||*/ !req.body.quantity)
-        return res.status(400).json({ message: 'Faltam dados.' })
+// router.post('/api', (req, res) => {
+//     if(!req.body.id_product || /*!req.body.id_store ||*/ !req.body.quantity)
+//         return res.status(400).json({ message: 'Faltam dados.' })
     
-    if(isNaN(req.body.quantity))
-        return res.status(400).json({ message: 'Há dados inválidos.'})
+//     if(isNaN(req.body.quantity))
+//         return res.status(400).json({ message: 'Há dados inválidos.'})
         
-    const item = new Item({
-        id_product: req.body.id_product,
-        id_store: req.store_id, // Campo store_id da requisição vem do middleware de autenticação.
-        // id_store: req.body.id_store,
-        quantity: Number(req.body.quantity)
-    })
+//     const item = new Item({
+//         id_product: req.body.id_product,
+//         id_store: req.store_id, // Campo store_id da requisição vem do middleware de autenticação.
+//         // id_store: req.body.id_store,
+//         quantity: Number(req.body.quantity)
+//     })
 
-    item.save()
-        .then(() => res.status(200).json({ message: 'Item criado com sucesso!' }))
-        .catch(err => res.status(400).json({ message: 'Erro ao criar item.' }))
-})
+//     item.save()
+//         .then(() => res.status(200).json({ message: 'Item criado com sucesso!' }))
+//         .catch(err => res.status(400).json({ message: 'Erro ao criar item.' }))
+// })
 
 /**
- * @swagger
+ * swagger
  * /item/api/{id}:
  *      delete:
  *          summary: Exclusão de item por id.
@@ -123,20 +145,20 @@ router.post('/api', (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.delete('/api/:id', (req, res) => {
-    const item_id = req.params.id
+// router.delete('/api/:id', (req, res) => {
+//     const item_id = req.params.id
 
-    Item.findOne({_id: item_id})
-        .then(item => {
-            if(!item) {
-                return res.status(400).json({ message: 'Item inexistente.' })
-            } else {
-                Item.deleteOne({id: item_id})
-                    .then(() => res.status(200).json({ message: 'Item deletado com sucesso!' }))
-                    .catch(err => res.status(400).json({ message: 'Erro ao deletar item.' }))
-            }
-        })
-        .catch(err => res.status(400).json({ message: 'Erro ao deletar item.' }))
-})
+//     Item.findOne({_id: item_id})
+//         .then(item => {
+//             if(!item) {
+//                 return res.status(400).json({ message: 'Item inexistente.' })
+//             } else {
+//                 Item.deleteOne({id: item_id})
+//                     .then(() => res.status(200).json({ message: 'Item deletado com sucesso!' }))
+//                     .catch(err => res.status(400).json({ message: 'Erro ao deletar item.' }))
+//             }
+//         })
+//         .catch(err => res.status(400).json({ message: 'Erro ao deletar item.' }))
+// })
 
 module.exports = router
