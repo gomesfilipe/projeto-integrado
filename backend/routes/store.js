@@ -196,13 +196,17 @@ router.delete('/api', auth_middleware, async (req, res) => { // Tirei o parâmet
     // const store_id = req.params.id
     
     try {
-        const store = await Store.findOne({_id: store_id}).select('+admin_password')
+        let store = await Store.findOne({_id: store_id}).select('+admin_password')
 
         if(!store) {
             return res.status(400).json({ message: 'Loja inexistente.' })
         
         } else if(await bcrypt.compare(admin_password, store.admin_password)){
+            await Product.deleteMany({id_store: store_id})
+            await Item.deleteMany({id_store: store_id})
+            await Sale.deleteMany({id_store: store_id})
             await Store.deleteOne({_id: store_id})
+
             return res.status(200).json({ message: 'Loja deletada com sucesso!' })
             
         } else {
