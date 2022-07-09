@@ -90,20 +90,20 @@ app.listen(port, () => {
 // Adaptar o crud de vendas, remover post e delete no crud de itens. //!OK
 // Descontar estoque no cadastro de vendas. //!OK
 // Fazer verificação se a quantidade de itens é menor ou igual ao estoque. //!OK
+// Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela). //!OK
+// Remover campo photo do model de produtos. //!OK
+// Desfazer grupo de rotas nologged e colocar as rotas no grupo de rotas store. //!OK
 
 //? BAIXA PRIORIDADE
 // Diminuir tempo do token de validação.
 // Definir critérios de validação de username, password e admin_password.
 
 //? ALTA PRIORIDADE
-// Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela). //!TESTAR
-// Remover campo photo do model de produtos.
-// Desfazer grupo de rotas nologged e colocar as rotas no grupo de rotas store.
 // Além da mensagem de sucesso, enviar os dados do produto / venda / loja / item cadastrados pelo cliente. (decidir).
 
-// Não deixar acessar rota de login quando estiver logado.
-// Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo). //? BAIXA PRIORIDADE
+// Não deixar acessar rota de login nem de cadastro de loja quando estiver logado.
 // Conferir documentação e melhorá-la com mais detalhes.
+// Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo). //? BAIXA PRIORIDADE
 
 // Fazer scripts de testes.
 // Ver documentação do describe.
