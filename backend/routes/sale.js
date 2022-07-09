@@ -136,17 +136,24 @@ router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
  *          tags: [Sale]
  *          security:
  *            - Bearer: []
+ * 
  *          parameters:
  *          - in: body
- *            name: product
+ *            name: sale
  *            schema:
  *              type: object
  *              properties:
  *                items:
  *                  type: array
  *                  items:
- *                      type: string
- *                      example: 62c34b928340ed2117560766
+ *                      type: object
+ *                      properties:
+ *                        id_product:
+ *                          type: string
+ *                          example: 62c34b928340ed2117560766
+ *                        quantity:
+ *                          type: string
+ *                          example: 5
  *                value:
  *                  type: string
  *                  example: 120.00
@@ -159,16 +166,46 @@ router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
  *              '401':
  *                  description: Token inválido.
  */
-router.post('/api', auth_middleware, (req, res) => {
+router.post('/api', auth_middleware, async (req, res) => {
     if(!req.body.items || !req.body.value /*|| !req.body.id_store*/)
         return res.status(400).json({ message: 'Faltam dados.' })
     
     if(isNaN(req.body.value))
         return res.status(400).json({ message: 'Há dados inválidos.'})
 
+    for(let i = 0; i < req.body.items.length; i++) { // Verificando se há estoque para todos os itens.
+        let product = await Product.findOne({_id: req.body.items[i].id_product})
+        
+        if(!product) {
+            return res.status(400).json({ message: 'Id inválido de um dos produtos.' })
+        }
+
+        if(req.body.items[i].quantity > product.quantity  || req.body.items[i].quantity <= 0) {
+            return res.status(400).json({ message: 'Quantidade  inválida de um dos produtos.'})
+        }
+    }
+
+    let items_id = []
+
+    for(let i = 0; i < req.body.items.length; i++) { // Salvando itens no banco de dados.
+        let item = new Item({
+            id_product: req.body.items[i].id_product,
+            id_store: req.store_id,
+            quantity: Number(req.body.items[i].quantity)
+        })
+
+        let product = await Product.findOne({_id: item.id_product})
+
+        product.quantity -= item.quantity // Descontando o estoque do produto relacionado ao item.
+        await product.save()
+
+        let save_item = await item.save()
+        items_id.push(save_item._id)
+    }
 
     const sale = new Sale({
-        items: req.body.items,
+        // items: req.body.items,
+        items: items_id,
         value: req.body.value,
         id_store: req.store_id
         // id_store: req.body.id_store
@@ -217,10 +254,14 @@ router.delete('/api/:id', auth_middleware, (req, res) => {
     const sale_id = req.params.id
 
     Sale.findOne({_id: sale_id})
-        .then(sale => {
+        .then(async sale => {
             if(!sale) {
                 return res.status(400).json({ message: 'Venda inexistente.' })
             } else {
+                for(let i = 0; i < sale.items.length; i++) { // Deletando os itens da venda no banco de dados.
+                    await Item.deleteOne({_id: sale.items[i]})
+                }
+                
                 Sale.deleteOne({_id: sale_id})
                     .then(() => res.status(200).json({ message: 'Venda deletada com sucesso!' }))
                     .catch(err => res.status(400).json({ message: 'Erro ao deletar venda.' }))
