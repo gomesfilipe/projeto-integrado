@@ -22,10 +22,10 @@ const Product = new Schema({
         required: true
     },
 
-    photo: {
-        type: String,
-        required: true
-    },
+    // photo: {
+    //     type: String,
+    //     required: true
+    // },
 
     unity: {
         type: String,

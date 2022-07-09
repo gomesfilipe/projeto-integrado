@@ -271,9 +271,6 @@ router.get('/api/:name', auth_middleware, (req, res) => {
  *                quantity:
  *                  type: string
  *                  example: 10
- *                photo:
- *                  type: string
- *                  example: www.link.para.foto.com
  *                unity:
  *                  type: string
  *                  example: Unidade
@@ -293,7 +290,7 @@ router.post('/api', auth_middleware, (req, res) => {
     const id_store1 = req.store_id // Este campo da requisição vem do middleware de autenticação.
     // const id_store1 = req.body.id_store
 
-    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.unity /*|| !req.body.id_store*/)
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || /*!req.body.photo ||*/ !req.body.unity /*|| !req.body.id_store*/)
         return res.status(400).json({ message: 'Faltam dados.' })
 
     if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
@@ -310,7 +307,7 @@ router.post('/api', auth_middleware, (req, res) => {
                 cost: Number(req.body.cost),
                 sale: Number(req.body.sale),
                 quantity: Number(req.body.quantity),
-                photo: req.body.photo,
+                // photo: req.body.photo,
                 unity: req.body.unity,
                 id_store: req.store_id
                 // id_store: req.body.id_store
@@ -364,9 +361,6 @@ router.post('/api', auth_middleware, (req, res) => {
  *                quantity:
  *                  type: string
  *                  example: 10
- *                photo:
- *                  type: string
- *                  example: www.link.para.foto.com
  *                unity:
  *                  type: string
  *                  example: Unidade
@@ -384,7 +378,7 @@ router.post('/api', auth_middleware, (req, res) => {
 router.put('/api/:id', auth_middleware, (req, res) => {
     const product_id = req.params.id
 
-    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.photo || !req.body.quantity)
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || /*!req.body.photo ||*/ !req.body.quantity)
         return res.status(400).json({ message: 'Faltam dados.' })
 
     if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
@@ -400,7 +394,7 @@ router.put('/api/:id', auth_middleware, (req, res) => {
                 product.cost = Number(req.body.cost),
                 product.sale = Number(req.body.sale),
                 product.quantity = Number(req.body.quantity),
-                product.photo = req.body.photo,
+                // product.photo = req.body.photo,
                 product.unity = req.body.unity
 
                 if(product.name != req.body.name) { // Mudança de nome do produto, verificar se já existe ou não.
