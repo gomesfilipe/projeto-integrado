@@ -87,27 +87,23 @@ app.listen(port, () => {
 // Mudar get de produto por id pra get de produtos da propria loja (fazer paginação???) //!OK
 // Fazer rota get para pegar todas as vendas da loja. //!OK
 // Adaptar rotas para fazer as ações da loja que está logada. //!OK
+// Adaptar o crud de vendas, remover post e delete no crud de itens. //!OK
+// Descontar estoque no cadastro de vendas. //!OK
+// Fazer verificação se a quantidade de itens é menor ou igual ao estoque. //!OK
 
 //? BAIXA PRIORIDADE
+// Diminuir tempo do token de validação.
 // Definir critérios de validação de username, password e admin_password.
-// Ver como fazer upload de imagens (ou remover este campo).
-// Fazer verificação se a quantidade de itens é menor ou igual ao estoque.
-// Além da mensagem de sucesso, enviar os dados do produto / venda / loja / item cadastrados pelo cliente. (decidir).
-// Passar cadastro de loja para o grupo de rotas store.
-// Fazer rota de logout (cancelar token).
-// Cancelar token ao deletar loja.
 
 //? ALTA PRIORIDADE
-// Adaptar o crud de vendas, remover crud de itens.
-// Descontar estoque no cadastro de vendas e retornar estoque na exclusão de vendas.
+// Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela). //!TESTAR
+// Remover campo photo do model de produtos.
+// Desfazer grupo de rotas nologged e colocar as rotas no grupo de rotas store.
+// Além da mensagem de sucesso, enviar os dados do produto / venda / loja / item cadastrados pelo cliente. (decidir).
 
 // Não deixar acessar rota de login quando estiver logado.
-
-// Desfazer grupo de rotas nologged e criar um novo grupo para login/logout.
-// No cadastro de item deve verificar se o id da loja e produto existem.
-// Colocar id da venda nos itens após fechar uma venda.
-// Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela). 
 // Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo). //? BAIXA PRIORIDADE
+// Conferir documentação e melhorá-la com mais detalhes.
+
 // Fazer scripts de testes.
 // Ver documentação do describe.
-// Conferir documentação e melhorá-la com mais detalhes.
