@@ -93,13 +93,13 @@ app.listen(port, () => {
 // Mudar implementação da rota de deletar loja (deve excluir os produtos, itens e vendas associadas a ela). //!OK
 // Remover campo photo do model de produtos. //!OK
 // Desfazer grupo de rotas nologged e colocar as rotas no grupo de rotas store. //!OK
+// Além da mensagem de sucesso, enviar os dados do produto / venda / loja cadastrados pelo cliente. (decidir). //!OK
 
 //? BAIXA PRIORIDADE
 // Diminuir tempo do token de validação.
 // Definir critérios de validação de username, password e admin_password.
 
 //? ALTA PRIORIDADE
-// Além da mensagem de sucesso, enviar os dados do produto / venda / loja / item cadastrados pelo cliente. (decidir).
 
 // Não deixar acessar rota de login nem de cadastro de loja quando estiver logado.
 // Conferir documentação e melhorá-la com mais detalhes.
