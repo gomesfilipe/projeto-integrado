@@ -55,8 +55,6 @@ app.listen(port, () => {
 
 // module.exports = app // Exportando app para poder executar os testes automatizados.
 
-// TODO
-
 //? JÁ FEITOS
 // Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK
 // Verificar se já existe produto ou loja com mesmo nome no CRUD. //!OK
@@ -94,16 +92,12 @@ app.listen(port, () => {
 // Remover campo photo do model de produtos. //!OK
 // Desfazer grupo de rotas nologged e colocar as rotas no grupo de rotas store. //!OK
 // Além da mensagem de sucesso, enviar os dados do produto / venda / loja cadastrados pelo cliente. (decidir). //!OK
+// Definir critérios de validação de username, password e admin_password. //!OK
+// Não deixar acessar rota de login nem de cadastro de loja quando estiver logado. //!OK
 
-//? BAIXA PRIORIDADE
-// Diminuir tempo do token de validação.
-// Definir critérios de validação de username, password e admin_password.
-
-//? ALTA PRIORIDADE
-
-// Não deixar acessar rota de login nem de cadastro de loja quando estiver logado.
+// TODO
 // Conferir documentação e melhorá-la com mais detalhes.
 // Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo). //? BAIXA PRIORIDADE
 
-// Fazer scripts de testes.
-// Ver documentação do describe.
+// Fazer scripts de testes, ver documentação do describe.
+// Diminuir tempo do token de validação.
