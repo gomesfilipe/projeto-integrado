@@ -13,6 +13,7 @@ const Product = mongoose.model('products')
 const Item = mongoose.model('items')
 const Sale = mongoose.model('sales')
 const auth_middleware = require('../middlewares/auth')
+const no_auth_middleware = require('../middlewares/no_auth')
 
 // router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
 
@@ -41,6 +42,9 @@ const auth_middleware = require('../middlewares/auth')
  *          description: Rota para efetuar login do usuário, devendo ser informados
  *                       username e senha no corpo da requisição.
  *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ * 
  *          parameters:
  *          - in: body
  *            name: store
@@ -61,7 +65,7 @@ const auth_middleware = require('../middlewares/auth')
  *                  description: Erro ao efetuar login. (Faltaram dados no corpo da requisição,
  *                               ou o usuário não existe ou senha está incorreta)
  */
-router.post('/authenticate', async (req, res) => {
+router.post('/authenticate', no_auth_middleware, async (req, res) => {
     const {username, password} = req.body
 
     if(!username || !password)
@@ -98,6 +102,9 @@ router.post('/authenticate', async (req, res) => {
  *          description: Rota para efetuar cadastro de loja, devendo ser informados
  *                       nome, username, senha e senha de administrador no corpo da requisição.
  *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ * 
  *          parameters:
  *          - in: body
  *            name: store
@@ -124,7 +131,8 @@ router.post('/authenticate', async (req, res) => {
  *                  description: Erro ao cadastrar loja. (Faltaram dados no corpo da requisição,
  *                               ou o usuário já existe ou ocorreu falha ao salvar no banco de dados.)
  */
-router.post('/api', (req, res) => {
+router.post('/api', no_auth_middleware, (req, res) => {
+    console.log('rota: [' + req.headers.authorization + ']')
     const username = req.body.username
      
     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
