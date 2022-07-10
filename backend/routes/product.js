@@ -38,6 +38,9 @@ const auth_middleware = require('../middlewares/auth')
  *       unity:
  *         type: string
  *         example: KG
+ *       min:
+ *         type: number
+ *         example: 3
  * 
  *   CompleteProduct:
  *     type: object
@@ -63,6 +66,9 @@ const auth_middleware = require('../middlewares/auth')
  *       id_store:
  *         type: string
  *         example: 62c2440e7e340b831c3ab807
+ *       min:
+ *         type: number
+ *         example: 3
  *       __v:
  *         type: number
  *         example: 0
@@ -372,7 +378,7 @@ router.get('/api/:name', auth_middleware, (req, res) => {
  *      post:
  *          summary: Cadastro de produto.
  *          description: Rota para efetuar cadastro de produto, devendo ser informados
- *                       nome, preço de custo, preço de venda, quantidade e unidade.
+ *                       nome, preço de custo, preço de venda, quantidade, unidade e estoque mínimo.
  *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
@@ -410,11 +416,15 @@ router.post('/api', auth_middleware, (req, res) => {
     const id_store1 = req.store_id // Este campo da requisição vem do middleware de autenticação.
     // const id_store1 = req.body.id_store
 
-    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || /*!req.body.photo ||*/ !req.body.unity /*|| !req.body.id_store*/)
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.unity || !req.body.min)
         return res.status(400).json({ message: 'Faltam dados.' })
 
-    if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
+    if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity) || isNaN(req.body.min))
         return res.status(400).json({ message: 'Há dados inválidos.' })
+
+    if(req.body.min < 0) {
+        return res.status(400).json({ message: 'Quantidade mínima de estoque inválida.' })
+    }
 
     Product.findOne({name: name1, id_store: id_store1})
         .then(product => {
@@ -429,7 +439,8 @@ router.post('/api', auth_middleware, (req, res) => {
                 quantity: Number(req.body.quantity),
                 // photo: req.body.photo,
                 unity: req.body.unity,
-                id_store: req.store_id
+                id_store: req.store_id,
+                min: req.body.min
                 // id_store: req.body.id_store
             })
 
@@ -457,8 +468,8 @@ router.post('/api', auth_middleware, (req, res) => {
  *      put:
  *          summary: Edição de produto.
  *          description: Rota para efetuar edição de produto, devendo ser informados no corpo da requisiçãp
- *                       nome, preço de custo, preço de venda, quantidade e unidade atualizados. No path
- *                       deve ser passado o id do produto que se deseja editar.
+ *                       nome, preço de custo, preço de venda, quantidade, unidade e estoque mínimo atualizados. 
+ *                       No path deve ser passado o id do produto que se deseja editar.
  *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
@@ -498,12 +509,15 @@ router.post('/api', auth_middleware, (req, res) => {
 router.put('/api/:id', auth_middleware, (req, res) => {
     const product_id = req.params.id
 
-    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || /*!req.body.photo ||*/ !req.body.quantity)
+    if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || /*!req.body.photo ||*/ !req.body.quantity || !req.body.min)
         return res.status(400).json({ message: 'Faltam dados.' })
 
-    if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity))
+    if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity) || isNaN(req.body.min))
         return res.status(400).json({ message: 'Há dados inválidos.'})
 
+    if(req.body.min < 0) {
+        return res.status(400).json({ message: 'Quantidade mínima de estoque inválida.' })
+    }
 
     Product.findOne({_id: product_id})
         .then(product => {
@@ -516,6 +530,7 @@ router.put('/api/:id', auth_middleware, (req, res) => {
                 product.quantity = Number(req.body.quantity),
                 // product.photo = req.body.photo,
                 product.unity = req.body.unity
+                product.min = req.body.min
 
                 if(product.name != req.body.name) { // Mudança de nome do produto, verificar se já existe ou não.
                     Product.findOne({name: req.body.name, id_store: req.store_id})
@@ -612,6 +627,49 @@ router.delete('/api/:id', auth_middleware, (req, res) => {
         .catch(err => {
             return res.status(400).json({ message: 'Erro ao deletar produto.' })
         })
+})
+
+/**
+ * @swagger
+ * /product/api/less/than/min:
+ *      get:
+ *          summary: Busca de produtos abaixo do estoque mínimo.
+ *          description: Rota para consultar os produtos abaixo do estoque mínimo da loja que está logada.
+ *                       É necessário autenticação para acessá-la.
+ *          tags: [Product]
+ *      
+ *          security:
+ *            - Bearer: []
+ *
+ *          responses: 
+ *              '200': 
+ *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      products:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteProduct'
+ *              '400':
+ *                  description: Erro ao consultar produtos no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ *              '401':
+ *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
+ */
+router.get('/api/less/than/min', auth_middleware, async (req, res) => {
+    try {
+        const products = await Product.find({
+            id_store: req.store_id,
+            $where: "this.quantity < this.min"
+        })
+        res.status(200).json({products})
+    } catch(err) {
+        res.status(400).json({ message: 'Erro ao consultar produtos.' })
+    }
 })
 
 module.exports = router
