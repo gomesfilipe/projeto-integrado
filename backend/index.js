@@ -96,14 +96,11 @@ app.listen(port, () => {
 // Não deixar acessar rota de login nem de cadastro de loja quando estiver logado. //!OK
 // Conferir documentação e melhorá-la com mais detalhes. //!OK
 // Quando deleta uma venda precisa tirar ela da lista de vendas da loja. //!OK
+// Adicionar campo min na model de produtos //!OK
+// Mudar rotas post e put de product para adaptar ao campo min //!OK
+// Fazer rota de get produtos abaixo de min //!OK
+// Atualizar documentação de products //!OK
 
 // TODO
-// Adicionar campo min na model de produtos
-// Mudar rotas post e put de product para adaptar ao campo min
-// Fazer rota de get produtos abaixo de min
-// Atualizar documentação de products
-
-// Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo).
 // Fazer scripts de testes, ver documentação do describe.
 // Diminuir tempo do token de validação.
-
