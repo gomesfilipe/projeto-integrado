@@ -21,7 +21,7 @@ const Product = new Schema({
         type: Number,
         required: true
     },
-
+    
     // photo: {
     //     type: String,
     //     required: true
@@ -34,6 +34,11 @@ const Product = new Schema({
 
     id_store: {
         type: String,
+        required: true
+    },
+
+    min: {
+        type: Number,
         required: true
     }
 })
