@@ -99,7 +99,7 @@ const auth_middleware = require('../middlewares/auth')
  * 
  *          responses: 
  *              '200': 
- *                  description: Produtos consultados com sucesso!
+ *                  description: Vendas consultadoa com sucesso!
  *                  schema:
  *                    type: object
  *                    properties:
@@ -109,7 +109,7 @@ const auth_middleware = require('../middlewares/auth')
  *                          $ref: '#/definitions/CompleteSale'
  *                          
  *              '400':
- *                  description: Erro ao consultar produtos no banco de dados.
+ *                  description: Erro ao consultar vendas no banco de dados.
  *                  schema:
  *                    $ref: '#/definitions/Error'
  *              '401':
@@ -136,7 +136,7 @@ router.get('/api/all', (req, res) => {
  * 
  *          responses: 
  *              '200': 
- *                  description: Produtos consultados com sucesso!
+ *                  description: Vendas consultadas com sucesso!
  *                  schema:
  *                    type: object
  *                    properties:
@@ -145,7 +145,7 @@ router.get('/api/all', (req, res) => {
  *                        items:
  *                          $ref: '#/definitions/CompleteSale'
  *              '400':
- *                  description: Erro ao consultar produtos no banco de dados.
+ *                  description: Erro ao consultar vendas no banco de dados.
  *                  schema:
  *                    $ref: '#/definitions/Error'
  *              '401':
@@ -183,7 +183,7 @@ router.get('/api', auth_middleware, (req, res) => {
  * 
  *          responses: 
  *              '200': 
- *                  description: Produtos consultados com sucesso!
+ *                  description: Vendas consultadas com sucesso!
  *                  schema:
  *                    type: object
  *                    properties:
@@ -192,7 +192,7 @@ router.get('/api', auth_middleware, (req, res) => {
  *                        items:
  *                          $ref: '#/definitions/CompleteSale'
  *              '400':
- *                  description: Erro ao consultar produtos no banco de dados ou alguma das datas inválida.
+ *                  description: Erro ao consultar vendas no banco de dados ou alguma das datas inválida.
  *                  schema:
  *                    $ref: '#/definitions/Error'
  *              '401':
@@ -344,7 +344,7 @@ router.post('/api', auth_middleware, async (req, res) => {
  * 
  *          responses: 
  *              '200': 
- *                  description: Produto deletado com sucesso!
+ *                  description: Venda deletada com sucesso!
  *                  schema:
  *                    $ref: '#/definitions/Success'
  *              '400':
@@ -367,6 +367,15 @@ router.delete('/api/:id', auth_middleware, (req, res) => {
                 for(let i = 0; i < sale.items.length; i++) { // Deletando os itens da venda no banco de dados.
                     await Item.deleteOne({_id: sale.items[i]})
                 }
+                
+                let store = await Store.findOne({_id: sale.id_store})
+                const index = store.sales.indexOf(sale_id)
+                
+                if(index > -1) { // Retirando venda da lista de vendas da loja.
+                    store.sales.splice(index, 1)
+                }
+
+                await store.save()
                 
                 Sale.deleteOne({_id: sale_id})
                     .then(() => res.status(200).json({ message: 'Venda deletada com sucesso!' }))
