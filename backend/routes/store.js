@@ -57,6 +57,16 @@ const no_auth_middleware = require('../middlewares/no_auth')
  *          items:
  *            type: string
  *            example:
+ *        sales:
+ *          items:
+ *            type: string
+ *            example: 
+ *        _id:
+ *          type: string
+ *          example: 62caf274427bbcad14fcd604
+ *        __v:
+ *          type: number
+ *          example: 0
  * 
  *   CompleteStore:
  *      type: object
@@ -81,7 +91,7 @@ const no_auth_middleware = require('../middlewares/no_auth')
  *            type: string
  *            example: 62c9dfeab664c24450071b1a
  *        __v:
- *          type: integer
+ *          type: number
  *          example: 0
  * 
  *   Error:
@@ -328,7 +338,7 @@ router.get('/api/all', (req, res) => {
  *      get:
  *          summary: Busca da loja que está logada.
  *          description: Rota para consultar dados da loja que está logada.
- *                       É necessário estar logado para acessá-la.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
@@ -371,7 +381,7 @@ router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
  *      put:
  *          summary: Edição da loja que está logada.
  *          description: Rota para editar informações da loja que estiver logada.
- *                       É necessário estar logado para acessá-la.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Store]
  *          security:
  *            - Bearer: []
@@ -456,6 +466,7 @@ router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
  *          description: Rota para excluir a loja que estiver logada. É necessário
  *                       passar a senha de administrador no corpo da requisição para permitir
  *                       a exclusão da loja, juntamente com todas as suas vendas e produtos.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Store]
  *          security:
  *            - Bearer: []

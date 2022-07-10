@@ -22,6 +22,70 @@ const auth_middleware = require('../middlewares/auth')
  *       type: apiKey
  *       name: Authorization
  *       in: header
+ * 
+ * definitions:
+ *   CompleteSale:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: 62c49c5bc163eea36e8756c8
+ *       items:
+ *         type: array
+ *         items:
+ *           type: string
+ *           example: 62c34b928340ed2117560766
+ *       date: 
+ *         type: string
+ *         example: 2022-07-05T20:16:31.417Z
+ *       value:
+ *         type: number
+ *         example: 120.5
+ *       id_store:
+ *         type: string
+ *         example: 62c2440e7e340b831c3ab807
+ *       __v:
+ *         type: number
+ *         example: 0
+ *
+ *   Sale:
+ *     type: object
+ *     properties:
+ *       items:
+ *         type: array
+ *         items:
+ *           type: object
+ *           properties:
+ *             id_product:
+ *               type: string
+ *               example: 62c34b928340ed2117560766
+ *             quantity:
+ *               type: string
+ *               example: 5
+ *       value:
+ *         type: string
+ *         example: 125.5
+ * 
+ *   Error:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: error message
+ *
+ *   ErrorToken:
+ *     type: object
+ *     properties:
+ *       err:
+ *         type: string
+ *         example: error token message
+ * 
+ *   Success:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: success message
  */
 
 /**
@@ -29,17 +93,29 @@ const auth_middleware = require('../middlewares/auth')
  * /sale/api/all:
  *      get:
  *          summary: Busca de todas as vendas de todas as lojas cadastradas.
- *          description: Rota para consultar todas as vendas efetuadas.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para consultar todas as vendas efetuadas de todas as lojas cadastradas.
+ *                       Não necessário autenticação para acessá-la.
  *          tags: [Sale]
  * 
  *          responses: 
  *              '200': 
  *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      sales:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteSale'
+ *                          
  *              '400':
  *                  description: Erro ao consultar produtos no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/all', (req, res) => {
     Sale.find()
@@ -53,7 +129,7 @@ router.get('/api/all', (req, res) => {
  *      get:
  *          summary: Busca de todas as vendas da loja que está logada.
  *          description: Rota para consultar todas as vendas efetuadas pela loja logada.
- *                       É necessário estar logado para acessá-la.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Sale]
  *          security:
  *            - Bearer: []
@@ -61,10 +137,21 @@ router.get('/api/all', (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      sales:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteSale'
  *              '400':
  *                  description: Erro ao consultar produtos no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api', auth_middleware, (req, res) => {
     Sale.find({id_store: req.store_id})
@@ -78,7 +165,7 @@ router.get('/api', auth_middleware, (req, res) => {
  *      get:
  *          summary: Busca de vendas por data.
  *          description: Rota para consultar as vendas por período. As datas devem estar no formato YYYY-MM-DD.
- *                       É necessário estar logado para acessá-la.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Sale]
  *          security:
  *            - Bearer: []
@@ -97,10 +184,21 @@ router.get('/api', auth_middleware, (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      sales:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteSale'
  *              '400':
- *                  description: Erro ao consultar produtos no banco de dados.
+ *                  description: Erro ao consultar produtos no banco de dados ou alguma das datas inválida.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
     if(!req.params.from_date || !req.params.to_date)
@@ -131,8 +229,9 @@ router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
  * /sale/api/:
  *      post:
  *          summary: Cadastro de venda.
- *          description: Rota para efetuar as vendas da loja.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para efetuar as vendas da loja. Devem ser passados no corpo da requisição 
+ *                       os itens e o valor da venda.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Sale]
  *          security:
  *            - Bearer: []
@@ -141,30 +240,28 @@ router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
  *          - in: body
  *            name: sale
  *            schema:
- *              type: object
- *              properties:
- *                items:
- *                  type: array
- *                  items:
- *                      type: object
- *                      properties:
- *                        id_product:
- *                          type: string
- *                          example: 62c34b928340ed2117560766
- *                        quantity:
- *                          type: string
- *                          example: 5
- *                value:
- *                  type: string
- *                  example: 120.00
+ *              $ref: '#/definitions/Sale'
  * 
  *          responses: 
  *              '200': 
  *                  description: Venda efetuada com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      new_sale:
+ *                        $ref: '#/definitions/CompleteSale'
+ *                      message:
+ *                        type: string
+ *                        example: success message
+ *                          
  *              '400':
  *                  description: Erro ao cadastrar venda no banco de dados, ou faltam dados, ou dados foram enviados de modo incorreto.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.post('/api', auth_middleware, async (req, res) => {
     if(!req.body.items || !req.body.value /*|| !req.body.id_store*/)
@@ -233,8 +330,8 @@ router.post('/api', auth_middleware, async (req, res) => {
  * /sale/api/{id}:
  *      delete:
  *          summary: Exclusão de venda por id.
- *          description: Rota para deletar uma venda específica por id.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para deletar uma venda específica por id da loja que está logada.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Sale]
  *          security:
  *            - Bearer: []
@@ -248,10 +345,16 @@ router.post('/api', auth_middleware, async (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produto deletado com sucesso!
+ *                  schema:
+ *                    $ref: '#/definitions/Success'
  *              '400':
  *                  description: Erro ao deletar venda no banco de dados ou venda não encontrada.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.delete('/api/:id', auth_middleware, (req, res) => {
     const sale_id = req.params.id

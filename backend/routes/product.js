@@ -18,6 +18,75 @@ const auth_middleware = require('../middlewares/auth')
  *       type: apiKey
  *       name: Authorization
  *       in: header
+ * 
+ * definitions:
+ *   Product:
+ *     type: object
+ *     properties:
+ *       name:
+ *         type: string
+ *         example: Prego
+ *       cost:
+ *         type: number
+ *         example: 25.5
+ *       sale:
+ *         type: number
+ *         example: 42.5
+ *       quantity:
+ *         type: number
+ *         example: 20
+ *       unity:
+ *         type: string
+ *         example: KG
+ * 
+ *   CompleteProduct:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: 62c339f67ef69ce43d463525
+ *       name:
+ *         type: string
+ *         example: Prego
+ *       cost:
+ *         type: number
+ *         example: 25.5
+ *       sale:
+ *         type: number
+ *         example: 42.5
+ *       quantity:
+ *         type: number
+ *         example: 20
+ *       unity:
+ *         type: string
+ *         example: KG
+ *       id_store:
+ *         type: string
+ *         example: 62c2440e7e340b831c3ab807
+ *       __v:
+ *         type: number
+ *         example: 0
+ * 
+ *   Error:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: error message
+ *
+ *   ErrorToken:
+ *     type: object
+ *     properties:
+ *       err:
+ *         type: string
+ *         example: error token message
+ *
+ *   Success:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: success message
  */
 
 /**
@@ -25,17 +94,28 @@ const auth_middleware = require('../middlewares/auth')
  * /product/api/all:
  *      get:
  *          summary: Busca de todos os produtos de todas as lojas cadastradas.
- *          description: Rota para consultar todos os produtos cadastrados.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para consultar todos os produtos cadastrados de todas as lojas cadastradas.
+ *                       Não é necessário autenticação para acessá-la.
  *          tags: [Product]
  * 
  *          responses: 
  *              '200': 
  *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      products:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteProduct'
  *              '400':
  *                  description: Erro ao consultar produtos no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/all', (req, res) => {
     Product.find()
@@ -48,19 +128,30 @@ router.get('/api/all', (req, res) => {
  * /product/api:
  *      get:
  *          summary: Busca de todos os produtos da loja que está logada.
- *          description: Rota para consultar um produto específico por id.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para consultar todos os produtos da loja que está logada.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
  * 
  *          responses: 
  *              '200': 
- *                  description: Produto consultado com sucesso!
+ *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      products:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteProduct'
  *              '400':
- *                  description: Erro ao consultar produto no banco de dados ou produto não encontrada.
+ *                  description: Erro ao consultar produto no banco de dados ou produtos não encontrados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api', auth_middleware, (req, res) => {
     Product.find({id_store: req.store_id})
@@ -71,7 +162,7 @@ router.get('/api', auth_middleware, (req, res) => {
                 res.status(200).json({products})
             }
         })
-        .catch(() => {return res.status(400).json({ message: 'Produto não encontrado.' })})
+        .catch(() => {return res.status(400).json({ message: 'Erro ao buscar produtos.' })})
 })
 
 /**
@@ -81,7 +172,7 @@ router.get('/api', auth_middleware, (req, res) => {
  *          summary: Busca de todos produtos da loja que está logada com paginação.
  *          description: Rota para consultar produtos em geral da loja que está logada.
  *                       Deve-se passar no path da requisição o número e tamanho da página de produtos.
- *                       É necessário estar logado para acessar esta rota.
+ *                       É necessário autenticação para acessar esta rota.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
@@ -99,10 +190,21 @@ router.get('/api', auth_middleware, (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      products:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteProduct'
  *              '400':
  *                  description: Erro ao consultar produto no banco de dados ou produto não encontrado ou faltam dados no corpo da requisição.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/:page/:size_page', auth_middleware, (req, res) => {
     const page = req.params.page
@@ -132,9 +234,9 @@ router.get('/api/:page/:size_page', auth_middleware, (req, res) => {
  * /product/api/name/{name}/{page}/{size_page}:
  *      get:
  *          summary: Busca de produtos da loja que está logada por nome com paginação.
- *          description: Rota para consultar produtos que contenham seu nome iniciado pelo parâmetro passado.
- *                       Deve-se passar no path da requisição o número e tamanho da página de produtos.
- *                       É necessário estar logado para acessar esta rota.
+ *          description: Rota para consultar produtos da loja que está logada que contenham seu nome iniciado pelo parâmetro passado.
+ *                       Deve-se passar no path da requisição o nome do produto, o número e tamanho da página de produtos.
+ *                       É necessário autenticação para acessar esta rota.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
@@ -156,10 +258,21 @@ router.get('/api/:page/:size_page', auth_middleware, (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produtos consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      products:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteProduct'
  *              '400':
  *                  description: Erro ao consultar produto no banco de dados ou produto não encontrado ou faltam dados no corpo da requisição.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
     const product_name = req.params.name
@@ -198,8 +311,8 @@ router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
  * /product/api/{name}:
  *      get:
  *          summary: Busca de produtos da loja que está logada por nome sem paginação.
- *          description: Rota para consultar produtos por nome sem paginação.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para consultar produtos da loja que está logada por nome sem paginação.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
@@ -213,10 +326,21 @@ router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produto consultado com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      products:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/CompleteProduct'
  *              '400':
  *                  description: Erro ao consultar produto no banco de dados ou produto não encontrada.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/:name', auth_middleware, (req, res) => {
     const product_name = req.params.name
@@ -248,8 +372,8 @@ router.get('/api/:name', auth_middleware, (req, res) => {
  *      post:
  *          summary: Cadastro de produto.
  *          description: Rota para efetuar cadastro de produto, devendo ser informados
- *                       nome, preço de custo, preço de venda, quantidade, link para foto, unidade e id de sua loja.
- *                       É necessário estar logado para acessá-la.
+ *                       nome, preço de custo, preço de venda, quantidade e unidade.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
@@ -257,33 +381,29 @@ router.get('/api/:name', auth_middleware, (req, res) => {
  *          - in: body
  *            name: product
  *            schema:
- *              type: object
- *              properties:
- *                name:
- *                  type: string
- *                  example: Martelo
- *                cost:
- *                  type: string
- *                  example: 30.50
- *                sale:
- *                  type: string
- *                  example: 50.99
- *                quantity:
- *                  type: string
- *                  example: 10
- *                unity:
- *                  type: string
- *                  example: Unidade
+ *              $ref: '#/definitions/Product'
  * 
  *          responses: 
  *              '200': 
  *                  description: Produto cadastrado com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      product:
+ *                        $ref: '#/definitions/CompleteProduct'
+ *                      message:
+ *                        type: string
+ *                        example: success message
  *              '400':
  *                  description: Erro ao cadastrar produto. (Faltaram dados no corpo da requisição,
  *                               ou o produto já existe, ou ocorreu falha ao salvar no banco de dados ou 
  *                               dados foram passados de modo incorreto)
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.post('/api', auth_middleware, (req, res) => {
     const name1 = req.body.name
@@ -336,9 +456,10 @@ router.post('/api', auth_middleware, (req, res) => {
  * /product/api/{id}:
  *      put:
  *          summary: Edição de produto.
- *          description: Rota para efetuar edição de produto, devendo ser informados
- *                       nome, preço de custo, preço de venda, quantidade, link para foto, unidade e id de sua loja atualizados.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para efetuar edição de produto, devendo ser informados no corpo da requisiçãp
+ *                       nome, preço de custo, preço de venda, quantidade e unidade atualizados. No path
+ *                       deve ser passado o id do produto que se deseja editar.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
@@ -350,33 +471,29 @@ router.post('/api', auth_middleware, (req, res) => {
  *          - in: body
  *            name: product
  *            schema:
- *              type: object
- *              properties:
- *                name:
- *                  type: string
- *                  example: Martelo
- *                cost:
- *                  type: string
- *                  example: 30.50
- *                sale:
- *                  type: string
- *                  example: 50.99
- *                quantity:
- *                  type: string
- *                  example: 10
- *                unity:
- *                  type: string
- *                  example: Unidade
+ *              $ref: '#/definitions/Product'
  * 
  *          responses: 
  *              '200': 
  *                  description: Produto editado com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      edited_product:
+ *                        $ref: '#/definitions/CompleteProduct'
+ *                      message:
+ *                        type: string
+ *                        example: success message
  *              '400':
  *                  description: Erro ao editar produto. (Faltaram dados no corpo da requisição,
  *                               ou o produto não existe, ou ocorreu falha ao salvar edição no banco de dados ou 
- *                               dados foram passados de modo incorreto)
+ *                               dados foram passados de modo incorreto).
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.put('/api/:id', auth_middleware, (req, res) => {
     const product_id = req.params.id
@@ -435,8 +552,9 @@ router.put('/api/:id', auth_middleware, (req, res) => {
  * /product/api/{id}:
  *      delete:
  *          summary: Exclusão de produto por id.
- *          description: Rota para deletar um produto específico por id.
- *                       É necessário estar logado para acessá-la.
+ *          description: Rota para deletar um produto específico por id da loja que está logada.
+ *                       O id do produto deve ser passado no path da requisição.
+ *                       É necessário autenticação para acessá-la.
  *          tags: [Product]
  *          security:
  *            - Bearer: []
@@ -450,10 +568,16 @@ router.put('/api/:id', auth_middleware, (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Produto deletado com sucesso!
+ *                  schema:
+ *                    $ref: '#/definitions/Success'
  *              '400':
  *                  description: Erro ao deletar produto no banco de dados ou produto não encontrado.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.delete('/api/:id', auth_middleware, (req, res) => {
     const product_id = req.params.id

@@ -21,7 +21,38 @@ const auth_middleware = require('../middlewares/auth')
  *       in: header
  * 
  * definitions:
+ *   Item:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: 62c34b928340ed2117560766
+ *       id_product:
+ *         type: string
+ *         example: 62c339f67ef69ce43d463525
+ *       id_store:
+ *         type: string
+ *         example: 62c2440e7e340b831c3ab807
+ *       id_quantity:
+ *         type: number
+ *         example: 4
+ *       __v:
+ *         type: number
+ *         example: 0
  * 
+ *   Error:
+ *     type: object
+ *     properties:
+ *       message:
+ *         type: string
+ *         example: error message
+ *
+ *   ErrorToken:
+ *     type: object
+ *     properties:
+ *       err:
+ *         type: string
+ *         example: error token message
  */
 
 /**
@@ -36,10 +67,22 @@ const auth_middleware = require('../middlewares/auth')
  *          responses: 
  *              '200': 
  *                  description: Itens consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      items:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/Item'
  *              '400':
  *                  description: Erro ao consultar itens no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ * 
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api/all', (req, res) => {
     Item.find()
@@ -52,7 +95,7 @@ router.get('/api/all', (req, res) => {
  * /item/api:
  *      get:
  *          summary: Busca de todos os itens da loja que está logada.
- *          description: Rota para consultar todos os itens cadastrados.
+ *          description: Rota para consultar todos os itens cadastrados da loja que está logada.
  *                       É necessário estar logado para acessá-la.
  *          tags: [Item]
  *          security:
@@ -61,10 +104,21 @@ router.get('/api/all', (req, res) => {
  *          responses: 
  *              '200': 
  *                  description: Itens consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      items:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/definitions/Item'
  *              '400':
  *                  description: Erro ao consultar itens no banco de dados.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
  *              '401':
  *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
  */
 router.get('/api', auth_middleware, (req, res) => {
     Item.find({id_store: req.store_id})
