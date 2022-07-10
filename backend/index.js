@@ -18,9 +18,9 @@ const swaggerOptions = {
     swaggerDefinition: {
         info: {
             openapi: '3.0.0',
-            title: 'SISVE API',
-            description: 'API para desenvolvimento do projeto SISVE',
-            version: '1.0.0'
+            title: 'Sistema de Vendas e Estoque (SISVE) API',
+            description: 'Documentação da API para desenvolvimento do projeto SISVE.',
+            version: '2.0.0'
         },
         servers: [`http://localhost:${port}`]
     },
@@ -94,9 +94,9 @@ app.listen(port, () => {
 // Além da mensagem de sucesso, enviar os dados do produto / venda / loja cadastrados pelo cliente. (decidir). //!OK
 // Definir critérios de validação de username, password e admin_password. //!OK
 // Não deixar acessar rota de login nem de cadastro de loja quando estiver logado. //!OK
+// Conferir documentação e melhorá-la com mais detalhes. //!OK
 
 // TODO
-// Conferir documentação e melhorá-la com mais detalhes.
 // Fazer rota para dar get nos produtos abaixo do estoque mínimo (decidir se vai implementar ou não, teria que inserir um campo de estoque mínimo).
 // Fazer scripts de testes, ver documentação do describe.
 // Diminuir tempo do token de validação.
