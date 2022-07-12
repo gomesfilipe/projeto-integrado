@@ -162,7 +162,16 @@ const no_auth_middleware = require('../middlewares/no_auth')
  *              '200': 
  *                  description: Login efetuado com sucesso!
  *                  schema:
- *                    $ref: '#/definitions/Store'
+ *                    type: object
+ *                    properties:
+ *                      store:
+ *                        $ref: '#/definitions/CompleteStore'
+ *                      token:
+ *                        type: string
+ *                        example: token here
+ *                      message:  
+ *                        type: string
+ *                        example: success message
  *                      
  *              '400':
  *                  description: Erro ao efetuar login. (Faltaram dados no corpo da requisição,
@@ -245,7 +254,6 @@ router.post('/authenticate', no_auth_middleware, async (req, res) => {
  *                    $ref: '#/definitions/ErrorToken'
  */
 router.post('/api', no_auth_middleware, (req, res) => {
-    console.log('rota: [' + req.headers.authorization + ']')
     const username = req.body.username
      
     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
