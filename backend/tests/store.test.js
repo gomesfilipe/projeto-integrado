@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 require('../models/Store')
 const Store = mongoose.model('stores')
     
-describe('Testes no CRUD de loja', () => {
+describe('Testes nas rotas relacionadas a lojas', () => {
     beforeAll(async () => {
         await mongoose.connect('mongodb://localhost/sisvefake') // Conectando a um banco de dados fake para os testes.
         await Store.deleteMany({})
