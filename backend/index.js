@@ -100,7 +100,13 @@ app.listen(port, () => {
 // Mudar rotas post e put de product para adaptar ao campo min //!OK
 // Fazer rota de get produtos abaixo de min //!OK
 // Atualizar documentação de products //!OK
+// Corrigir documentação da rota de login (o json do response 200 está errado). //!OK
 
 // TODO
-// Fazer scripts de testes, ver documentação do describe.
+// Fazer scripts de testes.
+    // Testes Store //!OK
+    // Testes Product
+    // Testes Sale
+    // Testes Item
+
 // Diminuir tempo do token de validação.
