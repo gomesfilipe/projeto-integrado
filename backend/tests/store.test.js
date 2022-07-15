@@ -209,8 +209,11 @@ describe('Testes nas rotas relacionadas a lojas', () => {
     it('Deletar loja', async () => {
         const res = await request(app).delete('/store/api')
             .set({ Authorization: token })
+            .send({
+                admin_password: '123456admin'
+            })
         
-        const store = await Store.findOne({ username: 'Supermercado' }) // Editou o username pra Supermercado no teste de edição.
+        const store = await Store.findOne({ name: 'Supermercado' }) // Editou o username pra Supermercado no teste de edição.
         expect(store).toBe(null)
     })
 })
