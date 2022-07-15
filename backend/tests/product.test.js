@@ -9,11 +9,12 @@ const seed = require('./seeds')
 
 describe('Testes nas rotas relacionadas a produtos', () => {
     let token
+    let objects
     beforeAll(async () => {
         await mongoose.connect('mongodb://localhost/sisvefake') // Conectando a um banco de dados fake para os testes.
         await Store.deleteMany({})
         await Product.deleteMany({})
-        await seed()
+        objects = await seed()
 
         const res = await request(app).post('/store/authenticate')
             .send({
@@ -92,5 +93,142 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('product')
         expect(res.body).toHaveProperty('message')
+    })
+
+    it('Editar produto', async () => {
+        const id_product1 = objects.product1._id
+        const res = await request(app).put(`/product/api/${id_product1}`)
+            .set({ Authorization: token })
+            .send({
+                name: 'Ketchup Tradicional',
+                cost: 15.5,
+                sale: 20.5,
+                quantity: 50,
+                unity:'Unidade',
+                min: 30
+            })
+
+        expect(res.body).toHaveProperty('edited_product')
+        expect(res.body).toHaveProperty('message')
+        expect(res.body.edited_product.name).toBe('Ketchup Tradicional')
+        expect(res.body.edited_product.cost).toBe(15.5)
+        expect(res.body.edited_product.sale).toBe(20.5)
+        expect(res.body.edited_product.quantity).toBe(50)
+        expect(res.body.edited_product.unity).toBe('Unidade')
+        expect(res.body.edited_product.min).toBe(30)
+    })
+
+    it('Editar produto colocando nome já existente', async () => {
+        const id_product1 = objects.product1._id
+        const res = await request(app).put(`/product/api/${id_product1}`)
+            .set({ Authorization: token })
+            .send({
+                name: 'Feijao',
+                cost: 15.5,
+                sale: 20.5,
+                quantity: 50,
+                unity:'Unidade',
+                min: 30
+            })
+
+        expect(res.body).not.toHaveProperty('edited_product')
+        expect(res.body).toHaveProperty('message')
+    })
+
+    it('Editar produto com campos vazios', async () => {
+        const id_product1 = objects.product1._id
+        const res = await request(app).put(`/product/api/${id_product1}`)
+            .set({ Authorization: token })
+            .send({
+                cost: 15.5,
+                sale: 20.5,
+                unity:'Unidade',
+                min: 30
+            })
+
+        expect(res.body).not.toHaveProperty('edited_product')
+        expect(res.body).toHaveProperty('message')
+    })
+
+    it('Editar produto com campos inválidos', async () => {
+        const id_product1 = objects.product1._id
+        const res = await request(app).put(`/product/api/${id_product1}`)
+            .set({ Authorization: token })
+            .send({
+                name: 'Feijao',
+                cost: 'abcdef',
+                sale: 'abcdef',
+                quantity: 50,
+                unity:'Unidade',
+                min: 30
+            })
+
+        expect(res.body).not.toHaveProperty('edited_product')
+        expect(res.body).toHaveProperty('message')
+    })
+
+    it('Get em todos os produtos da loja', async () => {
+        const res = await request(app).get('/product/api')
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(4)
+    })
+
+    it('Get em todos os produtos da loja com paginação', async () => {
+        let res = await request(app).get(`/product/api/${1}/${2}`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(2)
+
+        res = await request(app).get(`/product/api/${2}/${2}`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(2)
+    })
+
+    it('Get de produtos por nome', async () => {
+        const name = 'ket'
+        const res = await request(app).get(`/product/api/${name}`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(2)
+    })
+
+    it('Get de produtos por nome com paginação', async () => {
+        const name = 'ket'
+        let res = await request(app).get(`/product/api/name/${name}/${1}/${1}`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(1)
+
+        res = await request(app).get(`/product/api/name/${name}/${2}/${1}`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(1)
+    })
+
+    it('Get de produtos abaixo do estoque mínimo', async () => {
+        const res = await request(app).get(`/product/api/less/than/min`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('products')
+        expect(res.body.products.length).toBe(2)
+        expect(res.body.products[0].name).toBe('Feijao')
+        expect(res.body.products[1].name).toBe('Refrigerante')
+    })
+
+    it('Exclusão de produto por id', async () => {
+        const id_product2 = objects.product2._id
+        const res = await request(app).delete(`/product/api/${id_product2}`)
+            .set({ Authorization: token })
+    
+        const product = await Store.findOne({ name: 'Feijao' })
+        expect(product).toBe(null)
     })
 })
