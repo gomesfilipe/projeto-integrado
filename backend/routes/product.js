@@ -302,7 +302,6 @@ router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
         .skip(page > 0 ? ((page - 1) * size_page) : 0)
         .limit(size_page)
         .then(products => {
-            console.log(products)
             if(!products) {
                 return res.status(400).json({ message: 'Produto não encontrado.' })
             } else {
