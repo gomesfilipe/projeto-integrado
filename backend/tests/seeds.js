@@ -38,7 +38,7 @@ const seed_store_products = async () => {
         name: 'Feijao',
         cost: 8.80,
         sale: 15.60,
-        quantity: 70,
+        quantity: 20,
         unity: 'Pacote',
         id_store: store._id,
         min: 30
@@ -48,7 +48,7 @@ const seed_store_products = async () => {
         name: 'Refrigerante',
         cost: 4.00,
         sale: 8.50,
-        quantity: 25,
+        quantity: 10,
         unity: 'Pacote',
         id_store: store._id,
         min: 15
