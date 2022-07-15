@@ -1,11 +1,6 @@
 const express = require('express')
 // const app = express()
 const app = require('./routes')
-// const store = require('./routes/store')
-// const product = require('./routes/product')
-// const sale = require('./routes/sale')
-// const item = require('./routes/item')
-// const nologged = require('./routes/no_logged')
 const mongoose = require('mongoose')
 
 const swaggerJsdoc = require('swagger-jsdoc')
@@ -27,33 +22,18 @@ const swaggerOptions = {
     apis: ['routes/item.js', 'routes/no_logged.js', 'routes/product.js', 'routes/sale.js', 'routes/store.js']
 }
 
-
 const swaggerDocs = swaggerJsdoc(swaggerOptions)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 // Configuração mongoose.
-// mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost/sisve')
     .then(() => console.log('Connected database!'))
     .catch(() => console.log('Error to connect database.'))
 
 // Rodando servidor.
-// const port = 8081
 app.listen(port, () => {
     console.log(`The server is running in http://localhost:${port}`)
 })
-
-// // Middleware.
-// app.use(express.json())
-
-// Usando rotas user.
-// app.use('/store', store) // /store é o prefixo para acessar as rotas desse grupo.
-// app.use('/product', product) // /product é o prefixo para acessar as rotas desse grupo.
-// app.use('/sale', sale) // /sale é o prefixo para acessar as rotas desse grupo.
-// app.use('/item', item) // /item é o prefixo para acessar as rotas desse grupo.
-// app.use('/nologged', nologged) // /nologged é o prefixo para acessar as rotas desse grupo.
-
-// module.exports = app // Exportando app para poder executar os testes automatizados.
 
 //? JÁ FEITOS
 // Ajeitar chaves de busca para produtos e lojas. (De preferência IDs) //!OK
@@ -101,15 +81,13 @@ app.listen(port, () => {
 // Fazer rota de get produtos abaixo de min //!OK
 // Atualizar documentação de products //!OK
 // Corrigir documentação da rota de login (o json do response 200 está errado). //!OK
+// Colocar validação de valores negativos no cadastro / edição de produto. //!OK
+// Fazer scripts de testes. //!OK
+// Testes Store //!OK
+// Testes Product //!OK
+// Testes Sale //!OK
+// Testes Item //!OK
+// Colocar expect(statusCode) nos testes já feitos. //!OK
 
 // TODO
-// Fazer scripts de testes.
-    // Testes Store //!OK
-    // Testes Product //!OK
-    // Testes Sale //!OK
-    // Testes Item //!OK
-    // Colocar expect(statusCode) nos testes já feitos.
-
-// Colocar validação de valores negativos no cadastro / edição de produto.
-
 // Diminuir tempo do token de validação.
