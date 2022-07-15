@@ -430,14 +430,14 @@ router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
     //! Validar username, password e admin_password (definir critérios).
 
     Store.findOne({_id: store_id})
-        .then(store => {
+        .then(async store => {
             if(!store) {
                 return res.status(400).json({ message: 'Loja não encontrada.' })
             } else {
                 store.name = req.body.name,
                 // store.username = req.body.username,
-                store.password = req.body.password,
-                store.admin_password = req.body.admin_password
+                store.password = await bcrypt.hash(req.body.password, 10)
+                store.admin_password = await bcrypt.hash(req.body.admin_password, 10)
                 
                 if(store.username != req.body.username) { // Mudança de username, verificar se ele já existe ou não.
                     Store.findOne({username: req.body.username})
