@@ -105,8 +105,11 @@ app.listen(port, () => {
 // TODO
 // Fazer scripts de testes.
     // Testes Store //!OK
-    // Testes Product
-    // Testes Sale
-    // Testes Item
+    // Testes Product //!OK
+    // Testes Sale //!OK
+    // Testes Item //!OK
+    // Colocar expect(statusCode) nos testes já feitos.
+
+// Colocar validação de valores negativos no cadastro / edição de produto.
 
 // Diminuir tempo do token de validação.
