@@ -421,8 +421,8 @@ router.post('/api', auth_middleware, (req, res) => {
     if(isNaN(req.body.cost) || isNaN(req.body.sale) || isNaN(req.body.quantity) || isNaN(req.body.min))
         return res.status(400).json({ message: 'Há dados inválidos.' })
 
-    if(req.body.min < 0) {
-        return res.status(400).json({ message: 'Quantidade mínima de estoque inválida.' })
+    if(req.body.cost < 0 || req.body.sale < 0 || req.body.quantity < 0 || req.body.min < 0) {
+        return res.status(400).json({ message: 'Há valores negativos.' })
     }
 
     Product.findOne({name: name1, id_store: id_store1})
