@@ -48,5 +48,6 @@ describe('Testes nas rotas relacionadas a itens', () => {
         expect(res.body.items[0].id_store).toBe(objects.item1.id_store)
         expect(res.body.items[1].id_store).toBe(objects.item2.id_store)
         expect(res.body.items[2].id_store).toBe(objects.item3.id_store)
+        expect(res.statusCode).toBe(200)
     })
 })

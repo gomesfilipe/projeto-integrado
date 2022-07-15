@@ -36,6 +36,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
         expect(res.body.new_store.name).toBe('Loja')
         expect(res.body.new_store.username).toBe('loja123')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(200)
     })
     
 
@@ -50,6 +51,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
 
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('token')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Cadastrar loja com parâmetros vazios', async () => {
@@ -61,6 +63,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
         
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('token')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Cadastrar loja com parâmetros inválidos', async () => {
@@ -74,6 +77,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
     
         expect(res.body).toHaveProperty('message')
         expect(res.body).not.toHaveProperty('token')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Login', async () => {
@@ -89,6 +93,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
             expect(res.body.store.name).toBe('Loja')
             expect(res.body.store.username).toBe('loja123')
             expect(res.body).toHaveProperty('message')
+            expect(res.statusCode).toBe(200)
     })
 
     it('Login com senha incorreta', async () => {
@@ -100,6 +105,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
 
             expect(res.body).toHaveProperty('message')
             expect(res.body).not.toHaveProperty('token')
+            expect(res.statusCode).toBe(400)
     })
 
     it('Login com usuário não existente', async () => {
@@ -111,6 +117,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
 
             expect(res.body).toHaveProperty('message')
             expect(res.body).not.toHaveProperty('token')
+            expect(res.statusCode).toBe(400)
     })
 
     it('Login com campos vazios', async () => {
@@ -121,6 +128,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
 
             expect(res.body).toHaveProperty('message')
             expect(res.body).not.toHaveProperty('token')
+            expect(res.statusCode).toBe(400)
     })
 
     it('Get na própria loja', async () => {
@@ -134,6 +142,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
         expect(res.body.store).toHaveProperty('products')
         expect(res.body.store).toHaveProperty('sales')
         expect(res.body.store).toHaveProperty('__v')
+        expect(res.statusCode).toBe(200)
     })
 
     it('Editar loja', async () => {
@@ -156,6 +165,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
             expect(res.body.edited_store).toHaveProperty('__v')
             expect(res.body.edited_store.name).toBe('Supermercado')
             expect(res.body.edited_store.username).toBe('loja123')
+            expect(res.statusCode).toBe(200)
     })
 
     it('Editar loja colocando username já existente', async () => {
@@ -178,6 +188,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
 
             expect(res.body).not.toHaveProperty('edited_store')
             expect(res.body).toHaveProperty('message')
+            expect(res.statusCode).toBe(400)
     })
 
     it('Editar loja com campos vazios', async () => {
@@ -190,6 +201,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
 
         expect(res.body).not.toHaveProperty('edited_store')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Bloquear acesso a rota de cadastro quando está autenticado', async () => {
@@ -197,6 +209,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
             .set({ Authorization: token })
 
         expect(res.body).toHaveProperty('err')
+        expect(res.statusCode).toBe(401)
     })
 
     it('Bloquear acesso a rota de login quando está autenticado', async () => {
@@ -204,6 +217,7 @@ describe('Testes nas rotas relacionadas a lojas', () => {
             .set({ Authorization: token })
 
         expect(res.body).toHaveProperty('err')
+        expect(res.statusCode).toBe(401)
     })
 
     it('Deletar loja', async () => {
@@ -215,5 +229,6 @@ describe('Testes nas rotas relacionadas a lojas', () => {
         
         const store = await Store.findOne({ name: 'Supermercado' }) // Editou o username pra Supermercado no teste de edição.
         expect(store).toBe(null)
+        expect(res.statusCode).toBe(200)
     })
 })

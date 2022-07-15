@@ -53,6 +53,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).toHaveProperty('product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(200)
     })
 
     it('Cadastrar produto com nome já existente', async () => {
@@ -69,6 +70,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Cadastrar produto com parâmetros vazios', async () => {
@@ -83,6 +85,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Cadastrar produto com parâmetros inválidos', async () => {
@@ -99,6 +102,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Editar produto', async () => {
@@ -122,6 +126,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
         expect(res.body.edited_product.quantity).toBe(50)
         expect(res.body.edited_product.unity).toBe('Unidade')
         expect(res.body.edited_product.min).toBe(30)
+        expect(res.statusCode).toBe(200)
     })
 
     it('Editar produto colocando nome já existente', async () => {
@@ -139,6 +144,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('edited_product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Editar produto com campos vazios', async () => {
@@ -154,6 +160,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('edited_product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Editar produto com campos inválidos', async () => {
@@ -171,6 +178,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).not.toHaveProperty('edited_product')
         expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Get em todos os produtos da loja', async () => {
@@ -179,6 +187,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).toHaveProperty('products')
         expect(res.body.products.length).toBe(4)
+        expect(res.statusCode).toBe(200)
     })
 
     it('Get em todos os produtos da loja com paginação', async () => {
@@ -193,6 +202,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).toHaveProperty('products')
         expect(res.body.products.length).toBe(2)
+        expect(res.statusCode).toBe(200)
     })
 
     it('Get de produtos por nome', async () => {
@@ -202,6 +212,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).toHaveProperty('products')
         expect(res.body.products.length).toBe(2)
+        expect(res.statusCode).toBe(200)
     })
 
     it('Get de produtos por nome com paginação', async () => {
@@ -217,6 +228,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
 
         expect(res.body).toHaveProperty('products')
         expect(res.body.products.length).toBe(1)
+        expect(res.statusCode).toBe(200)
     })
 
     it('Get de produtos abaixo do estoque mínimo', async () => {
@@ -227,6 +239,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
         expect(res.body.products.length).toBe(2)
         expect(res.body.products[0].name).toBe('Feijao')
         expect(res.body.products[1].name).toBe('Refrigerante')
+        expect(res.statusCode).toBe(200)
     })
 
     it('Exclusão de produto por id', async () => {
@@ -236,5 +249,6 @@ describe('Testes nas rotas relacionadas a produtos', () => {
     
         const product = await Store.findOne({ name: 'Feijao' })
         expect(product).toBe(null)
+        expect(res.statusCode).toBe(200)
     })
 })
