@@ -88,7 +88,7 @@ describe('Testes nas rotas relacionadas a produtos', () => {
         expect(res.statusCode).toBe(400)
     })
 
-    it('Cadastrar produto com parâmetros inválidos', async () => {
+    it('Cadastrar produto com parâmetros inválidos 1', async () => {
         const res = await request(app).post('/product/api')
         .set({ Authorization: token })
         .send({
@@ -98,6 +98,23 @@ describe('Testes nas rotas relacionadas a produtos', () => {
             quantity: 'abcdef',
             unity:'Unidade',
             min: 30
+        })
+
+        expect(res.body).not.toHaveProperty('product')
+        expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
+    })
+
+    it('Cadastrar produto com parâmetros inválidos 2', async () => {
+        const res = await request(app).post('/product/api')
+        .set({ Authorization: token })
+        .send({
+            name: 'Maionese',
+            cost: -20.5,
+            sale: 15.5,
+            quantity: -15,
+            unity:'Unidade',
+            min: -7
         })
 
         expect(res.body).not.toHaveProperty('product')
