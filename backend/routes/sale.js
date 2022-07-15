@@ -267,18 +267,25 @@ router.post('/api', auth_middleware, async (req, res) => {
     if(!req.body.items || !req.body.value /*|| !req.body.id_store*/)
         return res.status(400).json({ message: 'Faltam dados.' })
     
-    if(isNaN(req.body.value))
+    if(isNaN(req.body.value) || req.body.value < 0)
         return res.status(400).json({ message: 'Há dados inválidos.'})
 
+    if(req.body.items.length == 0) 
+        return res.status(400).json({ message: 'A venda deve ter pelo menos um item.'})
+
     for(let i = 0; i < req.body.items.length; i++) { // Verificando se há estoque para todos os itens.
+        if(!req.body.items[i].quantity || !req.body.items[i].id_product) {
+            return res.status(400).json({ message: 'Faltam dados.'})
+        }
+
         let product = await Product.findOne({_id: req.body.items[i].id_product})
         
         if(!product) {
             return res.status(400).json({ message: 'Id inválido de um dos produtos.' })
         }
 
-        if(req.body.items[i].quantity > product.quantity  || req.body.items[i].quantity <= 0) {
-            return res.status(400).json({ message: 'Quantidade  inválida de um dos produtos.'})
+        if(req.body.items[i].quantity > product.quantity  || req.body.items[i].quantity <= 0 || isNaN(req.body.items[i].quantity)) {
+            return res.status(400).json({ message: 'Quantidade inválida de um dos produtos.'})
         }
     }
 
