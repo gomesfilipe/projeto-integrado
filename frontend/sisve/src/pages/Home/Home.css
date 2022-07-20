@@ -1,3 +1,7 @@
+/* import './styles/global.css' */
+
+
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -43,37 +47,159 @@
 
 .container {
   display: flex;
-  align-items: center;
+  align-items: left;
   flex-direction: column;
-}
+} 
 
 .container h1 {
-  margin: 84px 0 24px;
-  width: 50%;
-  padding: 24px;
-  background: plum;
-  border-radius: 5px;
+  margin: 135px 0 1px;
+  padding-left: 80px;
+  font-size: 130px;
+  color: #004AAD ;
+  font-family: Limelight;
   border: none;
-  font-size: 50px;
+  /* width: 50%; */
+  /* padding: 24px; */
+  /* padding: 10px; */
+  /* border-radius: 5px; */
+
+
+}
+
+.container p{ 
+  
+  margin: 1px 0 1px;
+  padding-left: 80px; 
+  color: #004AAD ;
+  font-family: Limelight; 
+  
+
+  /* width: 50%; */ 
+  /* padding: 2px;  */
+
+  
+ 
 }
 
 
-.container button{
-  width: 50%;
-  padding: 24px;
-  background: peachpuff;
-  border-radius: 5px;
+.container input{
+  margin: 2px 0 2px;
+  width: 20%; 
+  /* padding-left: 50px;  */
+
+  background: #FF914D;
+  font-family: Literata;
+  color: #004AAD ;
+  font-size: 30px;
+  
+ 
+  border-radius: 10px;
+  border-color:  #FF914D;
+
+
   border: none;
-  font-size: 25px;
   cursor : pointer;
   transition: filter 0.2s;
+} 
+
+
+.Login {
+  display: flex;
+  align-items: left;
+  flex-direction: column; 
+} 
+
+
+.Login h3{
+
+  margin: 10px 0 1px;
+  padding-left: 900px; 
+  font-family: Limelight;
+  color: #004AAD ;
+ 
+  font-size: 40px;   
 }
 
-.container button:hover{
+.Login p{
+  margin: 10px 0 1px;
+  padding-left: 900px;
+
+  font-family: Literata;
+  color: black;
+  /* font-size: 20px; */ 
+}
+
+.Login input{
+  margin: 10px 0 2px;
+  margin-left: 900px;
+  width: 210px;
+
+  transition: filter 0.2s;
+
+  /* padding-left: 150px; */
+  /* align-items: right; */
+  /* background: whitesmoke;
+  border-color: #004AAD ;
+  transition: filter 0.2s; */
+} 
+
+
+
+.Login button{
+  margin: 10px 0 2px;
+  width: 212px;
+  margin-left: 900px;
+  /* /* margin: 10px 0 10px;
+  padding-left: 900px; */
+  /* border-radius: 5px; */
+  border-color: #004AAD ;
+  border-radius: 2px;
+  background: #004AAD ;
+  font-family:  Limelight;
+  color: #FF914D;
+  
+  /* font-family: Verdana; */
+}   
+
+
+
+
+.Login button:hover{
   filter: brightness(0.9);
 }
 
-.container p {
+.cadastro {
+  display: flex;
+  align-items: left;
+  flex-direction: column; 
+} 
+
+
+.cadastro p{
+  margin: 10px 0 1px;
+  padding-left: 1100px;
+
+  font-family: Ibarra Real Nova;
+  color: #004AAD ;
+  font-size: 17px;
+}
+
+.cadastro button{
+  margin: 2px 0 1px;
+  margin-left: 1135px;
+  width: 150px;
+  background:  #FF914D;
+  
+  border-color: #FF914D;
+  border-radius: 10px;
+  color: #004AAD;
+  font-family:  Limelight;
+}
+
+.cadastro button:hover{
+  filter: brightness(0.9);
+}
+/* .container p {
   width: 50%;
   margin: 10px 0 10px;
   padding: 24px;
@@ -83,6 +209,6 @@
   font-size: 15px;
   align-items: center;
 }
-
+ */  
 
 
