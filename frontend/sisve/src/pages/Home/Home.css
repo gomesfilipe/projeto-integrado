@@ -44,6 +44,31 @@
   color: #888;
 } */
 
+/* 
+* { */
+  /* background-color: #FF914D; */
+  /* background-image: url("./fundo.png");  */
+
+  /* width: 200px; */
+  /* height: max-content; */
+  /* display: solid;
+  background-image: url("./download.jpg");
+  height: 400; */
+  /* background-color: #FF914D; */
+
+  /* background-image: linear-gradient(#004AAD , #FF914D); */
+/* 
+  background-image: linear-gradient(#FF914D); */
+  /* background-color: #cccccc;
+  background-image: gradient(red, yellow); */
+/* }  */
+
+
+/* .fundo {
+  background-image: linear-gradient(#004AAD , #FF914D);
+} */
+
+
 
 .container {
   display: flex;
@@ -58,12 +83,6 @@
   color: #004AAD ;
   font-family: Limelight;
   border: none;
-  /* width: 50%; */
-  /* padding: 24px; */
-  /* padding: 10px; */
-  /* border-radius: 5px; */
-
-
 }
 
 .container p{ 
@@ -72,35 +91,7 @@
   padding-left: 80px; 
   color: #004AAD ;
   font-family: Limelight; 
-  
-
-  /* width: 50%; */ 
-  /* padding: 2px;  */
-
-  
- 
 }
-
-
-.container input{
-  margin: 2px 0 2px;
-  width: 20%; 
-  /* padding-left: 50px;  */
-
-  background: #FF914D;
-  font-family: Literata;
-  color: #004AAD ;
-  font-size: 30px;
-  
- 
-  border-radius: 10px;
-  border-color:  #FF914D;
-
-
-  border: none;
-  cursor : pointer;
-  transition: filter 0.2s;
-} 
 
 
 .Login {
@@ -116,53 +107,34 @@
   padding-left: 900px; 
   font-family: Limelight;
   color: #004AAD ;
- 
   font-size: 40px;   
 }
 
 .Login p{
   margin: 10px 0 1px;
   padding-left: 900px;
-
   font-family: Literata;
   color: black;
-  /* font-size: 20px; */ 
+
 }
 
 .Login input{
   margin: 10px 0 2px;
   margin-left: 900px;
   width: 210px;
-
   transition: filter 0.2s;
-
-  /* padding-left: 150px; */
-  /* align-items: right; */
-  /* background: whitesmoke;
-  border-color: #004AAD ;
-  transition: filter 0.2s; */
 } 
-
-
 
 .Login button{
   margin: 10px 0 2px;
   width: 212px;
   margin-left: 900px;
-  /* /* margin: 10px 0 10px;
-  padding-left: 900px; */
-  /* border-radius: 5px; */
   border-color: #004AAD ;
   border-radius: 2px;
   background: #004AAD ;
   font-family:  Limelight;
   color: #FF914D;
-  
-  /* font-family: Verdana; */
 }   
-
-
-
 
 .Login button:hover{
   filter: brightness(0.9);
@@ -173,7 +145,6 @@
   align-items: left;
   flex-direction: column; 
 } 
-
 
 .cadastro p{
   margin: 10px 0 1px;
@@ -199,16 +170,5 @@
 .cadastro button:hover{
   filter: brightness(0.9);
 }
-/* .container p {
-  width: 50%;
-  margin: 10px 0 10px;
-  padding: 24px;
-  background: greenyellow;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  align-items: center;
-}
- */  
 
 
