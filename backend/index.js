@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
-const port = 5500
+const port = 6500
 
 // Configuração Swagger.
 const swaggerOptions = {
