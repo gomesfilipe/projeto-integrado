@@ -133,7 +133,7 @@ const no_auth_middleware = require('../middlewares/no_auth')
  *         example: 123456admin
  */
 
- function generate_token(params = {}) {
+function generate_token(params = {}) {
     const token = jwt.sign(params, auth_config.secret, {
         expiresIn: 86400 // 1 dia.
     })
@@ -253,56 +253,86 @@ router.post('/authenticate', no_auth_middleware, async (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.post('/api', no_auth_middleware, (req, res) => {
+router.post('/api', no_auth_middleware, async (req, res) => {
+    const name = req.body.name
     const username = req.body.username
-     
-    if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
+    const password = req.body.password
+    const admin_password = req.body.admin_password
+
+    if(!name || !username || !password || !admin_password)
         return res.status(400).json({ message: 'Faltam dados.' })
     
     // Validação dos campos.
-    if(req.body.username.length < 4)
+    if(username.length < 4)
         return res.status(400).json({ message: 'Tamanho do username deve ter no mínimo 4 caracteres.' })
 
-    if(req.body.password.length < 4)
+    if(password.length < 4)
         return res.status(400).json({ message: 'Tamanho da senha deve ter no mínimo 4 caracteres.' })
 
-    if(req.body.admin_password.length < 4)
+    if(admin_password.length < 4)
         return res.status(400).json({ message: 'Tamanho da senha de administrador deve ter no mínimo 4 caracteres.' })
 
-    Store.findOne({username: username})
-        .then(async store => {
-            if(store) {
-                return res.status(400).json({ message: 'Usuário já existente.' })
-            }
-
-            const new_store = new Store({
-                name: req.body.name,
-                username: req.body.username,
-                password: await bcrypt.hash(req.body.password, 10),
-                admin_password: await bcrypt.hash(req.body.admin_password, 10)
-            })
-
-            // const new_store = new Store({
-            //     name: req.body.name,
-            //     username: req.body.username,
-            //     password: req.body.password,
-            //     admin_password: req.body.admin_password
-            // })
-            
-            new_store.save()
-                .then(() => {
-                    new_store.password = undefined
-                    new_store.admin_password = undefined
-                    
-                    res.status(200).json({
-                        new_store,
-                        token: generate_token({id: new_store._id}), // Enviando token para já entrar na conta após cadastrar.
-                        message: "Loja cadastrada com sucesso!"
-                    })
-                })
-                .catch(err => res.status(400).json({ message: 'Erro ao cadastrar loja.' }))
+    try {
+        const store_same_name = await Store.findOne({ name: name })
+    
+        if(store_same_name)
+            return res.status(400).json({ message: 'Nome de loja já existente.' })
+    
+        const store_same_username = await Store.findOne({ username: username })
+    
+        if(store_same_username)
+            return res.status(400).json({ message: 'Username de loja já existente.' })
+    
+        const store = new Store({
+            name: name,
+            username: username,
+            password: await bcrypt.hash(password, 10),
+            admin_password: await bcrypt.hash(admin_password, 10)
+        }) 
+    
+        const new_store = await store.save()
+    
+        // new_store.password = undefined
+        // new_store.admin_password = undefined
+    
+        return res.status(200).json({
+            new_store,
+            token: generate_token({id: new_store._id}), // Enviando token para já entrar na conta após cadastrar.
+            message: "Loja cadastrada com sucesso!"
         })
-        .catch(err => res.status(400).json({ message: 'Erro ao cadastrar loja.' }))
+
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao cadastrar loja.' })
+    }
+
+
+    // Store.findOne({username: username})
+    //     .then(async store => {
+    //         if(store) {
+    //             return res.status(400).json({ message: 'Usuário já existente.' })
+    //         }
+
+    //         const new_store = new Store({
+    //             name: req.body.name,
+    //             username: req.body.username,
+    //             password: await bcrypt.hash(req.body.password, 10),
+    //             admin_password: await bcrypt.hash(req.body.admin_password, 10)
+    //         })
+            
+    //         new_store.save()
+    //             .then(() => {
+    //                 new_store.password = undefined
+    //                 new_store.admin_password = undefined
+                    
+    //                 res.status(200).json({
+    //                     new_store,
+    //                     token: generate_token({id: new_store._id}), // Enviando token para já entrar na conta após cadastrar.
+    //                     message: "Loja cadastrada com sucesso!"
+    //                 })
+    //             })
+    //             .catch(err => res.status(400).json({ message: 'Erro ao cadastrar loja.' }))
+    //     })
+    //     .catch(err => res.status(400).json({ message: 'Erro ao cadastrar loja.' }))
 })
 
 /**
@@ -384,7 +414,7 @@ router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
 })
 
 /**
- * @swagger
+ * * @swagger
  * /store/api:
  *      put:
  *          summary: Edição da loja que está logada.
@@ -420,50 +450,192 @@ router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do 
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
+// router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
+//     const store_id = req.store_id
+//     // const store_id = req.params.id
+
+//     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
+//         return res.status(400).json({ message: 'Faltam dados.' })
+
+//     //! Validar username, password e admin_password (definir critérios).
+
+//     Store.findOne({_id: store_id})
+//         .then(async store => {
+//             if(!store) {
+//                 return res.status(400).json({ message: 'Loja não encontrada.' })
+//             } else {
+//                 store.name = req.body.name,
+//                 // store.username = req.body.username,
+//                 store.password = await bcrypt.hash(req.body.password, 10)
+//                 store.admin_password = await bcrypt.hash(req.body.admin_password, 10)
+                
+//                 if(store.username != req.body.username) { // Mudança de username, verificar se ele já existe ou não.
+//                     Store.findOne({username: req.body.username})
+//                         .then(store2 => {
+//                             if(store2) { // Tem loja com o mesmo username.
+//                                 return res.status(400).json({ message: 'Username já está em uso.' })
+//                             } else {
+//                                 store.username = req.body.username
+//                                 store.save()
+//                                 .then(() => res.json({ message: 'Loja editada com sucesso!' }))
+//                                 .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
+//                             }
+//                         })
+//                         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
+//                 } else {
+//                     store.save()
+//                         .then((edited_store) => res.json({ 
+//                             edited_store,
+//                             message: 'Loja editada com sucesso!' 
+//                         }))
+//                         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
+//                 }
+                
+//             }
+//         })
+//         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
+// })
+
+/**
+ * @swagger
+ * /store/api/edit/name:
+ *      put:
+ *          summary: Edição de nome da loja que está logada.
+ *          description: Rota para editar o nome da loja que estiver logada.
+ *                       É necessário autenticação para acessá-la.
+ *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: body
+ *            name: store
+ *            schema:
+ *              type: object
+ *              properties:
+ *                name:
+ *                  type: string
+ *                  example: Novo nome              
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Loja editada com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      edited_store:
+ *                        $ref: '#/definitions/CompleteStore'
+ *                      message:  
+ *                        type: string
+ *                        example: success message
+ *              '400':
+ *                  description: Erro ao editar loja no banco de dados ou loja não encontrada ou algum parâmetro enviado inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ *              '401':
+ *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
+ */
+router.put('/api/edit/name', auth_middleware, async (req, res) => {
     const store_id = req.store_id
-    // const store_id = req.params.id
+    const name = req.body.name
 
-    if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
+    if(!name) {
         return res.status(400).json({ message: 'Faltam dados.' })
+    }
 
-    //! Validar username, password e admin_password (definir critérios).
+    try {
+        const store_same_name = await Store.findOne({ name: name })
+    
+        if(store_same_name) {
+            return res.status(400).json({ message: 'Nome de loja já existente.' })
+        }
 
-    Store.findOne({_id: store_id})
-        .then(async store => {
-            if(!store) {
-                return res.status(400).json({ message: 'Loja não encontrada.' })
-            } else {
-                store.name = req.body.name,
-                // store.username = req.body.username,
-                store.password = await bcrypt.hash(req.body.password, 10)
-                store.admin_password = await bcrypt.hash(req.body.admin_password, 10)
-                
-                if(store.username != req.body.username) { // Mudança de username, verificar se ele já existe ou não.
-                    Store.findOne({username: req.body.username})
-                        .then(store2 => {
-                            if(store2) { // Tem loja com o mesmo username.
-                                return res.status(400).json({ message: 'Username já está em uso.' })
-                            } else {
-                                store.username = req.body.username
-                                store.save()
-                                .then(() => res.json({ message: 'Loja editada com sucesso!' }))
-                                .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-                            }
-                        })
-                        .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-                } else {
-                    store.save()
-                        .then((edited_store) => res.json({ 
-                            edited_store,
-                            message: 'Loja editada com sucesso!' 
-                        }))
-                        .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-                }
-                
-            }
+        let store = await Store.findOne({ _id: store_id })
+        store.name = name
+        const edited_store = await store.save()
+        return res.status(200).json({
+            edited_store, 
+            message: 'Loja editada com sucesso!'
         })
-        .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
+
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao editar loja.' })
+    }
+})
+
+/**
+ * @swagger
+ * /store/api/edit/username:
+ *      put:
+ *          summary: Edição de username da loja que está logada.
+ *          description: Rota para editar o username da loja que estiver logada.
+ *                       É necessário autenticação para acessá-la.
+ *          tags: [Store]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: body
+ *            name: store
+ *            schema:
+ *              type: object
+ *              properties:
+ *                username:
+ *                  type: string
+ *                  example: Novo username              
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Loja editada com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      edited_store:
+ *                        $ref: '#/definitions/CompleteStore'
+ *                      message:  
+ *                        type: string
+ *                        example: success message
+ *              '400':
+ *                  description: Erro ao editar loja no banco de dados ou loja não encontrada ou algum parâmetro enviado inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ *              '401':
+ *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
+ */
+router.put('/api/edit/username', auth_middleware, async (req, res) => {
+    const store_id = req.store_id
+    const username = req.body.username
+
+    if(!username) {
+        return res.status(400).json({ message: 'Faltam dados.' })
+    }
+
+    if(username.length < 4) {
+        return res.status(400).json({ message: 'Tamanho do username deve ter no mínimo 4 caracteres.' })
+    }
+
+    try {
+        const store_same_username = await Store.findOne({ username: username })
+    
+        if(store_same_username) {
+            return res.status(400).json({ message: 'Username de loja já existente.' })
+        }
+
+        let store = await Store.findOne({ _id: store_id })
+        store.username = username
+        const edited_store = await store.save()
+        return res.status(200).json({
+            edited_store, 
+            message: 'Loja editada com sucesso!'
+        })
+
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao editar loja.' })
+    }
 })
 
 /**
