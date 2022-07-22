@@ -15,8 +15,6 @@ const Sale = mongoose.model('sales')
 const auth_middleware = require('../middlewares/auth')
 const no_auth_middleware = require('../middlewares/no_auth')
 
-// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
-
 /**
  * @swagger
  * securityDefinitions:
@@ -135,7 +133,7 @@ const no_auth_middleware = require('../middlewares/no_auth')
 
 function generate_token(params = {}) {
     const token = jwt.sign(params, auth_config.secret, {
-        expiresIn: 86400 // 1 dia.
+        expiresIn: 3600 // 1 hora.
     })
     return token
 }
@@ -417,89 +415,6 @@ router.get('/api', auth_middleware, async (req, res) => {
 })
 
 /**
- * * @swagger
- * /store/api:
- *      put:
- *          summary: Edição da loja que está logada.
- *          description: Rota para editar informações da loja que estiver logada.
- *                       É necessário autenticação para acessá-la.
- *          tags: [Store]
- *          security:
- *            - Bearer: []
- *          
- *          parameters:
- *          - in: body
- *            name: store
- *            schema:
- *              $ref: '#/definitions/Store'
- * 
- *          responses: 
- *              '200': 
- *                  description: Loja editada com sucesso!
- *                  schema:
- *                    type: object
- *                    properties:
- *                      edited_store:
- *                        $ref: '#/definitions/CompleteStore'
- *                      message:  
- *                        type: string
- *                        example: success message
- *              '400':
- *                  description: Erro ao editar loja no banco de dados ou loja não encontrada ou algum parâmetro enviado inválido.
- *                  schema:
- *                    $ref: '#/definitions/Error'
- *              '401':
- *                  description: Token inválido.
- *                  schema:
- *                    $ref: '#/definitions/ErrorToken'
- */
-// router.put('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
-//     const store_id = req.store_id
-//     // const store_id = req.params.id
-
-//     if(!req.body.name || !req.body.username || !req.body.password || !req.body.admin_password)
-//         return res.status(400).json({ message: 'Faltam dados.' })
-
-//     //! Validar username, password e admin_password (definir critérios).
-
-//     Store.findOne({_id: store_id})
-//         .then(async store => {
-//             if(!store) {
-//                 return res.status(400).json({ message: 'Loja não encontrada.' })
-//             } else {
-//                 store.name = req.body.name,
-//                 // store.username = req.body.username,
-//                 store.password = await bcrypt.hash(req.body.password, 10)
-//                 store.admin_password = await bcrypt.hash(req.body.admin_password, 10)
-                
-//                 if(store.username != req.body.username) { // Mudança de username, verificar se ele já existe ou não.
-//                     Store.findOne({username: req.body.username})
-//                         .then(store2 => {
-//                             if(store2) { // Tem loja com o mesmo username.
-//                                 return res.status(400).json({ message: 'Username já está em uso.' })
-//                             } else {
-//                                 store.username = req.body.username
-//                                 store.save()
-//                                 .then(() => res.json({ message: 'Loja editada com sucesso!' }))
-//                                 .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-//                             }
-//                         })
-//                         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-//                 } else {
-//                     store.save()
-//                         .then((edited_store) => res.json({ 
-//                             edited_store,
-//                             message: 'Loja editada com sucesso!' 
-//                         }))
-//                         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-//                 }
-                
-//             }
-//         })
-//         .catch(err => res.status(400).json({ message: 'Erro ao editar loja.' }))
-// })
-
-/**
  * @swagger
  * /store/api/edit/name:
  *      put:
@@ -674,10 +589,9 @@ router.put('/api/edit/username', auth_middleware, async (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.delete('/api', auth_middleware, async (req, res) => { // Tirei o parâmetro id do path.
+router.delete('/api', auth_middleware, async (req, res) => {
     const store_id = req.store_id
     const admin_password = req.body.admin_password
-    // const store_id = req.params.id
     
     try {
         let store = await Store.findOne({_id: store_id}).select('+admin_password')
