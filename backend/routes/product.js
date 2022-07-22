@@ -350,10 +350,6 @@ router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
 router.get('/api/:name', auth_middleware, (req, res) => {
     const product_name = req.params.name
 
-    // Coloquei page e size_page no path pois requisições get não podem ter body.
-    // const page = req.body.page
-    // const size_page = req.body.size_page
-
     if(!product_name)
         return res.status(400).json({ message: 'Faltam dados.' })
 
@@ -413,7 +409,6 @@ router.get('/api/:name', auth_middleware, (req, res) => {
 router.post('/api', auth_middleware, (req, res) => {
     const name1 = req.body.name
     const id_store1 = req.store_id // Este campo da requisição vem do middleware de autenticação.
-    // const id_store1 = req.body.id_store
 
     if(!req.body.name || !req.body.cost || !req.body.sale || !req.body.quantity || !req.body.unity || !req.body.min)
         return res.status(400).json({ message: 'Faltam dados.' })
@@ -440,12 +435,11 @@ router.post('/api', auth_middleware, (req, res) => {
                 unity: req.body.unity,
                 id_store: req.store_id,
                 min: req.body.min
-                // id_store: req.body.id_store
             })
 
             new_product.save()
                 .then((product) => {
-                    Store.findOne({_id: req.store_id}/*req.body.id_store}*/)
+                    Store.findOne({_id: req.store_id})
                         .then(store => {
                             store.products.push(new_product)
                             store.save()
