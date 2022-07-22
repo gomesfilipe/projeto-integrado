@@ -202,24 +202,28 @@ router.get('/api', auth_middleware, (req, res) => {
  */
 router.get('/api/dates/:from_date/:to_date', auth_middleware, (req, res) => {
     if(!req.params.from_date || !req.params.to_date)
-        return res.json({ message: 'Faltam dados.' })
+        return res.status(400).json({ message: 'Faltam dados.' })
 
     // Formato YYYY-MM-DD HH:mm:ss
     const from_date = new Date(`${req.params.from_date} 00:00:00`)
     const to_date = new Date(`${req.params.to_date} 00:00:00`)
 
     if(from_date == 'Invalid Date') {
-        return res.json({ message: 'Data inicial inválida.' })
+        return res.status(400).json({ message: 'Data inicial inválida.' })
     }
 
     if(to_date == 'Invalid Date') {
-        return res.json({ message: 'Data final inválida.' })
+        return res.status(400).json({ message: 'Data final inválida.' })
     }
 
-    Sale.find({"date": {
-        "$gte": from_date.toISOString(), // Início do período. Obs: devem estar no formato ISO.
-        "$lt": to_date.toISOString() // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
-    }, id_store: req.store_id})
+    Sale.find({
+        "date": {
+            "$gte": from_date.toISOString(), // Início do período. Obs: devem estar no formato ISO.
+            "$lt": to_date.toISOString() // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
+        }, 
+        
+        id_store: req.store_id
+    })
         .then(sales => res.status(200).json({sales}))
         .catch(err => res.status(400).json({ message: 'Erro ao buscar vendas.' }))
 })
@@ -390,6 +394,93 @@ router.delete('/api/:id', auth_middleware, (req, res) => {
             }
         })
         .catch(err => res.status(400).json({ message: 'Erro ao deletar venda.' }))
+})
+
+/**
+ * @swagger
+ * /sale/api/dashboards/{from_date}/{to_date}:
+ *      get:
+ *          summary: Consulta de faturamento e quantidade de vendas por data.
+ *          description: Rota para consultar faturamento e quantidade de vendas num período da loja que está logada. As datas devem estar no formato YYYY-MM-DD.
+ *                       É necessário autenticação para acessá-la.
+ *          tags: [Sale]
+ *          security:
+ *            - Bearer: []
+ *          
+ *          parameters:
+ *          - in: path
+ *            name: from_date
+ *            type: string
+ *            required: true     
+ * 
+ *          - in: path
+ *            name: to_date
+ *            type: string
+ *            required: true     
+ * 
+ *          responses: 
+ *              '200': 
+ *                  description: Dashboards consultados com sucesso!
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      sales_quantity:
+ *                        type: number
+ *                        example: 110
+ *                      sales_billing:
+ *                        type: number
+ *                        example: 15350.90
+ *              '400':
+ *                  description: Erro ao consultar vendas no banco de dados ou alguma das datas inválida.
+ *                  schema:
+ *                    $ref: '#/definitions/Error'
+ *              '401':
+ *                  description: Token inválido.
+ *                  schema:
+ *                    $ref: '#/definitions/ErrorToken'
+ */
+router.get('/api/dashboards/:from_date/:to_date', auth_middleware, async (req, res) => {
+    try {
+        if(!req.params.from_date || !req.params.to_date)
+            return res.status(400).json({ message: 'Faltam dados.' })
+
+        // Formato YYYY-MM-DD HH:mm:ss
+        const from_date = new Date(`${req.params.from_date} 00:00:00`)
+        const to_date = new Date(`${req.params.to_date} 00:00:00`)
+
+        if(from_date == 'Invalid Date') {
+            return res.status(400).json({ message: 'Data inicial inválida.' })
+        }
+
+        if(to_date == 'Invalid Date') {
+            return res.status(400).json({ message: 'Data final inválida.' })
+        }
+        
+        const store_id = req.store_id
+        const sales = await Sale.find({ 
+            "date": {
+                "$gte": from_date.toISOString(), // Início do período. Obs: devem estar no formato ISO.
+                "$lt": to_date.toISOString() // Fim do período. Exemplo: "2022-06-12T14:49:01.686Z"
+            },
+
+            id_store: store_id
+        })
+
+        const sales_quantity = sales.length
+        let sales_billing = 0
+
+        for(let sale of sales) {
+            sales_billing += sale.value
+        }
+
+        return res.status(200).json({
+            sales_quantity, 
+            sales_billing
+        })
+
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar vendas.' })
+    }
 })
 
 module.exports = router
