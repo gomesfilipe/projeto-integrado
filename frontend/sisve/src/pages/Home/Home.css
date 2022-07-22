@@ -1,176 +1,119 @@
-/* import './styles/global.css' */
 
-
-
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-} */
-
-/* 
-* { */
-  /* background-color: #FF914D; */
-  /* background-image: url("./fundo.png");  */
-
-  /* width: 200px; */
-  /* height: max-content; */
-  /* display: solid;
-  background-image: url("./download.jpg");
-  height: 400; */
-  /* background-color: #FF914D; */
-
-  /* background-image: linear-gradient(#004AAD , #FF914D); */
-/* 
-  background-image: linear-gradient(#FF914D); */
-  /* background-color: #cccccc;
-  background-image: gradient(red, yellow); */
-/* }  */
-
-
-/* * {
-  /* background-image: linear-gradient(#004AAD , #FF914D); */
-  /* background-image: url("fundo.png"); */
-  /* background-color: peachpuff;
-}  */
-
-
-
-.container {
+.linha{
   display: flex;
-  align-items: left;
-  flex-direction: column;
-} 
+  flex-flow: row wrap;
+  }
 
-.container h1 {
-  margin: 135px 0 1px;
-  padding-left: 80px;
-  font-size: 130px;
-  color: #004AAD ;
+.coluna-50 {
+  width: 50%;
+  background-color: #F5873B;
+}
+
+.coluna-100 {
+  width: 50%;
+  background-color: #FFFFFF;
+}
+
+.coluna-50 h1 {
+  margin: 50px 80px 1px 20px;
+  font-size: 70px;
+  color: #FFFFFF ;
   font-family: Limelight;
-  border: none;
 }
 
-.container p{ 
-  
-  margin: 1px 0 1px;
-  padding-left: 80px; 
-  color: #004AAD ;
-  font-family: Limelight; 
-}
-
-
-.Login {
-  display: flex;
-  align-items: left;
-  flex-direction: column; 
-} 
-
-
-.Login h3{
-
-  margin: 10px 0 1px;
-  padding-left: 900px; 
+.coluna-50 h2 {
+  margin: 10px 80px 1px 20px;
+  font-size: 20px;
+  color: #FFFFFF ;
   font-family: Limelight;
-  color: #004AAD ;
-  font-size: 40px;   
 }
 
-.Login p{
-  margin: 10px 0 1px;
-  padding-left: 900px;
+.coluna-50 p {
+  margin: 50px 80px 50px 20px;
+  font-size: 20px;
+  color: #FFFFFF ;
   font-family: Literata;
-  color: black;
-
 }
 
-.Login input{
-  margin: 10px 0 2px;
-  margin-left: 900px;
-  width: 210px;
+.coluna-50 h3 {
+  margin: 54px 80px 10px 20px;
+  font-size: 20px;
+  color: #FFFFFF ;
+  font-family: Limelight;
+}
+
+.coluna-50 button{
+  width: 60%;
+  padding: 15px;
+  font-weight: 800;
+
+  background: #FFFFFF ;
+  color:#F5873B;
+
+  border-radius: 25px;
+  margin: 20px 0px 10px 94px;
+  border: none;
+
+  cursor: pointer;
   transition: filter 0.2s;
-} 
 
-.Login button{
-  margin: 10px 0 2px;
-  width: 212px;
-  margin-left: 900px;
-  border-color: #004AAD ;
-  border-radius: 2px;
-  background: #004AAD ;
-  font-family:  Limelight;
-  color: #FF914D;
-}   
+  font-size: 20px;
+}
 
-.Login button:hover{
+.coluna-50 button:hover{
   filter: brightness(0.9);
 }
 
-.cadastro {
-  display: flex;
-  align-items: left;
-  flex-direction: column; 
+.coluna-100 h2 {
+  margin: 130px 80px 10px 10px;
+  font-size: 30px;
+  color: #004AADFF ;
+  font-family: Limelight;
+}
+
+.coluna-100 h3 {
+  margin: 30px 80px 30px 20px;
+  font-size: 20px;
+  color: #004AADFF ;
+  font-family: Literata;
+}
+
+.coluna-100 label {
+  margin: 20px 80px 1px 30px;
+  font-family: Limelight;
+  color: #004AADFF ;
+}
+
+.coluna-100 input{
+  margin: 20px 80px 1px 30px;
+  width: 70%;
+  padding: 24px;
+
+  background: rgba(84, 95, 109, 0.329);
+  border-radius: 5px;
+  border: none;
+
+  font-size: 16px;
 } 
 
-.cadastro p{
-  margin: 10px 0 1px;
-  padding-left: 1100px;
+.coluna-100 button{
+  width: 60%;
+  padding: 15px;
+  font-weight: 800;
 
-  font-family: Ibarra Real Nova;
-  color: #004AAD ;
-  font-size: 17px;
+  background: #004AADFF ;
+  color:#FFFFFF;
+
+  border-radius: 25px;
+  margin: 25px 0px 10px 94px;
+  border: none;
+
+  cursor: pointer;
+  transition: filter 0.2s;
+
+  font-size: 20px;
 }
 
-.cadastro button{
-  margin: 2px 0 1px;
-  margin-left: 1135px;
-  width: 150px;
-  background:  #FF914D;
-  
-  border-color: #FF914D;
-  border-radius: 10px;
-  color: #004AAD;
-  font-family:  Limelight;
-}
-
-.cadastro button:hover{
+.coluna-100 button:hover{
   filter: brightness(0.9);
 }
-
-

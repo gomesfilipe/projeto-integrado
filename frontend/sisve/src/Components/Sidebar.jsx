@@ -1,6 +1,10 @@
 import React from "react";
+<<<<<<< HEAD:frontend/sisve/src/pages/Components/Sidebar.jsx
 import './Sidebar.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+=======
+import './Sidebar.css';
+>>>>>>> 0a810161ee332e2ae1b25694eb25e3d715820422:frontend/sisve/src/Components/Sidebar.jsx
 
 import {
   ProSidebar,

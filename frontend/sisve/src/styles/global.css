@@ -1,7 +1,9 @@
+/* Cuidar da estilização das páginas*/
+/* "*" para resetar informaçções da tela*/ 
 
-* {
+*{
+    /*Boas práticas resetar*/
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
