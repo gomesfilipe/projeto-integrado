@@ -364,10 +364,13 @@ router.post('/api', no_auth_middleware, async (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api/all', (req, res) => {
-    Store.find()
-        .then(stores => res.status(200).json({stores}))
-        .catch(err => res.status(400).json({ message: 'Erro ao buscar lojas.' }))
+router.get('/api/all', async (req, res) => {
+    try {
+        const stores = await Store.find()
+        return res.status(200).json({ stores })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar lojas.' })
+    }
 })
 
 /**
@@ -398,19 +401,19 @@ router.get('/api/all', (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api', auth_middleware, (req, res) => { // Tirei o parâmetro id do path.
-    const store_id = req.store_id
-    // const store_id = req.params.id
+router.get('/api', auth_middleware, async (req, res) => {
+    try {
+        const store_id = req.store_id
+        const store = await Store.findOne({ _id: store_id })
+        if(!store) {
+            return res.status(400).json({ message: 'Loja não encontrada.' })
+        }
 
-    Store.findOne({_id: store_id})
-        .then(store => {
-            if(!store) {
-                return res.status(400).json({ message: 'Loja não encontrada.' })
-            } else {
-                res.status(200).json({store})
-            }
-        })
-        .catch(() => {return res.status(400).json({ message: 'Erro ao buscar loja.' })})
+        return res.status(200).json({ store })
+
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar loja.' })
+    }
 })
 
 /**
