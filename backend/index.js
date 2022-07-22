@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
-const port = 5500
+const port = 8000
 
 // Configuração Swagger.
 const swaggerOptions = {
@@ -33,6 +33,7 @@ mongoose.connect('mongodb://localhost/sisve')
 // Rodando servidor.
 app.listen(port, () => {
     console.log(`The server is running in http://localhost:${port}`)
+    console.log(`Access http://localhost:${port}/docs to read the API docs`)
 })
 
 //? JÁ FEITOS
@@ -88,6 +89,12 @@ app.listen(port, () => {
 // Testes Sale //!OK
 // Testes Item //!OK
 // Colocar expect(statusCode) nos testes já feitos. //!OK
+// Ajeitar a edição de loja, não permitir editar senha e senha de administrador. //!OK
 
 // TODO
-// Diminuir tempo do token de validação.
+// Fazer rota para gerar os dashboards.
+    // Faturamento num período de tempo.
+    // Quantidade de vendas num período de tempo.
+
+// Colocar async/await nas rotas de get de loja.
+// Diminuir tempo do token de validação para 3600 segundos.
