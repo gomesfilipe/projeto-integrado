@@ -219,6 +219,18 @@ describe('Testes nas rotas relacionadas a vendas', () => {
         expect(res.statusCode).toBe(200)
     })
 
+    it('Get vendas da loja por período com data inválida', async () => {
+        const from_date = '2022-03-01'
+        const to_date = 'abcdef'
+
+        const res = await request(app).get(`/sale/api/dates/${from_date}/${to_date}`)
+            .set({ Authorization: token })
+        
+        expect(res.body).not.toHaveProperty('sales')
+        expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
+    })
+
     it('Get vendas da loja por período', async () => {
         const from_date = '2022-03-01'
         const to_date = '2022-03-31'
@@ -248,6 +260,34 @@ describe('Testes nas rotas relacionadas a vendas', () => {
         expect(res.body.sales[1].date).toBe(new Date('2022-03-20 00:00:00').toISOString())
 
         expect(res.statusCode).toBe(200)
+    })
+    
+    it('Get dashboards', async () => {
+        const from_date = '2022-03-01'
+        const to_date = '2022-03-31'
+        
+        const res = await request(app).get(`/sale/api/dashboards/${from_date}/${to_date}`)
+            .set({ Authorization: token })
+
+        expect(res.body).toHaveProperty('sales_quantity')
+        expect(res.body).toHaveProperty('sales_billing')
+        expect(res.body).not.toHaveProperty('message')
+        expect(res.body.sales_quantity).toBe(2)
+        expect(res.body.sales_billing).toBe(1100.00)
+        expect(res.statusCode).toBe(200)
+    })
+
+    it('Get dashboards com data inválida', async () => {
+        const from_date = 'abcdef'
+        const to_date = '2022-03-31'
+        
+        const res = await request(app).get(`/sale/api/dashboards/${from_date}/${to_date}`)
+            .set({ Authorization: token })
+
+        expect(res.body).not.toHaveProperty('sales_quantity')
+        expect(res.body).not.toHaveProperty('sales_billing')
+        expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
     })
 
     it('Exclusão de venda por id', async () => {
