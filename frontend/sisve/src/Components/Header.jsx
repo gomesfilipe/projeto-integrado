@@ -17,9 +17,6 @@ import { FiHome, FiLogOut, FiArrowLeftCircle, FiArrowRightCircle, FiShoppingBag,
 import { RiPencilLine } from "react-icons/ri";
 import { BiCog } from "react-icons/bi";
 
-
-
-
 //import sidebar css from react-pro-sidebar module and our custom css 
 import "react-pro-sidebar/dist/css/styles.css";
 import "./Header.css";
@@ -40,8 +37,7 @@ const Header = () => {
   return (
     <>
       <div id="header">
-          {/* collapsed props to change menu size using menucollapse state */}
-        
+          {/* collapsed props to change menu size using menucollapse state */} 
         <ProSidebar collapsed={menuCollapse}>
           <SidebarHeader>
 
@@ -65,14 +61,11 @@ const Header = () => {
             </div>  
              
           </SidebarHeader>
-
-         
           <SidebarContent>
             <Menu >
               {/* <MenuItem active={true} icon={<FiHome />}>
                 Home
               </MenuItem> */}
-
             <MenuItem icon={<FiHome />}>Loja</MenuItem>
               <MenuItem icon={<FiShoppingBag />}>Produtos</MenuItem>
               <MenuItem icon={<FaShoppingCart />}>Venda</MenuItem>
