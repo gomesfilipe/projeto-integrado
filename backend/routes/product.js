@@ -123,10 +123,13 @@ const auth_middleware = require('../middlewares/auth')
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api/all', (req, res) => {
-    Product.find()
-        .then(products => res.status(200).json({products}))
-        .catch(err => res.status(400).json({ message: 'Erro ao buscar produtos.' }))
+router.get('/api/all', async (req, res) => {
+    try {
+        const products = await Product.find()
+        return res.status(200).json({ products })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar produtos.' })
+    }
 })
 
 /**
@@ -159,16 +162,19 @@ router.get('/api/all', (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api', auth_middleware, (req, res) => {
-    Product.find({id_store: req.store_id})
-        .then(products => {
-            if(!products) {
-                return res.status(400).json({ message: 'Produto não encontrado.' })
-            } else {
-                res.status(200).json({products})
-            }
-        })
-        .catch(() => {return res.status(400).json({ message: 'Erro ao buscar produtos.' })})
+router.get('/api', auth_middleware, async (req, res) => {
+    try {
+        const store_id = req.store_id
+        const products = await Product.find({ id_store: store_id })
+
+        if(!products) {
+            return res.status(400).json({ message: 'Produto não encontrado.' })
+        }
+
+        return res.status(200).json({ products })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar produtos.' })
+    }
 })
 
 /**
@@ -212,27 +218,32 @@ router.get('/api', auth_middleware, (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api/:page/:size_page', auth_middleware, (req, res) => {
-    const page = req.params.page
-    const size_page = req.params.size_page
+router.get('/api/:page/:size_page', auth_middleware, async (req, res) => {
+    try {
+        const page = req.params.page
+        const size_page = req.params.size_page
+        const store_id = req.store_id
 
-    if(!page || !size_page)
-        return res.status(400).json({ message: 'Faltam dados.' })
+        if(!page || !size_page) {
+            return res.status(400).json({ message: 'Faltam dados.' })
+        }
+    
+        if(isNaN(page) || isNaN(size_page) || size_page <= 0) {
+            return res.status(400).json({ message: 'Há dados inválidos.'})
+        }
 
-    if(isNaN(page) || isNaN(size_page) || size_page <= 0)
-        return res.status(400).json({ message: 'Há dados inválidos.'})
+        const products = await Product.find({ id_store: store_id })
+                                .skip(page > 0 ? ((page - 1) * size_page) : 0)
+                                .limit(size_page)
+        
+        if(!products) {
+            return res.status(400).json({ message: 'Produto não encontrado.' })
+        }
 
-    Product.find({id_store: req.store_id})
-        .skip(page > 0 ? ((page - 1) * size_page) : 0)
-        .limit(size_page)
-        .then(products => {
-            if(!products) {
-                return res.status(400).json({ message: 'Produto não encontrado.' })
-            } else {
-                res.status(200).json({products})
-            }
-        })
-        .catch(() => {return res.status(400).json({ message: 'Produto não encontrado.' })})
+        return res.status(200).json({ products })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar produtos.' })
+    }
 })
 
 /**
@@ -280,35 +291,39 @@ router.get('/api/:page/:size_page', auth_middleware, (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
-    const product_name = req.params.name
-    const page = req.params.page
-    const size_page = req.params.size_page
+router.get('/api/name/:name/:page/:size_page', auth_middleware, async (req, res) => {
+    try {
+        const product_name = req.params.name
+        const page = req.params.page
+        const size_page = req.params.size_page
+        const store_id = req.store_id
 
-    // Coloquei page e size_page no path pois requisições get não podem ter body.
-    // const page = req.body.page
-    // const size_page = req.body.size_page
+        if(!product_name || !page || !size_page) {
+            return res.status(400).json({ message: 'Faltam dados.' })
+        }
+    
+        if(isNaN(page) || isNaN(size_page) || size_page <= 0) {
+            return res.status(400).json({ message: 'Há dados inválidos.'})
+        }
 
-    if(!product_name || !page || !size_page)
-        return res.status(400).json({ message: 'Faltam dados.' })
-
-    if(isNaN(page) || isNaN(size_page) || size_page <= 0)
-        return res.status(400).json({ message: 'Há dados inválidos.'})
-
-    Product.find({name: {
-        "$regex": `^(${product_name})`,
-        "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
-    }, id_store: req.store_id})
-        .skip(page > 0 ? ((page - 1) * size_page) : 0)
-        .limit(size_page)
-        .then(products => {
-            if(!products) {
-                return res.status(400).json({ message: 'Produto não encontrado.' })
-            } else {
-                res.status(200).json({products})
-            }
+        const products = await Product.find({
+            name: {
+                "$regex": `^(${product_name})`,
+                "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
+            }, 
+            id_store: store_id
         })
-        .catch(() => {return res.status(400).json({ message: 'Produto não encontrado.' })})
+            .skip(page > 0 ? ((page - 1) * size_page) : 0)
+            .limit(size_page)
+
+        if(!products) {
+            return res.status(400).json({ message: 'Produto não encontrado.' })
+        }
+
+        return res.status(200).json({ products })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar produtos.' })
+    }
 })
 
 /**
@@ -347,24 +362,31 @@ router.get('/api/name/:name/:page/:size_page', auth_middleware, (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api/:name', auth_middleware, (req, res) => {
-    const product_name = req.params.name
+router.get('/api/:name', auth_middleware, async (req, res) => {
+    try {
+        const store_id = req.store_id
+        const product_name = req.params.name
 
-    if(!product_name)
-        return res.status(400).json({ message: 'Faltam dados.' })
+        if(!product_name) {
+            return res.status(400).json({ message: 'Faltam dados.' })
+        }
 
-    Product.find({name: {
-        "$regex": `^(${product_name})`,
-        "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
-    }, id_store: req.store_id})
-        .then(products => {
-            if(!products) {
-                return res.status(400).json({ message: 'Produto não encontrado.' })
-            } else {
-                res.status(200).json({products})
-            }
+        const products = await Product.find({
+            name: {
+                "$regex": `^(${product_name})`,
+                "$options": "i" // Não diferencia letras maiúsculas de minúsculas.
+            },
+            id_store: store_id
         })
-        .catch(() => {return res.status(400).json({ message: 'Produto não encontrado.' })})
+
+        if(!products) {
+            return res.status(400).json({ message: 'Produto não encontrado.' })
+        }
+
+        return res.status(200).json({ products })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar produtos.' })
+    }
 })
 
 /**
