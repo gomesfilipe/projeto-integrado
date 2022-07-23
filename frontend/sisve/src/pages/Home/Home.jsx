@@ -13,8 +13,7 @@ function Home() {
       senha: password
     } 
     /*funcionando perfeitamente*/
-    console.log(userName)
-    console.log(password)
+    console.log(usuario)
   }
  
   return ( 
