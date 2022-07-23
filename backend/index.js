@@ -11,7 +11,7 @@ const swaggerOptions = {
             openapi: '3.0.0',
             title: 'Sistema de Vendas e Estoque (SISVE) API',
             description: 'Documentação da API para desenvolvimento do projeto SISVE.',
-            version: '2.0.0'
+            version: '3.0.0'
         },
         servers: [`http://localhost:${port}`]
     },
