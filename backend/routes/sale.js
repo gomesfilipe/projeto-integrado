@@ -12,8 +12,6 @@ const Item = mongoose.model('items')
 
 const auth_middleware = require('../middlewares/auth')
 
-// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
-
 /**
  * @swagger
  * securityDefinitions:
