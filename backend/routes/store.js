@@ -214,6 +214,7 @@ router.post('/authenticate', no_auth_middleware, async (req, res) => {
  *          summary: Cadastro de loja.
  *          description: Rota para efetuar cadastro de loja, devendo ser informados
  *                       nome, username, senha e senha de administrador no corpo da requisição.
+ *                       Os campos username, senha e senha de administrador devem ter no mínimo 4 caracteres.
  *                       Só pode ser acessada caso o usuário não esteja logado.
  *          tags: [Store]
  *          security:
@@ -290,9 +291,6 @@ router.post('/api', no_auth_middleware, async (req, res) => {
     
         const new_store = await store.save()
     
-        // new_store.password = undefined
-        // new_store.admin_password = undefined
-    
         return res.status(200).json({
             new_store,
             token: generate_token({id: new_store._id}), // Enviando token para já entrar na conta após cadastrar.
@@ -302,35 +300,6 @@ router.post('/api', no_auth_middleware, async (req, res) => {
     } catch(err) {
         return res.status(400).json({ message: 'Erro ao cadastrar loja.' })
     }
-
-
-    // Store.findOne({username: username})
-    //     .then(async store => {
-    //         if(store) {
-    //             return res.status(400).json({ message: 'Usuário já existente.' })
-    //         }
-
-    //         const new_store = new Store({
-    //             name: req.body.name,
-    //             username: req.body.username,
-    //             password: await bcrypt.hash(req.body.password, 10),
-    //             admin_password: await bcrypt.hash(req.body.admin_password, 10)
-    //         })
-            
-    //         new_store.save()
-    //             .then(() => {
-    //                 new_store.password = undefined
-    //                 new_store.admin_password = undefined
-                    
-    //                 res.status(200).json({
-    //                     new_store,
-    //                     token: generate_token({id: new_store._id}), // Enviando token para já entrar na conta após cadastrar.
-    //                     message: "Loja cadastrada com sucesso!"
-    //                 })
-    //             })
-    //             .catch(err => res.status(400).json({ message: 'Erro ao cadastrar loja.' }))
-    //     })
-    //     .catch(err => res.status(400).json({ message: 'Erro ao cadastrar loja.' }))
 })
 
 /**
