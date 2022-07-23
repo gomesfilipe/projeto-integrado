@@ -1,18 +1,16 @@
 import React from "react";
 import './Products.css'
-import Sidebar from "../Components/Sidebar";
+import Header from "../../Components/Header";
 
 
 function Products() {
   
     return (
-
-        <div>
-          
-          <Sidebar></Sidebar>
-          {/* <h1>Produtos</h1> */}
-          {/* <p>dblfzs</p> */}
-        </div>
+      
+      // <Sidebar></Sidebar>
+      <Header></Header>
+  
+  
    
     )
   }
