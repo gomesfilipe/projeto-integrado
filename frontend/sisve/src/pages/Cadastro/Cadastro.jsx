@@ -1,6 +1,7 @@
 import './Cadastro.css'
 import React, { useState } from 'react';
 
+
 {/*A senha deve conter mais de 4 chars*/ }
 
 function Cadastro() {
@@ -13,11 +14,16 @@ function Cadastro() {
   function cadastrarEmpresa() {
     const newEmpresa = {
       name: nomeEmpresa,
-      userName: userNameEmpresa,
-      senha: password,
-      senhaAdm: admPassword
+      username: userNameEmpresa,
+      password: password,
+      admin_password: admPassword
     }
-    console.log(newEmpresa)
+    /* Mandar para o backend */
+    axios.get("http://localhost:6500/sale/api/all")
+    .then( response => {
+      console.log(response.status)
+    })
+    .catch( error => console.error(error))
   }
 
   return (

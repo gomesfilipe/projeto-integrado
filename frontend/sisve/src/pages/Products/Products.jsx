@@ -9,9 +9,7 @@ function Products() {
       
       // <Sidebar></Sidebar>
       <Header></Header>
-  
-  
-   
+
     )
   }
   

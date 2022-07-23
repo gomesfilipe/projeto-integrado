@@ -11,7 +11,6 @@ function Rota() {
     <Routes>
     <Route exact path='/' element={<Home/>} />
     <Route exact path='/Cadastro' element={<Cadastro/>} />
-
     </Routes>
     </BrowserRouter>
   )
