@@ -1,4 +1,5 @@
 import './Cadastro.css'
+import api from '../../api'
 import React, { useState } from 'react';
 
 
@@ -19,7 +20,7 @@ function Cadastro() {
       admin_password: admPassword
     }
     /* Mandar para o backend */
-    axios.get("http://localhost:8000/sale/api/all")
+    api.get("/sale/api/all")
     .then( response => {
       console.log(response.status)
     })
