@@ -2,7 +2,7 @@ const app = require('./routes')
 const mongoose = require('mongoose')
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
-const port = 8000
+require('dotenv').config()
 
 // Configuração Swagger.
 const swaggerOptions = {
@@ -13,7 +13,8 @@ const swaggerOptions = {
             description: 'Documentação da API para desenvolvimento do projeto SISVE.',
             version: '3.0.0'
         },
-        servers: [`http://localhost:${port}`]
+        // servers: [`http://localhost:${port}`]
+        servers: [`${process.env.API_HOST}:${process.env.API_PORT}`]
     },
     apis: ['routes/item.js', 'routes/no_logged.js', 'routes/product.js', 'routes/sale.js', 'routes/store.js']
 }
@@ -22,12 +23,12 @@ const swaggerDocs = swaggerJsdoc(swaggerOptions)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 // Configuração mongoose.
-mongoose.connect('mongodb://localhost/sisve')
+mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.DB_NAE}`)
     .then(() => console.log('Connected database!'))
     .catch(() => console.log('Error to connect database.'))
 
 // Rodando servidor.
-app.listen(port, () => {
-    console.log(`The server is running in http://localhost:${port}`)
-    console.log(`Access the API docs in http://localhost:${port}/docs`)
+app.listen(process.env.API_PORT, () => {
+    console.log(`The server is running in ${process.env.API_URL_BASE}:${process.env.API_PORT}`)
+    console.log(`Access the API docs in ${process.env.API_URL_BASE}:${process.env.API_PORT}/docs`)
 })
