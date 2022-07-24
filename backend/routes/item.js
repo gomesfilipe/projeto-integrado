@@ -9,8 +9,6 @@ const Item = mongoose.model('items')
 
 const auth_middleware = require('../middlewares/auth')
 
-// router.use(auth_middleware) // Middleware atuará nas rotas desse grupo.
-
 /**
  * @swagger
  * securityDefinitions:
@@ -84,10 +82,13 @@ const auth_middleware = require('../middlewares/auth')
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api/all', (req, res) => {
-    Item.find()
-        .then(items => res.status(200).json({ items }))
-        .catch(err => res.status(400).json({ message: 'Erro ao buscar itens.' }))
+router.get('/api/all', async (req, res) => {
+    try {
+        const items = await Item.find()
+        return res.status(200).json({ items })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar itens.' })
+    }
 })
 
 /**
@@ -120,10 +121,14 @@ router.get('/api/all', (req, res) => {
  *                  schema:
  *                    $ref: '#/definitions/ErrorToken'
  */
-router.get('/api', auth_middleware, (req, res) => {
-    Item.find({id_store: req.store_id})
-        .then(items => res.status(200).json({ items }))
-        .catch(err => res.status(400).json({ message: 'Erro ao buscar itens.' }))
+router.get('/api', auth_middleware, async (req, res) => {
+    try {
+        const store_id = req.store_id
+        const items = await Item.find({ id_store: store_id})
+        return res.status(200).json({ items })
+    } catch(err) {
+        return res.status(400).json({ message: 'Erro ao buscar itens.' })
+    }
 })
 
 module.exports = router
