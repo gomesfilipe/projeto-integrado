@@ -14,7 +14,7 @@ function Rota() {
     <Route exact path='/' element={<Home/>} />
     <Route path='/Cadastro' element={<Cadastro/>} />
     <Route path='/Products' element={<Products/>} />
-    <Route path='/Cadastro/Store' element={<Store/>} />
+    <Route path='/Store' element={<Store/>} />
     </Routes>
     </BrowserRouter>
   )

@@ -14,8 +14,7 @@ function Home() {
     const usuario = {
       username: userName,
       password: password
-      }
-
+    }
     //esvaziar mensagem    
     setMensagem("");
     
