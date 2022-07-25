@@ -7,7 +7,7 @@ function Products() {
   
     return (
       
-      // <Sidebar></Sidebar>
+      
       <Header></Header>
 
     )

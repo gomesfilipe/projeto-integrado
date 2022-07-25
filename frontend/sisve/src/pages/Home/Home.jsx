@@ -1,19 +1,48 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom'
+import api from '../../api'
 import './Home.css'
 
 function Home() {
 
   const [userName,setUserName] = useState();
   const [password,setPassword] = useState();
+  const [mensagem,setMensagem] = useState();
+  const [sucesso,setSucesso] = useState();
 
   function loginUsuario(){
     const usuario = {
-      name: userName,
-      senha: password
+      username: userName,
+      password: password
       }
-    /*funcionando perfeitamente*/
-    console.log(usuario)
+
+    //esvaziar mensagem    
+    setMensagem("");
+    
+    /* Mandar para o backend */
+    api.post("/store/authenticate",usuario)
+    .then( response => {      
+      //login efetuado com sucesso
+      if(response.status == 200)
+        {       
+        setSucesso('S');
+        alert("Login efetuado com sucesso!");
+        var token = response.data.token;
+        localStorage.setItem("token",JSON.stringify(token));
+      }
+    })
+    .catch(error => {
+      setSucesso('N')
+      //erros que podem acontecer
+      if(error.message = "error message" )
+      {
+        setMensagem("Login Incorreto! Usuário não existe ou senha incorreta.")
+      }
+      else
+      {
+        setMensagem("Não é possível acessar a loja logado em uma conta.");
+      }
+    })
   }
  
   return ( 
@@ -33,7 +62,7 @@ function Home() {
           <h2>Já Sou cadastrado</h2>
           <h3>Acessar a minha loja</h3>
           
-          <label>Username:</label>
+          <label>Nome de usuário:</label>
           <br />
           <input 
             type="text"
@@ -50,8 +79,12 @@ function Home() {
           />
           <br />
           <button type="button" onClick={loginUsuario} >
-          Entrar
+              Entrar
           </button> 
+          {/*Caso houver erro com as entradas acima*/}
+          {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}
+          {/*Caso houver sucesso com as entradas acima redirecionar a página*/}
+
         </div>
       </div>
     </div>
