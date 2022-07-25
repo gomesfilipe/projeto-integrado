@@ -1,4 +1,5 @@
 import './Cadastro.css'
+import api from '../../api'
 import React, { useState } from 'react';
 
 
@@ -20,7 +21,7 @@ function Cadastro() {
     }
     console.log(newEmpresa)
     /* Mandar para o backend */
-    axios.post("http://localhost:6500/store/api",newEmpresa)
+    api.get("/sale/api/all")
     .then( response => {
       console.log(response.status)
     })

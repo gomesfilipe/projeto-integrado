@@ -39,6 +39,19 @@ describe('Testes nas rotas relacionadas a lojas', () => {
         expect(res.statusCode).toBe(200)
     })
     
+    it('Cadastrar loja com nome já existente', async () => {
+        const res = await request(app).post('/store/api')
+            .send({
+                name: 'Loja',
+                username: 'loja12345',
+                password: '654321',
+                admin_password: '654321admin'
+            })
+
+        expect(res.body).toHaveProperty('message')
+        expect(res.body).not.toHaveProperty('token')
+        expect(res.statusCode).toBe(400)
+    })
 
     it('Cadastrar loja com username já existente', async () => {
         const res = await request(app).post('/store/api')
@@ -145,30 +158,86 @@ describe('Testes nas rotas relacionadas a lojas', () => {
         expect(res.statusCode).toBe(200)
     })
 
-    it('Editar loja', async () => {
-        const res = await request(app).put('/store/api')
-            .set({ Authorization: token })
-            .send({
-                name: 'Supermercado',
-                username: 'loja123',
-                password: '123456',
-                admin_password: '123456admin'
-            })
+    // it('Editar loja', async () => {
+    //     const res = await request(app).put('/store/api')
+    //         .set({ Authorization: token })
+    //         .send({
+    //             name: 'Supermercado',
+    //             username: 'loja123',
+    //             password: '123456',
+    //             admin_password: '123456admin'
+    //         })
 
-            expect(res.body).toHaveProperty('edited_store')
-            expect(res.body).toHaveProperty('message')
-            expect(res.body.edited_store).toHaveProperty('_id')
-            expect(res.body.edited_store).toHaveProperty('name')
-            expect(res.body.edited_store).toHaveProperty('username')
-            expect(res.body.edited_store).toHaveProperty('products')
-            expect(res.body.edited_store).toHaveProperty('sales')
-            expect(res.body.edited_store).toHaveProperty('__v')
-            expect(res.body.edited_store.name).toBe('Supermercado')
-            expect(res.body.edited_store.username).toBe('loja123')
-            expect(res.statusCode).toBe(200)
+    //         expect(res.body).toHaveProperty('edited_store')
+    //         expect(res.body).toHaveProperty('message')
+    //         expect(res.body.edited_store).toHaveProperty('_id')
+    //         expect(res.body.edited_store).toHaveProperty('name')
+    //         expect(res.body.edited_store).toHaveProperty('username')
+    //         expect(res.body.edited_store).toHaveProperty('products')
+    //         expect(res.body.edited_store).toHaveProperty('sales')
+    //         expect(res.body.edited_store).toHaveProperty('__v')
+    //         expect(res.body.edited_store.name).toBe('Supermercado')
+    //         expect(res.body.edited_store.username).toBe('loja123')
+    //         expect(res.statusCode).toBe(200)
+    // })
+
+    // it('Editar loja colocando username já existente', async () => {
+    //     const res1 = await request(app).post('/store/api') // Criando segunda loja.
+    //         .send({
+    //             name: 'Mercearia',
+    //             username: 'mercearia123',
+    //             password: '123456789',
+    //             admin_password: '123456789admin'
+    //         })
+        
+    //     const res = await request(app).put('/store/api')
+    //         .set({ Authorization: token })
+    //         .send({
+    //             name: 'Supermercado',
+    //             username: 'mercearia123',
+    //             password: '123456',
+    //             admin_password: '123456admin'
+    //         })
+
+    //         expect(res.body).not.toHaveProperty('edited_store')
+    //         expect(res.body).toHaveProperty('message')
+    //         expect(res.statusCode).toBe(400)
+    // })
+
+    // it('Editar loja com campos vazios', async () => {
+    //     const res = await request(app).put('/store/api')
+    //         .set({ Authorization: token })
+    //         .send({
+    //             username: 'Pastelaria',
+    //             password: '12345678910',
+    //         })
+
+    //     expect(res.body).not.toHaveProperty('edited_store')
+    //     expect(res.body).toHaveProperty('message')
+    //     expect(res.statusCode).toBe(400)
+    // })
+
+    it('Editar nome de loja', async () => {
+        const res = await request(app).put('/store/api/edit/name')
+        .set({ Authorization: token })
+        .send({
+            name: 'Supermercado',
+        })
+
+        expect(res.body).toHaveProperty('edited_store')
+        expect(res.body).toHaveProperty('message')
+        expect(res.body.edited_store).toHaveProperty('_id')
+        expect(res.body.edited_store).toHaveProperty('name')
+        expect(res.body.edited_store).toHaveProperty('username')
+        expect(res.body.edited_store).toHaveProperty('products')
+        expect(res.body.edited_store).toHaveProperty('sales')
+        expect(res.body.edited_store).toHaveProperty('__v')
+        expect(res.body.edited_store.name).toBe('Supermercado')
+        expect(res.body.edited_store.username).toBe('loja123')
+        expect(res.statusCode).toBe(200)
     })
 
-    it('Editar loja colocando username já existente', async () => {
+    it('Editar nome de loja com nome já existente', async () => {
         const res1 = await request(app).post('/store/api') // Criando segunda loja.
             .send({
                 name: 'Mercearia',
@@ -176,28 +245,68 @@ describe('Testes nas rotas relacionadas a lojas', () => {
                 password: '123456789',
                 admin_password: '123456789admin'
             })
-        
-        const res = await request(app).put('/store/api')
+
+        const res = await request(app).put('/store/api/edit/name')
             .set({ Authorization: token })
             .send({
-                name: 'Supermercado',
-                username: 'mercearia123',
-                password: '123456',
-                admin_password: '123456admin'
+                name: 'Mercearia'
             })
-
+        
             expect(res.body).not.toHaveProperty('edited_store')
             expect(res.body).toHaveProperty('message')
             expect(res.statusCode).toBe(400)
     })
 
-    it('Editar loja com campos vazios', async () => {
-        const res = await request(app).put('/store/api')
-            .set({ Authorization: token })
-            .send({
-                username: 'Pastelaria',
-                password: '12345678910',
-            })
+    it('Editar nome de loja com campo vazio', async () => {
+        const res = await request(app).put('/store/api/edit/name')
+        .set({ Authorization: token })
+        .send({
+            name: '',
+        })
+
+        expect(res.body).not.toHaveProperty('edited_store')
+        expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
+    })
+
+    it('Editar username de loja', async () => {
+        const res = await request(app).put('/store/api/edit/username')
+        .set({ Authorization: token })
+        .send({
+            username: 'loja1234',
+        })
+
+        expect(res.body).toHaveProperty('edited_store')
+        expect(res.body).toHaveProperty('message')
+        expect(res.body.edited_store).toHaveProperty('_id')
+        expect(res.body.edited_store).toHaveProperty('name')
+        expect(res.body.edited_store).toHaveProperty('username')
+        expect(res.body.edited_store).toHaveProperty('products')
+        expect(res.body.edited_store).toHaveProperty('sales')
+        expect(res.body.edited_store).toHaveProperty('__v')
+        expect(res.body.edited_store.name).toBe('Supermercado')
+        expect(res.body.edited_store.username).toBe('loja1234')
+        expect(res.statusCode).toBe(200)
+    })
+
+    it('Editar username de loja com username já existente', async () => {
+        const res = await request(app).put('/store/api/edit/username')
+        .set({ Authorization: token })
+        .send({
+            username: 'mercearia123',
+        })
+
+        expect(res.body).not.toHaveProperty('edited_store')
+        expect(res.body).toHaveProperty('message')
+        expect(res.statusCode).toBe(400)
+    })
+
+    it('Editar username de loja com campo vazio', async () => {
+        const res = await request(app).put('/store/api/edit/username')
+        .set({ Authorization: token })
+        .send({
+            username: '',
+        })
 
         expect(res.body).not.toHaveProperty('edited_store')
         expect(res.body).toHaveProperty('message')
