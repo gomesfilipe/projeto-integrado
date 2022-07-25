@@ -73,7 +73,7 @@ function Cadastro() {
             placeholder="Crie um nome para sua empresa no nosso app"
             onChange={e => setUserNameEmpresa(e.target.value)}
           />
-          <div className="form-text"> O nome deverá conter no mínimo 4 caracteres sem espaçamento. </div>
+          <div className="form-text"> O nome deverá conter no mínimo 4 caracteres. </div>
           <br />
 
           <label>Senha de login:</label>
@@ -83,7 +83,7 @@ function Cadastro() {
             placeholder="Crie uma senha para acessar sua empresa no app"
             onChange={e => setPassword(e.target.value)}
           />
-          <div className="form-text"> A senha deverá conter no mínimo 4 caracteres sem espaçamento. </div>
+          <div className="form-text"> A senha deverá conter no mínimo 4 caracteres. </div>
           <br />
 
           <label>Senha de administrador:</label>
@@ -94,7 +94,7 @@ function Cadastro() {
             onChange={e => setAdmPassword(e.target.value)}
     
           />
-          <div className="form-text">A senha de administrador deverá conter no mínimo 4 caracteres sem espaçamento e deverá ser de conhecimento apenas do dono ou supervisor de seu negócio. </div>
+          <div className="form-text">A senha de administrador deverá conter no mínimo 4 caracteres e deverá ser de conhecimento apenas do dono ou supervisor de seu negócio. </div>
           <br />
           <button type="button" onClick={cadastrarEmpresa} >
           Cadastrar empresa
