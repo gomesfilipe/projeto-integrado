@@ -5,15 +5,14 @@
   }
 
 .coluna-50 {
-  width: 50%;
-  /* width: 45%; */
+  width: 45%;
   background-color: #F5873B;
   height: 100vh;
 }
 
 .coluna-100 {
   width: 50%;
-  /* padding-left: 60px; */
+  padding-left: 60px;
   background-color: #FFFFFF;
 }
 
