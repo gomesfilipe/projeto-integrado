@@ -27,6 +27,27 @@ function Cadastro() {
     .catch( error => console.error(error))
   }
 
+  //   api.post('/store/api', newEmpresa)
+  //   .then( response => {
+  //       if(response.status == 200){
+  //         // alert(
+  //         //   <Alert variant="filled" severity="success">
+  //         //       {response.body.message}
+  //         //   </Alert>
+  //         // )
+  //       }
+  //       else{
+  //         // alert(
+  //         //   <Alert variant="filled" severity="error">
+  //         //     {response.body.message}
+  //         //   </Alert>
+  //         // )
+  //         <p>oi</p>
+  //       }
+  //   })
+  //   .catch( error => console.error(error))
+  // }
+
   return (
     
     <div>

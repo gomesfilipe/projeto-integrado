@@ -50,7 +50,7 @@ function Home() {
           />
           <br />
           <button type="button" onClick={loginUsuario} >
-          Entrar
+              Entrar
           </button> 
         </div>
       </div>
