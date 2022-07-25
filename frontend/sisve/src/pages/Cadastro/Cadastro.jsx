@@ -31,7 +31,7 @@ function Cadastro() {
   return (
     
     <div>
-            
+
       <div className='formulario'>
 
         <h1>Cadastre-se!</h1>

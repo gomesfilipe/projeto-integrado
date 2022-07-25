@@ -4,6 +4,7 @@ import {BrowserRouter,Routes,Route} from 'react-router-dom'
 /* Importa as páginas*/
 import Home from './pages/Home/Home'
 import Cadastro from './pages/Cadastro/Cadastro'
+/*import Loja from './pages/Loja/Loja'*/
 
 function Rota() {  
   return (  

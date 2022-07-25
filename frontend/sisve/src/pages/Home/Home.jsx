@@ -11,7 +11,7 @@ function Home() {
     const usuario = {
       name: userName,
       senha: password
-    } 
+      }
     /*funcionando perfeitamente*/
     console.log(usuario)
   }
