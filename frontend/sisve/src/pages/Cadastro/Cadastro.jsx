@@ -18,8 +18,9 @@ function Cadastro() {
       password: password,
       admin_password: admPassword
     }
+    console.log(newEmpresa)
     /* Mandar para o backend */
-    axios.get("http://localhost:6500/sale/api/all")
+    axios.post("http://localhost:6500/store/api",newEmpresa)
     .then( response => {
       console.log(response.status)
     })
