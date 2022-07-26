@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../../Components/Header";
-import Home from "../Home/Home"
-
-import "./Store.css"
+import "./Store"
+import api from '../../api'
 
 //Icon
 import { FaShoppingCart } from "react-icons/fa"
 
 
-function Store () {
+function Store(){
+
+    const [usuario,setUsuario] = useState('');
+    
+    //executar quando a página for carregada
+    useEffect(function()
+    {
+        setUsuario('Hoop Cadernos')
+        api.get("/store/api")
+        .then( response => {
+            //consulta efetuada com sucesso
+        })
+        .catch(error => console.error(error))
+    },[])
+    
+
     return (
-       <div>
-        
+       <div>        
             <div style={{ display: "flex" }}>
-                <Header/>
-            
+                <Header/>            
                 <div className='Store' >
-                    <h1>Hoop</h1>
+
+                    {/*Pegar dados da loja pra montar a página*/}
+                    <h1> Hello, {usuario}! </h1>
+                    
+                    {/*Nome da loja*/}
                     <p>Name: Hoop</p>
                     <p>Username: hoop_cadernos</p>
 
@@ -35,22 +51,12 @@ function Store () {
                         <Button color="primary">
                             <Icon name="left" />
                         </Button>
-
                     </div> */}
 
                     {/* <h2>Dashboards</h2> */}
                 </div> 
-
-
-
-
-
             </div>
-
-      
         </div>
-       
-
-      );
-  };
-  export default Store
+    )
+}
+export default Store
