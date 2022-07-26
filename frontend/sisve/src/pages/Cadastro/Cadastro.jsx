@@ -1,6 +1,7 @@
 import './Cadastro.css'
 import api from '../../api'
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom'
 
 
 function Cadastro() {
@@ -103,7 +104,8 @@ function Cadastro() {
           {/*Caso houver erro com as entradas acima*/}
           {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}
           {/*Caso houver sucesso com as entradas acima redirecionar a página*/}
-
+          {sucesso === 'S' ? <div> {<Navigate to="/Store" /> } </div> : null}
+     
       </div>
     </div>
   )

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {Link} from 'react-router-dom'
 import api from '../../api'
 import './Home.css'
+import { Navigate } from 'react-router-dom'
 
 function Home() {
 
@@ -9,7 +10,7 @@ function Home() {
   const [password,setPassword] = useState();
   const [mensagem,setMensagem] = useState();
   const [sucesso,setSucesso] = useState();
-
+  
   function loginUsuario(){
     const usuario = {
       username: userName,
@@ -83,6 +84,7 @@ function Home() {
           {/*Caso houver erro com as entradas acima*/}
           {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}
           {/*Caso houver sucesso com as entradas acima redirecionar a página*/}
+          {sucesso === 'S' ? <div> {<Navigate to="/Store" /> } </div> : null}
 
         </div>
       </div>
