@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import {Link} from 'react-router-dom'
+import {Link,Navigate} from 'react-router-dom'
 import api from '../../api'
 import './Home.css'
-import { Navigate } from 'react-router-dom'
 
 function Home() {
 
@@ -85,7 +84,6 @@ function Home() {
           {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}
           {/*Caso houver sucesso com as entradas acima redirecionar a página*/}
           {sucesso === 'S' ? <div> {<Navigate to="/Store" /> } </div> : null}
-
         </div>
       </div>
     </div>
