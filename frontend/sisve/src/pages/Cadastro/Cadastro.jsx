@@ -12,38 +12,41 @@ function Cadastro() {
   const [admPassword, setAdmPassword] = useState('');
   const [mensagem,setMensagem] = useState('');
   const [sucesso,setSucesso] = useState('');
+  
 
   function cadastrarEmpresa() {
+    
     const newEmpresa = {
       name: nomeEmpresa,
       username: userNameEmpresa,
       password: password,
       admin_password: admPassword
     }
-    //esvaziar mensagem    
+    //esvaziar variáveis de controle    
     setMensagem("");
+    setSucesso("");
+  
     /* Mandar para o backend */
     api.post("/store/api",newEmpresa)
-    .then( response => {      
-      //cadastrada com sucesso
-      if(response.status == 200)
-      {       
-        setSucesso('S');
-        alert("Loja cadastrada com sucesso!");
-        var token = response.data.token;
-        localStorage.setItem("token",JSON.stringify(token));
-      }
+    .then( response => { 
+      //cadastro efetuado com sucesso            
+      setSucesso("S")  
+      alert("Cadastro efetuado com sucesso!");
+      //guardar dados da sessão para não ter que fazer muitas requisições ao servidor
+      sessionStorage.setItem("token",JSON.stringify(response.data.token));
+      sessionStorage.setItem("name",JSON.stringify(response.data.new_store.name));
+      sessionStorage.setItem("username",JSON.stringify(response.data.new_store.username));
     })
     .catch(error => {
       setSucesso('N')
       //erros que podem acontecer
-      if(error.message = "error message" )
+      if(error.message === "Request failed with status code 400" )
       {
         setMensagem("Erro ao cadastrar loja. Os dados não respeitam os critérios ou uma loja com esse nome já existe.")
       }
       else
       {
-        setMensagem("Não é possível acessar a loja logado em uma conta");
+        setMensagem("Não é possível acessar loja logado em uma conta.");
       }
     })
   }
@@ -63,7 +66,7 @@ function Cadastro() {
           <input 
             type="text"
             placeholder="Digite o nome real da sua empresa"
-            onChange={e => setNomeEmpresa(e.target.value)}         
+            onChange={(e) => setNomeEmpresa(e.target.value)}         
           />
           <br />
 
@@ -72,7 +75,7 @@ function Cadastro() {
           <input  
             type="text" 
             placeholder="Crie um nome para sua empresa no nosso app"
-            onChange={e => setUserNameEmpresa(e.target.value)}
+            onChange={(e) => setUserNameEmpresa(e.target.value)}
           />
           <div className="form-text"> O nome deverá conter no mínimo 4 caracteres. </div>
           <br />
@@ -82,7 +85,7 @@ function Cadastro() {
           <input  
             type="password" 
             placeholder="Crie uma senha para acessar sua empresa no app"
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <div className="form-text"> A senha deverá conter no mínimo 4 caracteres. </div>
           <br />
@@ -92,14 +95,12 @@ function Cadastro() {
           <input  
             type="password" 
             placeholder="Crie uma senha de administrador para a sua empresa "
-            onChange={e => setAdmPassword(e.target.value)}
+            onChange={(e) => setAdmPassword(e.target.value)}
     
           />
           <div className="form-text">A senha de administrador deverá conter no mínimo 4 caracteres e deverá ser de conhecimento apenas do dono ou supervisor de seu negócio. </div>
           <br />
-          <button type="button" onClick={cadastrarEmpresa} >
-          Cadastrar empresa
-          </button>
+          <button type="button" onClick={cadastrarEmpresa}> Cadastrar empresa </button>
 
           {/*Caso houver erro com as entradas acima*/}
           {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}

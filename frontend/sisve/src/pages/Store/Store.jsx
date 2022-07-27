@@ -1,59 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Header from "../../Components/Header";
-import "./Store"
-import api from '../../api'
-
-//Icon
-import { FaShoppingCart } from "react-icons/fa"
-
+import "./Store.css"
 
 function Store(){
 
-    const [usuario,setUsuario] = useState('');
-    
-    //executar quando a página for carregada
-    useEffect(function()
-    {
-        setUsuario('Hoop Cadernos')
-        api.get("/store/api")
-        .then( response => {
-            //consulta efetuada com sucesso
-        })
-        .catch(error => console.error(error))
-    },[])
-    
+    /* Dados do sessionStorage para personalizar página */
+    const stringName = sessionStorage.getItem('name')
+    const name = JSON.parse(stringName)
+    const stringUsername = sessionStorage.getItem('username')
+    const username = JSON.parse(stringUsername)
+
 
     return (
        <div>        
             <div style={{ display: "flex" }}>
                 <Header/>            
-                <div className='Store' >
+                <div className="Store" >
 
-                    {/*Pegar dados da loja pra montar a página*/}
-                    <h1> Hello, {usuario}! </h1>
+                    <h1> Seja bem vindo(a), {name}! </h1>
+                   
+                    <h2>Dados da Loja:</h2>
                     
-                    {/*Nome da loja*/}
-                    <p>Name: Hoop</p>
-                    <p>Username: hoop_cadernos</p>
+                    <p>Nome da loja: {name}</p>
+                    <p>Username da loja: {username}</p>
 
-                    {/* <Button variant="contained" Icon=   {<FaShoppingCart />}       >
-                     Editar
-                    </Button> */}
-
-                    {/* <button type="submit">
-                        Editar
-                    </button> */}
-
-                    {/* <IconButton aria-label="fingerprint" color="secondary">
-                        <FaShoppingCart />
-                    </IconButton> */}
-                    {/* <div>
-                        <Button color="primary">
-                            <Icon name="left" />
-                        </Button>
-                    </div> */}
-
-                    {/* <h2>Dashboards</h2> */}
+                    <h2>Dashboards da Loja:</h2>
+                    <p>Você ainda não tem dashboards !</p>
                 </div> 
             </div>
         </div>

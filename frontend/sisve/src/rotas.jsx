@@ -15,6 +15,7 @@ function Rota() {
     <Route path='/Cadastro' element={<Cadastro/>} />
     <Route path='/Products' element={<Products/>} />
     <Route path='/Store' element={<Store/>} />
+    {/*<Route path='/Vendas' element={<Vendas/>} />*/}
     </Routes>
     </BrowserRouter>
   )

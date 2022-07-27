@@ -1,5 +1,7 @@
 //import useState hook to create menu collapse state
 import React, { useState } from "react";
+import {Link} from 'react-router-dom'
+
 
 import {
   ProSidebar,
@@ -40,42 +42,37 @@ const Header = () => {
             <div className="closemenu" onClick={menuIconClick}>
                 {/* changing menu collapse icon on click */}
               <p>
-              {menuCollapse ? (
-                <FiMenu/>
-                
-               ) : (
-                 
-                <FiMenu/>
-              )}
-                  
+              {menuCollapse ? (<FiMenu/> ) : ( <FiMenu/> )}
               </p>
             </div>
              
-           <div className="logotext"> 
+            <div className="logotext"> 
               {/* small and big change using menucollapse state */}
             <p>{menuCollapse ? "" : "Sisve"}</p>  
-            </div>  
+           </div>  
              
           </SidebarHeader>
+
           <SidebarContent>
             <Menu >
               {/* <MenuItem active={true} icon={<FiHome />}>
                 Home
               </MenuItem> */}
-            <MenuItem icon={<FiHome />}>Loja</MenuItem>
-              <MenuItem icon={<FiShoppingBag />}>Produtos</MenuItem>
-              <MenuItem icon={<FaShoppingCart />}>Venda</MenuItem>
+              <MenuItem icon={<FiHome />}>  <Link to="/Store"> Loja </Link> </MenuItem>
+              <MenuItem icon={<FiShoppingBag />}> <Link to="/Products"> Produtos </Link> </MenuItem>
+              {/*<MenuItem icon={<FaShoppingCart />}>  <Link to="/Vendas"> Vendas </Link> </MenuItem>*/}
             </Menu>
           </SidebarContent>
+
           <SidebarFooter>
             <Menu>
-              <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
+             <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
             </Menu>
           </SidebarFooter>
+          
         </ProSidebar>
       </div>
     </>
   );
 };
-
 export default Header;

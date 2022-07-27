@@ -6,33 +6,24 @@
 }
    
 .Store h1 {
-    margin: 24px 0 24px;
-    color:  #004AADFF ;
+    margin: 0;
+    color:  rgb(0, 59, 136) ;
     font-family: Limelight;
     font-size: 50px;
     padding: 24px;
 }
 
-.Store p {
-    margin-top: 2px;
-    /* padding-left: 70px; */
-    color: rgb(206, 0, 0);
-    /* color:  #004AADFF ; */
-    /* color:  #004AADFF ; */
-   
-    font-family:  'Lucida Sans';
-    /* font-family: Lato; */
-    font-size: 20px;
-    margin: 20px 10px 5px 60px;
-}
-
 .Store h2 {
-    margin-top: 2px;
-    /* padding: 0 10px; */
-    /* padding-left: 70px; */
-    /* color:  #F5873B; */
-    color:  #004AADFF ;
+    margin: 24px 0 24px 54px ;
+    color:  rgb(0, 59, 136) ;
     font-family: Limelight;
     font-size: 25px;
-    margin: 80px 20px 30px 60px;;
 }
+
+.Store p {
+    margin: 0 0 12px 84px ;
+    color:  rgb(79, 85, 93) ;
+    font-family: Literata;
+    font-size: 20px;
+}
+
