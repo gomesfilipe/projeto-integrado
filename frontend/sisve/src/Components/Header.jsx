@@ -60,13 +60,18 @@ const Header = () => {
               </MenuItem> */}
               <MenuItem icon={<FiHome />}>  <Link to="/Store"> Loja </Link> </MenuItem>
               <MenuItem icon={<FiShoppingBag />}> <Link to="/Products"> Produtos </Link> </MenuItem>
-              {/*<MenuItem icon={<FaShoppingCart />}>  <Link to="/Vendas"> Vendas </Link> </MenuItem>*/}
+              {<MenuItem icon={<FaShoppingCart />}>  <Link to="/Vendas"> Realizar <br /> Venda </Link> </MenuItem>}
             </Menu>
           </SidebarContent>
 
           <SidebarFooter>
             <Menu>
-             <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
+             <MenuItem icon={<FiLogOut />}>
+              <div>
+                {sessionStorage.clear()}
+                <Link to="/"> Logout </Link> 
+              </div>
+             </MenuItem>
             </Menu>
           </SidebarFooter>
           
