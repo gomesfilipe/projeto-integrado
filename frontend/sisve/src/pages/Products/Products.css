@@ -1,0 +1,56 @@
+.Botao button{
+  
+    margin-left: 50px;
+    margin-top: 11px;
+
+    width: 50%;
+    padding: 4px;
+    font-weight: 800;
+    
+    background: wheat;
+    color:#F5873B;
+    
+    border-radius: 15px;
+    border: none;
+    
+    cursor: pointer;
+    font-size: 20px;
+    transition-duration: 0.4s;
+  }
+
+  .Botao button:hover{
+    filter: brightness(0.9); 
+  }
+
+
+.cabecalho h1{
+  margin: 5px 0 0px;
+  padding-left: 20px;
+  font-size: 40px;
+  color:#004AADFF ;
+  font-family: Limelight;
+}
+
+
+/* .produto-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 10 25px;
+  margin: 20px auto;
+  }
+  .produto-container h1 {
+  margin-top: 20px;
+  margin-bottom: 24px;
+  padding-left: 20px;
+  color:blue;
+  }
+  
+  .produto-container ul {
+  display: grid;
+  padding: 0 25px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 35px;
+  list-style: none;
+  } 
+ */
+

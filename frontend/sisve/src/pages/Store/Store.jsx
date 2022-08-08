@@ -10,7 +10,6 @@ function Store(){
     const stringUsername = sessionStorage.getItem('username')
     const username = JSON.parse(stringUsername)
 
-
     return (
        <div>        
             <div style={{ display: "flex" }}>
