@@ -69,9 +69,9 @@ function Products() {
   const name = JSON.parse(stringName)
 
   // const[produtos,setProdutos] = useState([]);
-  //const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]); 
   const stringToken = sessionStorage.getItem('token')
-  const Token = JSON.parse(stringToken)
+  // const Token = JSON.parse(stringToken)
 
   // useEffect(function(){ 
   //   console.log("oi")
@@ -85,10 +85,10 @@ function Products() {
   // },[])
 
       useEffect(() =>{
-        api.get('/product/api/all')
+        api.get('/product/api')
         .then( res => {
-          //setProducts(res.data);
-          console.log(res.data);
+          // setProducts(res.data.products);
+          // console.log(res.data);
           //console.log(products);
         })
         .catch((error) => {
@@ -112,7 +112,7 @@ function Products() {
 
         <div className='Products'>
           <h1> Todos os produtos da {name}: </h1>
-          <table class="table table-hover table-bordered">
+          <table className="table table-hover table-bordered">
             <thead>
               <tr>
                 <th scope="col"></th>
@@ -136,7 +136,7 @@ function Products() {
               </tr>
               <tr>
                 <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
+                <td colSpan="2">Larry the Bird</td>
                 <td>@twitter</td>
               </tr>
             </tbody>

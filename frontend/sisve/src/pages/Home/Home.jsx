@@ -27,7 +27,7 @@ function Home() {
       setSucesso("S")  
       alert("Login efetuado com sucesso!");
       //guardar dados da sessão para não ter que fazer muitas requisições ao servidor
-      sessionStorage.setItem("token",JSON.stringify(response.data.token));
+      sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("name",JSON.stringify(response.data.store.name));
       sessionStorage.setItem("username",JSON.stringify(response.data.store.username));
       
