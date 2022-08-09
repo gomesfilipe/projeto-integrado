@@ -1,0 +1,84 @@
+.Sale h1{
+  margin: 12px 0 0px 0px ;
+  margin-bottom: 0px;
+  color:  rgb(0, 59, 136) ;
+  font-family: Limelight;
+  font-size: 45px;
+  padding: 24px;
+}
+
+/* .Sale h5{
+  margin: 5px 0 0px 0px ;
+  margin-bottom: 0px;
+  color:  rgb(0, 59, 136) ;
+  font-family:Literata; 
+  font-weight: 600;
+ 
+  padding: 24px;
+} */
+
+.Sale table {
+  margin: 40px 0px 5px 18px ;
+  
+  color:  rgb(79, 85, 93) ;
+  font-family: Literata; 
+  font-size: 20px;
+  text-align: center;
+
+}
+
+.Sale table button{
+ 
+  background: ghostwhite;
+  color: rgb(0, 59, 136) ;
+  
+  /* border-radius: 3px; */
+  width: 50%;
+  border: none;
+  
+  cursor: pointer;
+  font-size: 20px;
+  /* transition-duration: 0.4s; */
+  transition: filter 0.2s;
+}
+
+.Sale table button button:hover{
+  filter: brightness(2.0); 
+  /* background-color: green; */
+}
+
+.Search h5{
+  margin-left: 25px;
+  color:  rgb(0, 59, 136) ;
+  font-family:Literata; 
+  font-weight: 600;
+}
+
+.Search button{
+  /* margin-bottom: 2px; */
+  margin: 2 1 1 0;
+  color:rgb(0, 59, 136) ;
+  background-color:#D4E9F6;
+  border-color: #D4E9F6;
+
+}
+
+.Search input{
+  /* border-radius:1px;  */
+  margin-top: 1px;
+  margin-left: 25px;
+  color: #606162;
+
+}
+
+.Shop-cart{
+  /* height: 100%; */
+  /* width: 40%;  */
+  /* margin-left: 40px; */
+  /* border-width: 40px; */
+  /* height: 100vh;
+  width: 40%; */
+  /* padding-left: 60px; */
+  /* margin-left: 80px;  */
+  background-color: wheat; 
+}

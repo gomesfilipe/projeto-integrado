@@ -10,23 +10,6 @@ import Product_registration from "../Product_registration/Product_registration";
 
 function Products() {
 
-  // state = {
-  //   seen: false
-  // };
-
-  // togglePop = () => {
-  //   this.setState({
-  //     seen: !this.state.seen
-  //   });
-  // };
-
- 
-
-
-
-
-
-
   /* Dados do sessionStorage para personalizar página */
   const stringName = sessionStorage.getItem('name')
   const name = JSON.parse(stringName)
@@ -99,10 +82,6 @@ function Products() {
 
             </tbody>
           </table>
-
-
-     
-
          
         </div> 
       </div>
