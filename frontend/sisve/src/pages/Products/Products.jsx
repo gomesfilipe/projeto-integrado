@@ -5,10 +5,28 @@ import Header from "../../Components/Header";
 
 import { FaPlus } from "react-icons/fa";
 import axios from 'axios';
+import Product_registration from "../Product_registration/Product_registration";
 
 
 function Products() {
-   
+
+  // state = {
+  //   seen: false
+  // };
+
+  // togglePop = () => {
+  //   this.setState({
+  //     seen: !this.state.seen
+  //   });
+  // };
+
+ 
+
+
+
+
+
+
   /* Dados do sessionStorage para personalizar página */
   const stringName = sessionStorage.getItem('name')
   const name = JSON.parse(stringName)
@@ -46,15 +64,16 @@ function Products() {
       <div style={{ display: "flex" }}>
         <Header/>   
 
-        <div className='Botao'>
+        <div className='Products'>
+          <h1> Todos os produtos da {name}: </h1>
+
+          <div className='Botao'>
             <button type="button" /*onClick={cadastrarProduto}*/ > 
               {<FaPlus />}
             </button>  
-        </div>  
+          </div> 
 
-        <div className='Products'>
-          <h1> Todos os produtos da {name}: </h1>
-          <table className="table table-hover table-bordered">
+          <table className="table table-hover table-bordered table-striped ">
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -67,62 +86,29 @@ function Products() {
             </thead>
             <tbody>
 
-
-              {/* <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr> */}
-
-              
-                      {products.map( (product,i) =>{
-                          return <tr key = {i+1}>
-                            <th scope="row">{i+1}</th>
-                              <td> {product.name}</td>
-                              <td> {product.cost}</td>
-                              <td> {product.sale}</td>
-                              <td> {product.quantity}</td>
-                              <td> {product.unity}</td>
-                              
-                        </tr> 
-                        })
-                      } 
-
-
+              {products.map( (product,i) =>{
+                return <tr key = {i+1}>
+                  <th scope="row">{i+1}</th>
+                    <td> {product.name}</td>
+                    <td> {product.cost}</td>
+                    <td> {product.sale}</td>
+                    <td> {product.quantity}</td>
+                    <td> {product.unity}</td>      
+                  </tr> 
+              })}
 
             </tbody>
           </table>
+
+
+     
+
+         
         </div> 
       </div>
     </div>
 
 
 
-    
-                      /* {
-                        Products.map( (product) =>{
-                          return <tr key = {product.id}>
-                            <th scope="row">{product}.id}</th>
-                              <td> {product.name}</td>
-                              <td> {product.cost}</td>
-                              <td> {product.price}</td>
-                              <td> {product.quantity}</td>
-                              <td> {product.unity}</td>
-                              
-                        </tr> 
-                        })
-                      }  */
 )}export default Products
   

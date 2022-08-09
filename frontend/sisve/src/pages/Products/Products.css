@@ -6,27 +6,36 @@
 }
    
 .Products h1 {
-    margin: 12px 0 84px 1px ;
+    margin: 12px 0 0px 0px ;
+    margin-bottom: 0px;
     color:  rgb(0, 59, 136) ;
     font-family: Limelight;
-    font-size: 50px;
+    font-size: 45px;
     padding: 24px;
 }
 
 .Products table {
-    margin: 12px 0 0px 12px ;
+    margin: 10px 0px 5px 30px ;
     color:  rgb(79, 85, 93) ;
-    font-family: Literata;
+    font-family: Literata; 
     font-size: 20px;
+    /* font-weight: 600; */
+    /* font-family: Helvetica;
+    font-size: 18px; */
+  
+  
+    text-align: center;
+  
 }
 
 
 .Botao button{
   
-    margin-left: 50px;
-    margin-top: 11px;
+    margin-left: 950px; 
+    margin-top: 2px; 
+    /* margin: 2px 0 20px 1px ; */
 
-    width: 50%;
+    width: 5%;
     padding: 4px;
     font-weight: 800;
     
