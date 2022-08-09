@@ -27,7 +27,7 @@ function Home() {
         setSucesso('S');
         alert("Login efetuado com sucesso!");
         var token = response.data.token;
-        localStorage.setItem("token",JSON.stringify(token));
+        sessionStorage.setItem("token",JSON.stringify(token));
       }
     })
     .catch(error => {

@@ -30,13 +30,13 @@ function Cadastro() {
         setSucesso('S');
         alert("Loja cadastrada com sucesso!");
         var token = response.data.token;
-        localStorage.setItem("token",JSON.stringify(token));
+        sessionStorage.setItem("token",token); 
       }
     })
     .catch(error => {
       setSucesso('N')
       //erros que podem acontecer
-      if(error.message = "error message" )
+      if(error.message == "error message" )
       {
         setMensagem("Erro ao cadastrar loja. Os dados não respeitam os critérios ou uma loja com esse nome já existe.")
       }
