@@ -1,56 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from "../../Components/Header";
-import Home from "../Home/Home"
-
 import "./Store.css"
 
-//Icon
-import { FaShoppingCart } from "react-icons/fa"
+function Store(){
 
+    /* Dados do sessionStorage para personalizar página */
+    const stringName = sessionStorage.getItem('name')
+    const name = JSON.parse(stringName)
+    const stringUsername = sessionStorage.getItem('username')
+    const username = JSON.parse(stringUsername)
 
-function Store () {
     return (
-       <div>
-        
+       <div>        
             <div style={{ display: "flex" }}>
-                <Header/>
-            
-                <div className='Store' >
-                    <h1>Hoop</h1>
-                    <p>Name: Hoop</p>
-                    <p>Username: hoop_cadernos</p>
+                <Header/>            
+                <div className="Store" >
 
-                    {/* <Button variant="contained" Icon=   {<FaShoppingCart />}       >
-                     Editar
-                    </Button> */}
+                    <h1> Seja bem vindo(a), {name}! </h1>
+                   
+                    <h2>Dados da Loja:</h2>
+                    
+                    <p>Nome da loja: {name}</p>
+                    <p>Username da loja: {username}</p>
 
-                    {/* <button type="submit">
-                        Editar
-                    </button> */}
-
-                    {/* <IconButton aria-label="fingerprint" color="secondary">
-                        <FaShoppingCart />
-                    </IconButton> */}
-                    {/* <div>
-                        <Button color="primary">
-                            <Icon name="left" />
-                        </Button>
-
-                    </div> */}
-
-                    {/* <h2>Dashboards</h2> */}
+                    <h2>Dashboards da Loja:</h2>
+                    <p>Você ainda não tem dashboards !</p>
                 </div> 
-
-
-
-
-
             </div>
-
-      
         </div>
-       
-
-      );
-  };
-  export default Store
+    )
+}
+export default Store

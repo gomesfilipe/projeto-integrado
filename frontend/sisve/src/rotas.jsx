@@ -7,6 +7,7 @@ import Home from './pages/Home/Home'
 import Cadastro from './pages/Cadastro/Cadastro'
 import Products from './pages/Products/Products'
 import Store from './pages/Store/Store'
+import Vendas from './pages/Vendas/Vendas'
 
 function Rota() {  
   return (  
@@ -16,7 +17,8 @@ function Rota() {
         <Route path='/Cadastro' element={<Cadastro/>} />
         <Route path='/Store' element={<Store/>} />
         <Route path="/Products" element={<AuthGuard component={<Products/>} />} />
-      </Routes>
+      <Route path='/Vendas' element={<Vendas/>} />
+    </Routes>
     </BrowserRouter>
   )
 }

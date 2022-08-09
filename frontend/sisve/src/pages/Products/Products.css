@@ -1,0 +1,47 @@
+.Products {
+    display: flex;    
+    background-color: #ffffff;
+    align-items: left;
+    flex-direction: column;
+}
+   
+.Products h1 {
+    margin: 12px 0 84px 1px ;
+    color:  rgb(0, 59, 136) ;
+    font-family: Limelight;
+    font-size: 50px;
+    padding: 24px;
+}
+
+.Products table {
+    margin: 12px 0 0px 12px ;
+    color:  rgb(79, 85, 93) ;
+    font-family: Literata;
+    font-size: 20px;
+}
+
+
+.Botao button{
+  
+    margin-left: 50px;
+    margin-top: 11px;
+
+    width: 50%;
+    padding: 4px;
+    font-weight: 800;
+    
+    background: wheat;
+    color:#F5873B;
+    
+    border-radius: 15px;
+    border: none;
+    
+    cursor: pointer;
+    font-size: 20px;
+    transition-duration: 0.4s;
+  }
+
+  .Botao button:hover{
+    filter: brightness(0.9); 
+  }
+
