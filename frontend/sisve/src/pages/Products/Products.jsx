@@ -9,8 +9,8 @@ import axios from 'axios';
 
 function Products() {
    
-    // const [products, setProducts] = useState([]);  //nao consegui fazer por esse
-    const [products, setProducts] = useState({name: '', price : ''});  //nao consegui fazer por esse
+    //const [products, setProducts] = useState([]);  //nao consegui fazer por esse
+    //const [products, setProducts] = useState({name: '', price : ''});  //nao consegui fazer por esse
 
     //Fazendo por lista
     var listPro = [];
@@ -20,13 +20,10 @@ function Products() {
       liPro : [],
     } ; //objeto produtos
 
-      //Capturando o token
-      const stringToken = localStorage.getItem('token')
-      const token = JSON.parse(stringToken)
-
     
+  
       //Pega os produtos de todas as lojas   Dando certo aqui
-      // axios.get('http://localhost:8000/product/api/all', {
+      // api.get('product/api/', {
       // })
       // .then((res) => {
       //   //Fazendo por objeto:
@@ -71,148 +68,48 @@ function Products() {
   const stringName = sessionStorage.getItem('name')
   const name = JSON.parse(stringName)
 
-  const[produtos,setProdutos] = useState([]);
+  // const[produtos,setProdutos] = useState([]);
+  //const [products, setProducts] = useState([]); 
   const stringToken = sessionStorage.getItem('token')
   const Token = JSON.parse(stringToken)
-/*
-  useEffect(function(){ 
-    console.log("oi")
-    api.get("/product/api",{
-      headers: {
-        'Authorization': `token ${Token}`
-      }
-    })
-    .then( async function(response){
-      await response.products.forEach(function(produto){
-        console.log(produto)
-      })
-    })
-    .catch(error => console.error(error))
-  },[]);*/
+
+  // useEffect(function(){ 
+  //   console.log("oi")
+  //   api.get("/product/api")
+  //   .then( async function(response){
+  //     await response.products.forEach(function(product){
+  //       console.log(product)
+  //     })
+  //   })
+  //   .catch(error => console.error(error))
+  // },[])
 
       useEffect(() =>{
-        axios.get('http://localhost:8000/product/api/all')
-        .then(res => res.json())
-        .then(data => {
-          setProducts(products);
+        api.get('/product/api/all')
+        .then( res => {
+          //setProducts(res.data);
+          console.log(res.data);
+          //console.log(products);
         })
         .catch((error) => {
-            console.error(error)
+            console.error('err frioso no front : ' , error);
           })
         
-      }, [products]);
-
-  
-
+      }, []);
     
-    return (
-      
-      <div>        
-            <div style={{ display: "flex" }}>
-                <Header/>
-                  <div className='cabecalho'>
-                    <h1> Meus Produtos </h1> 
-                    {/* {name}; */}
-                    
-
-                    
-                  
-                    {/* <button type="button" onClick={cadastrarProduto}> New </button>    */}
-                  </div>
-
-                  <div className='Botao'>
-                        <button type="button" > 
-                        {<FaPlus />}
-                     </button>     
-                    </div>
 
 
-
-
-                    {/* <div className="produto-container">
-                        <ul>
-                          {products.map(product => (
-                            <li key={product.id}>
-                                <b>Nome:</b>{product.name}<br/>
-                                <b>Preço:</b>{product.price}<br/>
-                            </li>
-                        ))}
-                        </ul>
-                    </div> */}
-
-                    
-
-
-              
-                {/* <table className="table table-hover table-bordered">
-
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Custo</th>
-                        <th scope="col">Preço</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col">Unidade</th>
-                      </tr>
-                    </thead>
-
-                    <tbody> 
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td> oi</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                      </tr> */}
-
-
-                      {/* <tr>
-                         <th scope="row">{res.data.id}</th>
-                              <td> {res.data.name}</td>
-                              <td> {res.data.cost}</td>
-                              <td> {res.data.price}</td>
-                              <td> {res.data.quantity}</td>
-                              <td> {res.data.unity}</td>
-                      </tr> */}
-                      
-                      {/* <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                      </tr> */}
-
-                      {/* {
-                        Products.map( (product) =>{
-                          return <tr key = {res.data.id}>
-                            <th scope="row">{res.data}.id}</th>
-                              <td> {res.data.name}</td>
-                              <td> {res.data.cost}</td>
-                              <td> {res.data.price}</td>
-                              <td> {res.data.quantity}</td>
-                              <td> {res.data.unity}</td>
-                              
-                        </tr> 
-                        })
-                      }  */}
-
-                    {/* </tbody>
-                </table>  */}
-
-                {/* <div>
-                  console.log(products.len)
-                </div> */}
-
-
-            </div>
-        </div>
-      
-  
   return (     
     <div>        
       <div style={{ display: "flex" }}>
-        <Header/>      
+        <Header/>   
+
+        <div className='Botao'>
+            <button type="button" /*onClick={cadastrarProduto}*/ > 
+              {<FaPlus />}
+            </button>  
+        </div>  
+
         <div className='Products'>
           <h1> Todos os produtos da {name}: </h1>
           <table class="table table-hover table-bordered">
@@ -247,5 +144,22 @@ function Products() {
         </div> 
       </div>
     </div>
+
+
+
+    
+                      /* {
+                        Products.map( (product) =>{
+                          return <tr key = {res.data.id}>
+                            <th scope="row">{res.data}.id}</th>
+                              <td> {res.data.name}</td>
+                              <td> {res.data.cost}</td>
+                              <td> {res.data.price}</td>
+                              <td> {res.data.quantity}</td>
+                              <td> {res.data.unity}</td>
+                              
+                        </tr> 
+                        })
+                      }  */
 )}export default Products
   
