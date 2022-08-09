@@ -9,67 +9,12 @@ import axios from 'axios';
 
 function Products() {
    
-    //const [products, setProducts] = useState([]);  //nao consegui fazer por esse
-    //const [products, setProducts] = useState({name: '', price : ''});  //nao consegui fazer por esse
-
-    //Fazendo por lista
-    var listPro = [];
-
-    //Fazendo por objeto
-    var Pro = {
-      liPro : [],
-    } ; //objeto produtos
-
-    
-  
-      //Pega os produtos de todas as lojas   Dando certo aqui
-      // api.get('product/api/', {
-      // })
-      // .then((res) => {
-      //   //Fazendo por objeto:
-      //   //Pro.liPro.push(res.data);
-      //   //console.log(Pro.liPro);
-      //   //console.log(Pro.liPro[0].products[0]);
-
-      //   //Fazendo por lista
-      //   listPro.push(res.data);
-      //   // console.log(listPro);
-      //   //Imprimindo primiero produto
-      //   console.log(listPro[0].products[0].name);
-      //   console.log(listPro[0].products[0].cost);
-
-
-      
-      // })
-      // .catch((error) => {
-      //   console.error(error)
-      // })
-      // const name =  JSON.stringify(listPro[0].products[0].name);
-      // console.log(listPro[0].products[0].name);
-      // const produto_name = JSON.stringify(listPro[0].products[0].name);
-      
-
-      
-      //Tentativa de pegar os produtos de uma unica loja
-      // axios.get('http://localhost:8000/product/api', {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-          
-      //   }
-      // })
-      // .then((res) => {
-      //   console.log(res.data)
-      // })
-      // .catch((error) => {
-      //   console.error(error)
-      // })
-
   /* Dados do sessionStorage para personalizar página */
   const stringName = sessionStorage.getItem('name')
   const name = JSON.parse(stringName)
 
   // const[produtos,setProdutos] = useState([]);
-  //const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]); 
   const stringToken = sessionStorage.getItem('token')
   const Token = JSON.parse(stringToken)
 
@@ -87,16 +32,13 @@ function Products() {
       useEffect(() =>{
         api.get('/product/api/all')
         .then( res => {
-          //setProducts(res.data);
-          console.log(res.data);
-          //console.log(products);
+          setProducts(res.data.products); //yey
         })
         .catch((error) => {
-            console.error('err frioso no front : ' , error);
+            console.error('err : ' , error);
           })
         
       }, []);
-    
 
 
   return (     
@@ -115,14 +57,18 @@ function Products() {
           <table class="table table-hover table-bordered">
             <thead>
               <tr>
-                <th scope="col"></th>
+                <th scope="col">ID</th>
                 <th scope="col">Nome</th>
-                <th scope="col">Qtd disponível</th>
-                <th scope="col">Handle</th>
+                <th scope="col">Custo</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Unidade</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+
+
+              {/* <tr>
                 <th scope="row">1</th>
                 <td>Mark</td>
                 <td>Otto</td>
@@ -138,7 +84,24 @@ function Products() {
                 <th scope="row">3</th>
                 <td colspan="2">Larry the Bird</td>
                 <td>@twitter</td>
-              </tr>
+              </tr> */}
+
+              
+                      {products.map( (product,i) =>{
+                          return <tr key = {i+1}>
+                            <th scope="row">{i+1}</th>
+                              <td> {product.name}</td>
+                              <td> {product.cost}</td>
+                              <td> {product.sale}</td>
+                              <td> {product.quantity}</td>
+                              <td> {product.unity}</td>
+                              
+                        </tr> 
+                        })
+                      } 
+
+
+
             </tbody>
           </table>
         </div> 
@@ -150,13 +113,13 @@ function Products() {
     
                       /* {
                         Products.map( (product) =>{
-                          return <tr key = {res.data.id}>
-                            <th scope="row">{res.data}.id}</th>
-                              <td> {res.data.name}</td>
-                              <td> {res.data.cost}</td>
-                              <td> {res.data.price}</td>
-                              <td> {res.data.quantity}</td>
-                              <td> {res.data.unity}</td>
+                          return <tr key = {product.id}>
+                            <th scope="row">{product}.id}</th>
+                              <td> {product.name}</td>
+                              <td> {product.cost}</td>
+                              <td> {product.price}</td>
+                              <td> {product.quantity}</td>
+                              <td> {product.unity}</td>
                               
                         </tr> 
                         })
