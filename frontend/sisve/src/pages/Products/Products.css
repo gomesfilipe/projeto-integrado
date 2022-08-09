@@ -1,0 +1,23 @@
+.Products {
+    display: flex;    
+    background-color: #ffffff;
+    align-items: left;
+    flex-direction: column;
+}
+   
+.Products h1 {
+    margin: 12px 0 84px 1px ;
+    color:  rgb(0, 59, 136) ;
+    font-family: Limelight;
+    font-size: 50px;
+    padding: 24px;
+}
+
+.Products table {
+    margin: 12px 0 0px 12px ;
+    color:  rgb(79, 85, 93) ;
+    font-family: Literata;
+    font-size: 20px;
+}
+
+

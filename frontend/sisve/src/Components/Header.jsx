@@ -31,6 +31,10 @@ const Header = () => {
     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
   };
 
+  function logout(){
+    sessionStorage.clear();
+  }
+
 
   return (
     <>
@@ -68,13 +72,11 @@ const Header = () => {
             <Menu>
              <MenuItem icon={<FiLogOut />}>
               <div>
-                {sessionStorage.clear()}
-                <Link to="/"> Logout </Link> 
+                <Link to="/" onClick={logout}> Logout </Link> 
               </div>
              </MenuItem>
             </Menu>
           </SidebarFooter>
-          
         </ProSidebar>
       </div>
     </>
