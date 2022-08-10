@@ -1,0 +1,91 @@
+.cadastrarProdutos {
+    display: flex;    
+    background-color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row wrap;
+}
+   
+.cadastrarProdutos h1 {
+    margin: 0;
+    color:  rgb(0, 59, 136) ;
+    font-family: Limelight;
+    font-size: 45px;
+    padding: 24px;
+}
+.coluna-1 {
+    width: 50%;
+    background-color: #ffffff;
+}
+  
+.coluna-2 {
+    width: 50%;
+    padding-left: 60px;
+    background-color: #ffffff;
+}
+  
+.coluna-1 label {
+    margin: 12px 1px 1px 24px;
+    font-family: Limelight;
+    color:#F5873B;
+}
+
+.coluna-2 label {
+    margin: 12px 1px 1px 24px;
+    font-family: Limelight;
+    color:#F5873B;
+}
+
+.coluna-1 input{
+    margin: 5px 1px 12px 24px;
+    width: 80%;
+    padding: 24px;
+    height: 50px;
+      
+    background:#f5893b60;
+    border-radius: 5px;
+    border: none;
+
+    
+    font-size: 16px;
+    font-style: italic;
+} 
+
+.coluna-2 input{
+    margin: 5px 1px 12px 24px;
+    width: 80%;
+    padding: 24px;
+    height: 50px;
+      
+    background:#f5893b60;
+    border-radius: 5px;
+    border: none;
+
+    
+    font-size: 16px;
+    font-style: italic;
+} 
+    
+.cadastrarProdutos button{
+    
+    width: 250px;
+    padding: 15px;
+    font-weight: 800;
+    
+    background: #F5873B;
+    color:#ffffff ;
+    
+    border-radius: 25px;
+    margin: 12px 200px 24px;
+    border: none;
+
+    
+    cursor: pointer;
+    transition: filter 0.2s;
+    
+    font-size: 20px;
+  }
+    
+.cadastrarProdutos button:hover{
+   filter: brightness(0.9);
+}
