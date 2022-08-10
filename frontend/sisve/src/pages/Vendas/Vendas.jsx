@@ -15,6 +15,10 @@ function Vendas() {
   const [carrinho, setCarrinho] = useState([]);
   const [input_search, setInput] = useState('');
 
+  const [pItens, setpItens] = useState([]);
+
+
+
       useEffect(() =>{
         api.get('/product/api')
         .then( res => {
@@ -36,16 +40,72 @@ function Vendas() {
           console.error('err : ' , error);
         })       
       }
-
+      //Adiciona um produto ao carrinho
       function addProduct(product){
         if(carrinho.indexOf(product) > -1){ //ja possui esse produto no carrinho
           alert(`${product.name} já está no carrinho!`);
           
         }else{  //nao possui esse produto no carrinho
-          setCarrinho([...carrinho,product])
+          setCarrinho([...carrinho,product]);
+          const item = {
+            product,
+            qtd: 1,
+            total : product.sale,
+          }
+          setpItens([...pItens, item]);
+          // setCarrinho([...carrinho,product])
+
         } 
+        // console.log(pItens);
+      }
+      // console.log(pItens[0].qtd);  //pra pegar o nome do primeiro produto
+
+      function alt_qtd(value_qtd, product, i) {
+        console.log('qtd eh : ' + value_qtd);
+        console.log('i eh : ' + i);
+        let alt_item = {
+            product,
+            qtd: value_qtd,
+            total : product.sale * value_qtd,
+        }
+        // setpItens(state => {
+        //   return { ...state[i], ...alt_item };
+
+        // });
+        // setpItens(pItens.filter(item => item.product.name !== product.name));
+        // console.log(pItens);
+        // setpItens(...pItens, alt_item);
+        // console.log(pItens);
+
+        // setpItens(prevpItens => {
+        //   return { ...prevpItens, ...alt_item};
+
+        // });
+        // return total;
+        // const index = pItens.indexOf(i); 
+
+        // pItens.splice(i, 1, alt_item);
+        // console.log(pItens);
+        setpItens(pItens.splice(i, 1, alt_item));
+        console.log(pItens);
+
       }
 
+      // console.log(pItens);
+
+
+      //   function handleClickAlterar(value, i, product) {
+      //     let alt_item = {
+      //       product,
+      //       qtd: value,
+      //       total : product.sale * value,
+      //     }
+      //     setpItens(state => {
+      //     return { ...state[i], ...alt_item };
+      //   });
+
+
+      // }
 
 
   return (     
@@ -56,7 +116,6 @@ function Vendas() {
         <div className='Screen-sale'>
           <h1> Realizar Venda </h1>
           <div className='Sale'>
-            {/* <h1> Realizar Venda </h1> */}
             
             <div className='Search'>
               <h5>Nome do Produto</h5>
@@ -89,7 +148,6 @@ function Vendas() {
                       <td> {product.sale}</td>
                       <td> {product.quantity}</td>
                       <td> 
-                        {/* <button type='button' onClick={() => setCarrinho([...carrinho,product])} > */}
                         <button type='button' onClick={(e) => {addProduct(product)}} >
                           {<FaPlus />}
                         </button>
@@ -113,15 +171,12 @@ function Vendas() {
                   <th scope="col">Preço</th>
                   <th scope="col">Qtd</th>
                   <th scope="col">Total</th>
-                  {/* <th scope="col">Retirar</th> */}
-
                 </tr>
               </thead>
               <tbody>
 
-                {carrinho.map( (item,i) =>{
+                {/* {carrinho.map( (item,i) =>{
                   return <tr key = {i}>
-                    {/* <th scope="row">{i+1}</th> */}
                       <td> {item.name}</td>
                       <td> {item.sale}</td>
                       <td>
@@ -130,7 +185,32 @@ function Vendas() {
                         />
                       </td>
                       <td>
-                        {pQtd}  
+                        {item.sale }  
+
+                      </td>
+                   
+                    </tr> 
+                })} */}
+
+
+              {pItens.map( (item,i) =>{
+                  return <tr key = {i}>
+                      <td> {item.product.name}</td>
+                      <td> {item.product.sale}</td>
+                      <td>
+                        <input type="text" /*defaultValue={1} */
+                        //onChange={(e) => setpQtd(e.target.value)} //muda na parte de Qtd
+                        //onChange={(e) => setCarrinho(e.target.value)}
+                        // onChange={(e) => setpItens(...pItens, item.qtd)}
+                        onChange={(e) => alt_qtd(e.target.value, item.product, i) }
+                        // onChange={(e) => handleClickAlterar() }
+                        // onChange={this.handleClickAlterar(e.target.value, i, item.product) }
+                        />
+                      </td>
+                      <td>
+                        {item.total} 
+
+
                       </td>
                    
                     </tr> 
