@@ -24,13 +24,29 @@
 
 
 }
+.cabecalho{
+    display: flex;
+    flex-flow: row wrap;
+}
+ 
+.Search {
+    width: 50%;
+    background-color: #ffffff;
+}
+      
+.Botao {
+    margin-left: 93%;
+    width: 50%;
+    background-color: #ffffff;
+    justify-content: center;
+    
+
+}
 
 .Botao button{
-  
-    margin-left: 1000px; 
-    margin-top: 2px; 
 
-    width: 5%;
+  
+    width: 48%;
     padding: 2px;
     font-weight: 800;
     
@@ -48,4 +64,56 @@
   .Botao button:hover{
     filter: brightness(0.9); 
   }
+
+  .Edicao button{
+  
+    padding: 2px;
+    font-weight: 800;
+    
+    color:#F5873B;
+
+    border-radius: 15px;
+    border: none;
+    
+    cursor: pointer;
+    font-size: 20px;
+    transition-duration: 0.4s;
+  }
+
+  .Delecao button{
+  
+    padding: 2px;
+    font-weight: 800;
+    
+    color:#F5873B;
+
+    border-radius: 15px;
+    border: none;
+    
+    cursor: pointer;
+    font-size: 20px;
+    transition-duration: 0.4s;
+  }
+
+  .Search button{
+  
+    width: 7%;    
+    border-radius: 100px;
+    border: none;
+    
+    cursor: pointer;
+    font-size: 20px;
+    transition-duration: 0.4s;
+  }
+
+  .Search input{
+
+    width: 70%;
+    background: rgba(255, 255, 255, 0.644);
+    font-size: 15px;
+    border-radius: 100px;
+
+  }
+
+
 

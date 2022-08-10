@@ -50,21 +50,23 @@ function Products() {
 
         <div className='Products'>
           <h1> Todos os produtos da {name}: </h1>
-          
-          <div className='Botao'>
-          <Link to="/Product_registration"> <button>{<FaPlus />}</button> </Link>
-          </div>
 
-          <div className='Search'>
+          <div className='cabecalho'>
+            
+            <div className='Search'>
               <h5>Buscar Produto</h5>
-              <input type="text" 
-                onChange={(e) =>  {setInput(e.target.value)}}         
-              />
+                <form class="d-flex">
+                  <input class="form-control me-2" type="search" placeholder="Digite o nome do produto" onChange={(e) =>  {setInput(e.target.value)}}/>
+                  <button type="submit" onClick={(e) => {searchProduct(input)}}>{<FaSearch />}</button>
+                </form>
+            </div>
 
-              <button type='button' onClick={(e) => {searchProduct(input)}}>
-                {<FaSearch />}
-              </button>
+            <div className='Botao'>
+              <Link to="/Product_registration"> <button>{<FaPlus />}</button> </Link>
+            </div>
+
           </div>
+          
 
           <table className="table table-hover table-bordered table-striped ">
             <thead>
@@ -90,11 +92,15 @@ function Products() {
                     <td> {product.quantity}</td>
                     <td> {product.unity}</td>
                     <td>
-                      {/* <Link to="/Product_edit/"> <button> {<FaPen/>} </button> </Link>  */}
-                      <Link to={`/Product_edit/${product.name}`}> <button> {<FaPen/>} </button> </Link> 
+                    <div className='Edicao'>
+                     <Link to="/Product_edit/${product.name}"> <button> {<FaPen/>} </button> </Link> 
+                    </div>
+                     
                     </td>
                     <td>
-                      <button onClick={(e) => apagarProduto(product._id)}> {<FaTrash/>} </button>
+                    <div className='Delecao'>
+                       <button onClick={(e) => apagarProduto(product._id)}> {<FaTrash/>} </button>
+                    </div>
                     </td>     
                   </tr> 
               })}
