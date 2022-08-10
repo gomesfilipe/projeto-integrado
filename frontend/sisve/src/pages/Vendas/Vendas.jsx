@@ -11,7 +11,9 @@ import { FaSearch } from "react-icons/fa";
 function Vendas() {
 
   const [products, setProducts] = useState([]); 
-  const [pQtd, setpQtd] = useState('');
+  const [pQtd, setpQtd] = useState([]);
+  const [carrinho, setCarrinho] = useState([]);
+  const [input_search, setInput] = useState('');
 
       useEffect(() =>{
         api.get('/product/api')
@@ -23,6 +25,27 @@ function Vendas() {
           })
         
       }, []);
+
+
+      function searchProduct(product_name){
+        api.get(`/product/api/${product_name}`)
+        .then(res =>{
+          setProducts(res.data.products); 
+        })
+        .catch((error) => {
+          console.error('err : ' , error);
+        })       
+      }
+
+      function addProduct(product){
+        if(carrinho.indexOf(product) > -1){ //ja possui esse produto no carrinho
+          alert(`${product.name} já está no carrinho!`);
+          
+        }else{  //nao possui esse produto no carrinho
+          setCarrinho([...carrinho,product])
+        } 
+      }
+
 
 
   return (     
@@ -37,9 +60,13 @@ function Vendas() {
             
             <div className='Search'>
               <h5>Nome do Produto</h5>
-              <input type="text" />
+              <input type="text" 
+                onChange={(e) =>  {setInput(e.target.value)}}         
+              />
 
-              <button>{<FaSearch />}</button>
+              <button type='button' onClick={(e) => {searchProduct(input_search)}}>
+                {<FaSearch />}
+              </button>
             </div>
 
             <table className="table table-borderless ">
@@ -50,8 +77,7 @@ function Vendas() {
                   <th scope="col">Preço</th>
                   <th scope="col">Estoque</th>
                   <th scope="col">Carrinho</th>
-                  {/* <th scope="col">Retirar</th> */}
-
+                  
                 </tr>
               </thead>
               <tbody>
@@ -63,17 +89,11 @@ function Vendas() {
                       <td> {product.sale}</td>
                       <td> {product.quantity}</td>
                       <td> 
-                        
-                        <button type='button'>
+                        {/* <button type='button' onClick={() => setCarrinho([...carrinho,product])} > */}
+                        <button type='button' onClick={(e) => {addProduct(product)}} >
                           {<FaPlus />}
                         </button>
-                        
                       </td>
-                      {/* <td> 
-                        <button>
-                          {<FaMinus />}
-                        </button>
-                      </td> */}
                     </tr> 
                 })}
 
@@ -99,14 +119,14 @@ function Vendas() {
               </thead>
               <tbody>
 
-                {products.map( (product,i) =>{
-                  return <tr key = {i+1}>
+                {carrinho.map( (item,i) =>{
+                  return <tr key = {i}>
                     {/* <th scope="row">{i+1}</th> */}
-                      <td> {product.name}</td>
-                      <td> {product.sale}</td>
+                      <td> {item.name}</td>
+                      <td> {item.sale}</td>
                       <td>
                         <input type="text" defaultValue={1} 
-                        onChange={(e) => setpQtd(e.target.value)}
+                        onChange={(e) => setpQtd(e.target.value)} //muda na parte de Qtd
                         />
                       </td>
                       <td>
@@ -129,12 +149,7 @@ function Vendas() {
           
         </div>
 
-        
-
-
-
-
-
+      
 
       </div>
     </div>
