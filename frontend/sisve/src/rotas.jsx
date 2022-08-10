@@ -18,8 +18,8 @@ function Rota() {
         <Route path='/Cadastro' element={<Cadastro/>} />
         <Route path='/Store' element={<Store/>} />
         <Route path="/Products" element={<AuthGuard component={<Products/>} />} />
-        <Route path='/Vendas' element={<Vendas/>} />
-        <Route path='/Product_registration' element={<Product_registration/>} />
+        <Route path="/Vendas" element={<AuthGuard component={<Vendas/>} />} />   
+        <Route path="/Product_registration" element={<AuthGuard component={<Product_registration/>} />} /> 
     </Routes>
     </BrowserRouter>
   )
