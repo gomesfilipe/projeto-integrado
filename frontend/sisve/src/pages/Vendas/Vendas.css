@@ -1,4 +1,4 @@
-.Sale h1{
+.Screen-sale h1{
   margin: 12px 0 0px 0px ;
   margin-bottom: 0px;
   color:  rgb(0, 59, 136) ;
@@ -6,6 +6,15 @@
   font-size: 45px;
   padding: 24px;
 }
+
+
+.Sale{
+  width: 70%;
+  /* height: 50%; */
+  /* background-color: aqua; */
+}
+
+
 
 /* .Sale h5{
   margin: 5px 0 0px 0px ;
@@ -18,7 +27,7 @@
 } */
 
 .Sale table {
-  margin: 40px 0px 5px 18px ;
+  margin: 40px 190px 5px 18px ;
   
   color:  rgb(79, 85, 93) ;
   font-family: Literata; 
@@ -73,12 +82,67 @@
 
 .Shop-cart{
   /* height: 100%; */
-  /* width: 40%;  */
+  width: 45%; 
   /* margin-left: 40px; */
   /* border-width: 40px; */
   /* height: 100vh;
   width: 40%; */
   /* padding-left: 60px; */
   /* margin-left: 80px;  */
-  background-color: wheat; 
+  background-color: wheat;
+  align-items: center; 
+  align-content: center;
+}
+
+
+.Shop-cart h2{
+  color:  rgb(0, 59, 136) ;
+  font-family: Limelight;
+  /* margin: 10px 10px 4px 0px; */
+  /* padding-left: 10px; */
+  margin-top: 40px;
+  text-align: center;
+}
+
+.Shop-cart table{
+  margin-top: 50px;
+  /* padding-left: 40px; */
+
+  /* margin-left: 20px;   */
+  text-align: center;
+}
+
+.Shop-cart table input{
+  width: 40px; 
+}  
+
+.Shop-cart p{
+  background-color: #F5873B;
+  font-weight: bold;
+  font-size: large;
+  margin-top: 50px;
+
+  padding-left: 30px;
+  border-radius: 5px;
+  height: 25px;
+  width: 20%;
+
+} 
+
+.Shop-cart button{
+  border-radius: 5px;
+  border-color: #7ED957;
+  background-color: #7ED957;
+  width: 90px;
+  height: 6%; 
+  color:black;
+
+  margin-left: 450px;
+  /* padding-left: 90px; */
+  margin-top: 100px;
+}
+
+.Shop-cart button{
+  filter: brightness(0.9); 
+  /* background-color: green; */
 }
