@@ -55,8 +55,8 @@ function Products() {
             
             <div className='Search'>
               <h5>Buscar Produto</h5>
-                <form class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Digite o nome do produto" onChange={(e) =>  {setInput(e.target.value)}}/>
+                <form className="d-flex">
+                  <input className="form-control me-2" type="search" placeholder="Digite o nome do produto" onChange={(e) =>  {setInput(e.target.value)}}/>
                   <button type="submit" onClick={(e) => {searchProduct(input)}}>{<FaSearch />}</button>
                 </form>
             </div>

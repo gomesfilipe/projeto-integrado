@@ -7,6 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 
+import { Navigate } from "react-router-dom"
 
 function Vendas() {
 
@@ -16,8 +17,10 @@ function Vendas() {
   const [input_search, setInput] = useState('');
 
   const [pItens, setpItens] = useState([]);
+  const [totalSale, setTotalSale] = useState(0);
 
-
+  const [mensagem,setMensagem] = useState('');
+  const [sucesso,setSucesso] = useState('');
 
       useEffect(() =>{
         api.get('/product/api')
@@ -52,6 +55,7 @@ function Vendas() {
             qtd: 1,
             total : product.sale,
           }
+          setTotalSale(totalSale + product.sale)
           setpItens([...pItens, item]);
           // setCarrinho([...carrinho,product])
 
@@ -66,13 +70,53 @@ function Vendas() {
             qtd: value_qtd,
             total : product.sale * value_qtd,
         }
+        
+        const old_value = pItens[i].total
+        const current_value = alt_item.total
+
+        
+        setTotalSale(totalSale - old_value + current_value)
 
         pItens.splice(i, 1, alt_item)
         const aux = pItens
-        // setpItens(aux)
         setpItens([...aux])
-
+        
       }
+
+      function efetuarVenda() {
+        let itemList = []
+        for(let i = 0; i < pItens.length; i++) {
+          const itemVenda = {
+            id_product: pItens[i].product._id,
+            quantity: pItens[i].qtd
+          }
+
+          itemList.push(itemVenda)
+        }
+        
+        const newVenda = {
+          items: itemList,
+          value: totalSale
+        }
+        
+        api.post('/sale/api', newVenda) 
+          .then(res => {
+            alert('Venda efetuada com sucesso!')
+            setSucesso('S')
+          })
+          .catch(error => {
+            setSucesso('N')
+            //erros que podem acontecer
+            if(error.message === "Request failed with status code 400")
+            {
+              setMensagem("Erro ao realizar venda. Há campos com valores inválidos.")
+            }
+            else
+            {
+            console.error(error)
+            }
+          })
+        }
 
       //   function handleClickAlterar(value, i, product) {
       //     let alt_item = {
@@ -178,7 +222,7 @@ function Vendas() {
                       <td> {item.product.name}</td>
                       <td> {item.product.sale}</td>
                       <td>
-                        <input type="text" /*defaultValue={1} */
+                        <input type="text" defaultValue={1}
                           onChange={(e) => alt_qtd(e.target.value, item.product, i) }
                         />
                       </td>
@@ -188,22 +232,19 @@ function Vendas() {
                    
                     </tr> 
                 })}
-
-
               </tbody>
             </table>
 
-
             <p>
-              Total: 
+              Total: {totalSale}
             </p>
             
-            <button type='button'>Finalizar</button>
-          
+            <button type='button' onClick={efetuarVenda}>Finalizar</button>
+            {/*Caso houver erro com as entradas acima*/}
+            {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}
+            {/*Caso houver sucesso com as entradas acima redirecionar a página*/}
+            {sucesso === 'S' ? <div> {<Navigate to="/Store" /> } </div> : null}
         </div>
-
-      
-
       </div>
     </div>
 
