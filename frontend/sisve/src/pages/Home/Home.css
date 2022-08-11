@@ -90,11 +90,9 @@
   margin: 20px 80px 1px 30px;
   width: 70%;
   padding: 24px;
-
   background: rgba(84, 95, 109, 0.329);
   border-radius: 5px;
   border: none;
-
   font-size: 16px;
 } 
 
@@ -102,17 +100,13 @@
   width: 60%;
   padding: 15px;
   font-weight: 800;
-
   background: #004AADFF ;
   color:#FFFFFF;
-
   border-radius: 25px;
   margin: 25px 0px 10px 94px;
   border: none;
-
   cursor: pointer;
   transition: filter 0.2s;
-
   font-size: 20px;
 }
 

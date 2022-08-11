@@ -41,12 +41,9 @@
     width: 80%;
     padding: 24px;
     height: 50px;
-      
     background:#f5893b60;
     border-radius: 5px;
     border: none;
-
-    
     font-size: 16px;
     font-style: italic;
 } 
@@ -55,13 +52,10 @@
     margin: 5px 1px 12px 24px;
     width: 80%;
     padding: 24px;
-    height: 50px;
-      
+    height: 50px; 
     background:#f5893b60;
     border-radius: 5px;
     border: none;
-
-    
     font-size: 16px;
     font-style: italic;
 } 
@@ -71,18 +65,13 @@
     width: 250px;
     padding: 15px;
     font-weight: 800;
-    
     background: #F5873B;
     color:#ffffff ;
-    
     border-radius: 25px;
     margin: 12px 200px 24px;
     border: none;
-
-    
     cursor: pointer;
     transition: filter 0.2s;
-    
     font-size: 20px;
   }
     

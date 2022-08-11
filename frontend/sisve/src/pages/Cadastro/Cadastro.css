@@ -46,17 +46,13 @@
   width: 60%;
   padding: 15px;
   font-weight: 800;
-  
   background: #FFFFFF ;
   color:#F5873B;
-  
   border-radius: 25px;
   margin: 12px 0 24px;
   border: none;
-  
   cursor: pointer;
   transition: filter 0.7s;
-  
   font-size: 20px;
 }
   

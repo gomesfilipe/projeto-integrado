@@ -2,9 +2,7 @@ import React, { useState , useEffect, Component} from 'react';
 import api from '../../api'
 import './Vendas.css'
 import Header from "../../Components/Header";
-
 import { FaPlus } from "react-icons/fa";
-import { FaMinus } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 
 import { Navigate } from "react-router-dom"
@@ -118,20 +116,6 @@ function Vendas() {
           })
         }
 
-      //   function handleClickAlterar(value, i, product) {
-      //     let alt_item = {
-      //       product,
-      //       qtd: value,
-      //       total : product.sale * value,
-      //     }
-      //     setpItens(state => {
-      //     return { ...state[i], ...alt_item };
-      //   });
-
-
-      // }
-
-
   return (     
     <div>        
       <div style={{ display: "flex" }}>
@@ -141,7 +125,7 @@ function Vendas() {
           <h1> Realizar Venda </h1>
           <div className='Sale'>
             
-            <div className='Search'>
+          <div className='Search'>
               <h5>Nome do Produto</h5>
               <input type="text" 
                 onChange={(e) =>  {setInput(e.target.value)}}         
@@ -190,7 +174,6 @@ function Vendas() {
           <table className="table table-borderless ">
               <thead>
                 <tr>
-                  {/* <th scope="col">ID</th> */}
                   <th scope="col">Produto</th>
                   <th scope="col">Preço</th>
                   <th scope="col">Qtd</th>
@@ -198,24 +181,6 @@ function Vendas() {
                 </tr>
               </thead>
               <tbody>
-
-                {/* {carrinho.map( (item,i) =>{
-                  return <tr key = {i}>
-                      <td> {item.name}</td>
-                      <td> {item.sale}</td>
-                      <td>
-                        <input type="text" defaultValue={1} 
-                        onChange={(e) => setpQtd(e.target.value)} //muda na parte de Qtd
-                        />
-                      </td>
-                      <td>
-                        {item.sale }  
-
-                      </td>
-                   
-                    </tr> 
-                })} */}
-
 
               {pItens.map( (item,i) =>{
                   return <tr key = {i}>
@@ -236,10 +201,10 @@ function Vendas() {
             </table>
 
             <p>
-              Total: {totalSale}
+              Total:  {totalSale}
             </p>
             
-            <button type='button' onClick={efetuarVenda}>Finalizar</button>
+            <button type='button' onClick={efetuarVenda}> <strong> Finalizar</strong></button>
             {/*Caso houver erro com as entradas acima*/}
             {sucesso === 'N' ? <div className="alert alert-danger mt-2" role="alert">{mensagem} </div> : null}
             {/*Caso houver sucesso com as entradas acima redirecionar a página*/}

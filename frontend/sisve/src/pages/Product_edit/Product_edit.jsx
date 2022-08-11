@@ -2,7 +2,7 @@ import './Product_edit.css'
 import React, { useState, useEffect } from 'react';
 import Header from "../../Components/Header";
 import api from '../../api'
-import {Navigate, useParams, useSearchParams} from 'react-router-dom'
+import {Navigate, useParams} from 'react-router-dom'
 
 
 
@@ -46,13 +46,6 @@ function Product_edit() {
       unity:unidadeProduto,
       min:qtdMinProduto
     }
-
-    // alert(editedProduct.name)
-    // alert(editedProduct.cost)
-    // alert(editedProduct.sale)
-    // alert(editedProduct.quantity)
-    // alert(editedProduct.unity)
-    // alert(editedProduct.min)
 
     //esvaziar variáveis de controle    
     setMensagem("");

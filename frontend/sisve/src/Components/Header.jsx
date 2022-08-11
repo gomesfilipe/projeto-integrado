@@ -59,9 +59,6 @@ const Header = () => {
 
           <SidebarContent>
             <Menu >
-              {/* <MenuItem active={true} icon={<FiHome />}>
-                Home
-              </MenuItem> */}
               <MenuItem icon={<FiHome />}>  <Link to="/Store"> Loja </Link> </MenuItem>
               <MenuItem icon={<FiShoppingBag />}> <Link to="/Products"> Produtos </Link> </MenuItem>
               {<MenuItem icon={<FaShoppingCart />}>  <Link to="/Vendas"> Realizar <br /> Venda </Link> </MenuItem>}
