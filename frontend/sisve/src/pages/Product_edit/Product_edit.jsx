@@ -79,7 +79,7 @@ function Product_edit() {
 
         <div className='cadastrarProdutos'>
 
-          <h1>Edição de Produtos: {name}</h1>
+          <h1>Edição de Produto: {name}</h1>
 
             <div className="coluna-1">
               <div >      

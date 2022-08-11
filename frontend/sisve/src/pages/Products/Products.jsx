@@ -97,7 +97,7 @@ function Products() {
                     <td> {product.unity}</td>
                     <td>
                     <div className='Edicao'>
-                     <Link to="/Product_edit/${product.name}"> <button> {<FaPen/>} </button> </Link> 
+                     <Link to={`/Product_edit/${product.name}`}> <button> {<FaPen/>} </button> </Link> 
                     </div>
                      
                     </td>

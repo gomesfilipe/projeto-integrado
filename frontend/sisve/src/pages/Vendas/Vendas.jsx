@@ -4,7 +4,7 @@ import './Vendas.css'
 import Header from "../../Components/Header";
 import { FaPlus } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
-
+import { FaTrash } from "react-icons/fa";
 import { Navigate } from "react-router-dom"
 
 function Vendas() {
@@ -55,12 +55,11 @@ function Vendas() {
           }
           setTotalSale(totalSale + product.sale)
           setpItens([...pItens, item]);
-          // setCarrinho([...carrinho,product])
-
+          
         } 
-        // console.log(pItens);
+        
       }
-      // console.log(pItens[0].qtd);  //pra pegar o nome do primeiro produto
+     
 
       function alt_qtd(value_qtd, product, i) {
         let alt_item = {
@@ -116,6 +115,18 @@ function Vendas() {
           })
         }
 
+
+        function removeItem(item, i){
+          pItens.splice(i, 1)
+          carrinho.splice(i, 1)
+          const aux = pItens
+          setpItens([...aux])
+          const aux2 = carrinho
+          setCarrinho([...aux2])
+          setTotalSale(totalSale - item.total)
+        }
+
+     
   return (     
     <div>        
       <div style={{ display: "flex" }}>
@@ -184,6 +195,11 @@ function Vendas() {
 
               {pItens.map( (item,i) =>{
                   return <tr key = {i}>
+                      <td> 
+                        <button type='button' onClick={(e) =>{removeItem(item, i)}} >
+                        {<FaTrash />}
+                        </button>
+                      </td>
                       <td> {item.product.name}</td>
                       <td> {item.product.sale}</td>
                       <td>
