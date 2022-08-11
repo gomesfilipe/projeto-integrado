@@ -22,7 +22,7 @@ function Vendas() {
       useEffect(() =>{
         api.get('/product/api')
         .then( res => {
-          setProducts(res.data.products); 
+          setProducts(res.data.products);
         })
         .catch((error) => {
             console.error('err : ' , error);
@@ -47,7 +47,7 @@ function Vendas() {
           
         }else{  //nao possui esse produto no carrinho
           setCarrinho([...carrinho,product]);
-          const item = {
+          let item = {
             product,
             qtd: 1,
             total : product.sale,
@@ -61,38 +61,18 @@ function Vendas() {
       // console.log(pItens[0].qtd);  //pra pegar o nome do primeiro produto
 
       function alt_qtd(value_qtd, product, i) {
-        console.log('qtd eh : ' + value_qtd);
-        console.log('i eh : ' + i);
         let alt_item = {
             product,
             qtd: value_qtd,
             total : product.sale * value_qtd,
         }
-        // setpItens(state => {
-        //   return { ...state[i], ...alt_item };
 
-        // });
-        // setpItens(pItens.filter(item => item.product.name !== product.name));
-        // console.log(pItens);
-        // setpItens(...pItens, alt_item);
-        // console.log(pItens);
-
-        // setpItens(prevpItens => {
-        //   return { ...prevpItens, ...alt_item};
-
-        // });
-        // return total;
-        // const index = pItens.indexOf(i); 
-
-        // pItens.splice(i, 1, alt_item);
-        // console.log(pItens);
-        setpItens(pItens.splice(i, 1, alt_item));
-        console.log(pItens);
+        pItens.splice(i, 1, alt_item)
+        const aux = pItens
+        // setpItens(aux)
+        setpItens([...aux])
 
       }
-
-      // console.log(pItens);
-
 
       //   function handleClickAlterar(value, i, product) {
       //     let alt_item = {
@@ -199,18 +179,11 @@ function Vendas() {
                       <td> {item.product.sale}</td>
                       <td>
                         <input type="text" /*defaultValue={1} */
-                        //onChange={(e) => setpQtd(e.target.value)} //muda na parte de Qtd
-                        //onChange={(e) => setCarrinho(e.target.value)}
-                        // onChange={(e) => setpItens(...pItens, item.qtd)}
-                        onChange={(e) => alt_qtd(e.target.value, item.product, i) }
-                        // onChange={(e) => handleClickAlterar() }
-                        // onChange={this.handleClickAlterar(e.target.value, i, item.product) }
+                          onChange={(e) => alt_qtd(e.target.value, item.product, i) }
                         />
                       </td>
                       <td>
                         {item.total} 
-
-
                       </td>
                    
                     </tr> 
