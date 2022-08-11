@@ -1,12 +1,11 @@
 #header {
     position: flex;
-    width: 220px;
+    width: auto;
+    height: 100%;
     
- 
   }
   #header .pro-sidebar {
     height: 100vh;
-    
   }
   #header .closemenu {
     padding: 0 28px;

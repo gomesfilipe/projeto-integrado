@@ -3,15 +3,10 @@
     background-color: #ffffff;
     align-items: left;
     flex-direction: column;
-}
-   
-.Store h1 {
-    /* margin: 0;
-    color:  rgb(0, 59, 136) ;
-    font-family: Limelight;
-    font-size: 45px;
-    padding: 24px; */
 
+}   
+.Store h1 {
+   
   margin: 12px 0 0px 0px ;
   margin-bottom: 0px;
   color:  rgb(0, 59, 136) ;
