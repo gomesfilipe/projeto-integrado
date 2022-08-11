@@ -6,7 +6,7 @@ import Header from "../../Components/Header";
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
-
+import { FaTrash } from "react-icons/fa";
 import { Navigate } from "react-router-dom"
 
 function Vendas() {
@@ -57,12 +57,11 @@ function Vendas() {
           }
           setTotalSale(totalSale + product.sale)
           setpItens([...pItens, item]);
-          // setCarrinho([...carrinho,product])
-
+          
         } 
-        // console.log(pItens);
+        
       }
-      // console.log(pItens[0].qtd);  //pra pegar o nome do primeiro produto
+     
 
       function alt_qtd(value_qtd, product, i) {
         let alt_item = {
@@ -118,20 +117,18 @@ function Vendas() {
           })
         }
 
-      //   function handleClickAlterar(value, i, product) {
-      //     let alt_item = {
-      //       product,
-      //       qtd: value,
-      //       total : product.sale * value,
-      //     }
-      //     setpItens(state => {
-      //     return { ...state[i], ...alt_item };
-      //   });
 
+        function removeItem(item, i){
+          pItens.splice(i, 1)
+          carrinho.splice(i, 1)
+          const aux = pItens
+          setpItens([...aux])
+          const aux2 = carrinho
+          setCarrinho([...aux2])
+          setTotalSale(totalSale - item.total)
+        }
 
-      // }
-
-
+     
   return (     
     <div>        
       <div style={{ display: "flex" }}>
@@ -191,6 +188,7 @@ function Vendas() {
               <thead>
                 <tr>
                   {/* <th scope="col">ID</th> */}
+                  <th scope="col">Remover</th>
                   <th scope="col">Produto</th>
                   <th scope="col">Preço</th>
                   <th scope="col">Qtd</th>
@@ -199,26 +197,14 @@ function Vendas() {
               </thead>
               <tbody>
 
-                {/* {carrinho.map( (item,i) =>{
-                  return <tr key = {i}>
-                      <td> {item.name}</td>
-                      <td> {item.sale}</td>
-                      <td>
-                        <input type="text" defaultValue={1} 
-                        onChange={(e) => setpQtd(e.target.value)} //muda na parte de Qtd
-                        />
-                      </td>
-                      <td>
-                        {item.sale }  
-
-                      </td>
-                   
-                    </tr> 
-                })} */}
-
-
+               
               {pItens.map( (item,i) =>{
                   return <tr key = {i}>
+                      <td> 
+                        <button type='button' onClick={(e) =>{removeItem(item, i)}} >
+                        {<FaTrash />}
+                        </button>
+                      </td>
                       <td> {item.product.name}</td>
                       <td> {item.product.sale}</td>
                       <td>

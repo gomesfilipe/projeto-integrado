@@ -54,7 +54,7 @@ function Products() {
           <div className='cabecalho'>
             
             <div className='Search'>
-              <h5>Buscar Produto</h5>
+              <h5>Nome</h5>
                 <form className="d-flex">
                   <input className="form-control me-2" type="search" placeholder="Digite o nome do produto" onChange={(e) =>  {setInput(e.target.value)}}/>
                   <button type="submit" onClick={(e) => {searchProduct(input)}}>{<FaSearch />}</button>
@@ -93,7 +93,7 @@ function Products() {
                     <td> {product.unity}</td>
                     <td>
                     <div className='Edicao'>
-                     <Link to="/Product_edit/${product.name}"> <button> {<FaPen/>} </button> </Link> 
+                     <Link to={`/Product_edit/${product.name}`}> <button> {<FaPen/>} </button> </Link> 
                     </div>
                      
                     </td>

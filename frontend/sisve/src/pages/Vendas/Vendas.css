@@ -9,7 +9,7 @@
 
 
 .Sale{
-  width: 70%;
+  width: 90%;
   /* height: 50%; */
   /* background-color: aqua; */
 }
@@ -81,7 +81,7 @@
 
 .Shop-cart{
   /* height: 100%; */
-  width: 45%; 
+  width: 53%; 
   /* margin-left: 40px; */
   /* border-width: 40px; */
   /* height: 100vh;
@@ -142,6 +142,26 @@
 }
 
 .Shop-cart button{
+  filter: brightness(0.9); 
+  /* background-color: green; */
+}
+
+
+.Shop-cart table button{
+  border-radius: 5px;
+  background-color: rgb(172, 166, 166);
+  border-color:rgb(172, 166, 166);
+  width: 25px;
+  height: 28px; 
+  color:black;
+
+  margin-left: 20px;
+  /* padding-left: 90px; */
+  margin-top: 3px;
+  align-content: center;
+}
+
+.Shop-cart table button{
   filter: brightness(0.9); 
   /* background-color: green; */
 }
