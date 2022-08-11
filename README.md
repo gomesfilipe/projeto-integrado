@@ -15,7 +15,6 @@ O SISVE é uma aplicação web de interface facilitada para controle de estoques
 * Cadastrar lojas;
 * Cadastrar e consultar produtos;
 * Efetuar vendas;
-* Consultar dashboards;
 
 ## Tecnologias Utilizadas
 
@@ -92,3 +91,6 @@ npm run test
 Veja abaixo exemplo desta execução:
 
 <img src="gifs/gif_tests.gif">
+
+## Apresentação do SISVE 
+<a href="https://youtu.be/Q33C89V5K4M">Clique aqui</a> para ver brevemente o vídeo do funcionamento do sistema para o usuário.
